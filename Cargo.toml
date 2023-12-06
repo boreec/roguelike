@@ -15,8 +15,7 @@ unsafe_code = "forbid"
 
 [lints.clippy]
 all = "warn"
-restriction = "warn"
-pendantic = "warn"
+pedantic = "warn"
 nursery = "warn"
 cargo = "warn"
 
