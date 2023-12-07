@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Cyprien Borée <cyprien.boree@tuta.io>"]
 description = "tactical tile-based 2D dungeon crawler roguelike"
+repository = "https://github.com/boreec/havoc-resurgence"
+keywords = ["tactical", "bevy", "roguelike", "tile-based", "turn-based"]
 
 [profile.dev]
 opt-level = 1
