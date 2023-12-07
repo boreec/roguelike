@@ -5,7 +5,7 @@ fn main() {
         .insert_resource(ClearColor(Color::rgb(0.5, 0.5, 0.9)))
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
-        .add_systems(Update, change_clear_color)
+        .add_systems(Update, check_exit_events)
         .run();
 }
 
@@ -13,11 +13,11 @@ fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
 
-fn change_clear_color(
+fn check_exit_events(
     input: Res<Input<KeyCode>>,
-    mut clear_color: ResMut<ClearColor>,
+    mut exit_events: ResMut<Events<bevy::app::AppExit>>,
 ) {
-    if input.just_pressed(KeyCode::Space) {
-        clear_color.0 = Color::PURPLE;
+    if input.just_pressed(KeyCode::Escape) {
+        exit_events.send(bevy::app::AppExit);
     }
 }
