@@ -18,7 +18,6 @@ unsafe_code = "forbid"
 all = "warn"
 pedantic = "warn"
 nursery = "warn"
-cargo = "warn"
 
 [dependencies]
 bevy = "0.12.1"
