@@ -6,6 +6,18 @@ const SPRITE_TILE_WIDTH: f32 = 64.0;
 const SPRITE_TILE_HEIGHT: f32 = 64.0;
 const SPRITE_IDX_PLAYER: usize = 2;
 
+const MAP_WIDTH: usize = 10;
+const MAP_HEIGHT: usize = 10;
+
+enum TileType {
+    Grass,
+}
+
+#[derive(Component)]
+struct Map {
+    tiles: Vec<TileType>,
+}
+
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.5, 0.5, 0.9)))
