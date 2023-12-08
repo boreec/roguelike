@@ -11,9 +11,19 @@ fn main() {
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
+
+    let texture_atlas = TextureAtlas::from_grid(
+        asset_server.load("img/tileset.png"),
+        Vec2::new(192f32, 64f32),
+        3,
+        1,
+        None,
+        None,
+    );
+
     commands.spawn(SpriteBundle {
-        texture: asset_server.load("img/tileset.png"),
-        ..default()
+        texture: texture_atlas.texture.clone(),
+        ..Default::default()
     });
 }
 
