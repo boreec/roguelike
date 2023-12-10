@@ -20,6 +20,14 @@ enum TileType {
     Grass,
 }
 
+impl TileType {
+    pub fn to_sprite_idx(&self) -> usize {
+        match self {
+            TileType::Grass => SPRITE_IDX_GRASS,
+        }
+    }
+}
+
 #[derive(Component)]
 struct Map {
     pub tiles: Vec<TileType>,
@@ -84,7 +92,7 @@ fn setup(
     let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
     let top_left_x = WINDOW_WITDH / -2.0;
     let top_left_y = WINDOW_HEIGHT / 2.0;
-    for (tile_i, _tile_type) in map.tiles.iter().enumerate() {
+    for (tile_i, tile_type) in map.tiles.iter().enumerate() {
         let tile_x = (tile_i % MAP_WIDTH) as f32;
         let tile_y = (tile_i / MAP_WIDTH) as f32;
         commands.spawn(SpriteSheetBundle {
@@ -95,7 +103,7 @@ fn setup(
                 top_left_y - tile_y * SPRITE_TILE_HEIGHT,
                 0f32,
             ),
-            sprite: TextureAtlasSprite::new(SPRITE_IDX_GRASS),
+            sprite: TextureAtlasSprite::new(tile_type.to_sprite_idx()),
             texture_atlas: atlas_handle.clone(),
             ..Default::default()
         });
