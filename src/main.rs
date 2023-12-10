@@ -8,8 +8,8 @@ const SPRITESHEET_ROWS: usize = 1;
 const SPRITE_TILE_WIDTH: f32 = 64.0;
 const SPRITE_TILE_HEIGHT: f32 = 64.0;
 
-const SPRITE_IDX_GRASS: usize = 0;
-const SPRITE_IDX_GRASS_WITH_FLOWER: usize = 1;
+const SPRITE_IDX_GRASS_WITH_FLOWER: usize = 0;
+const SPRITE_IDX_GRASS: usize = 1;
 const SPRITE_IDX_PLAYER: usize = 2;
 
 const MAP_WIDTH: usize = 10;
@@ -18,12 +18,14 @@ const MAP_HEIGHT: usize = 10;
 #[derive(Clone)]
 enum TileType {
     Grass,
+    GrassWithFlower,
 }
 
 impl TileType {
     pub fn to_sprite_idx(&self) -> usize {
         match self {
             TileType::Grass => SPRITE_IDX_GRASS,
+            TileType::GrassWithFlower => SPRITE_IDX_GRASS_WITH_FLOWER,
         }
     }
 }
@@ -35,9 +37,17 @@ struct Map {
 
 impl Map {
     fn new(width: usize, height: usize) -> Self {
-        return Map {
-            tiles: vec![TileType::Grass; width * height],
-        };
+        let mut tiles = Vec::new();
+        for i in 0..(width * height) {
+            let x = i / width;
+            let y = i % width;
+            if y == 0 || y == height - 1 || x == 0 || x == width - 1 {
+                tiles.push(TileType::GrassWithFlower)
+            } else {
+                tiles.push(TileType::Grass)
+            }
+        }
+        return Map { tiles };
     }
 }
 
