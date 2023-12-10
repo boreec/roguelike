@@ -9,7 +9,7 @@ const SPRITE_TILE_WIDTH: f32 = 64.0;
 const SPRITE_TILE_HEIGHT: f32 = 64.0;
 
 const SPRITE_IDX_GRASS: usize = 0;
-const SPRITE_IDX_GRASS_WITH_FLOWER: usize = 10;
+const SPRITE_IDX_GRASS_WITH_FLOWER: usize = 1;
 const SPRITE_IDX_PLAYER: usize = 2;
 
 const MAP_WIDTH: usize = 10;
@@ -84,7 +84,7 @@ fn setup(
     let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
     let top_left_x = WINDOW_WITDH / -2.0;
     let top_left_y = WINDOW_HEIGHT / 2.0;
-    for (tile_i, tile_type) in map.tiles.iter().enumerate() {
+    for (tile_i, _tile_type) in map.tiles.iter().enumerate() {
         let tile_x = (tile_i % MAP_WIDTH) as f32;
         let tile_y = (tile_i / MAP_WIDTH) as f32;
         commands.spawn(SpriteSheetBundle {
