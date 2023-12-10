@@ -110,7 +110,9 @@ fn setup(
                 top_left_x
                     + tile_x * SPRITE_TILE_WIDTH
                     + SPRITE_TILE_WIDTH / 2.0,
-                top_left_y - tile_y * SPRITE_TILE_HEIGHT,
+                top_left_y
+                    - tile_y * SPRITE_TILE_HEIGHT
+                    - SPRITE_TILE_HEIGHT / 2.0,
                 0f32,
             ),
             sprite: TextureAtlasSprite::new(tile_type.to_sprite_idx()),
