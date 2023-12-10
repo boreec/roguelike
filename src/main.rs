@@ -68,13 +68,13 @@ fn setup(
     });
 
     let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
-    for (i, tileType) in map.tiles.iter().enumerate() {
-        let x = (i % MAP_WIDTH) as f32;
-        let y = (i / MAP_WIDTH) as f32;
+    for (tile_i, tile_type) in map.tiles.iter().enumerate() {
+        let tile_x = (tile_i % MAP_WIDTH) as f32;
+        let tile_y = (tile_i / MAP_WIDTH) as f32;
         commands.spawn(SpriteSheetBundle {
             transform: Transform::from_xyz(
-                x * SPRITE_TILE_WIDTH,
-                y * SPRITE_TILE_HEIGHT,
+                tile_x * SPRITE_TILE_WIDTH,
+                tile_y * SPRITE_TILE_HEIGHT,
                 0f32,
             ),
             sprite: TextureAtlasSprite::new(SPRITE_IDX_GRASS),
