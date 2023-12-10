@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-const SCREEN_WITDH: f32 = 1280.0;
-const SCREEN_HEIGHT: f32 = 800.0;
+const WINDOW_WITDH: f32 = 1280.0;
+const WINDOW_HEIGHT: f32 = 800.0;
 
 const SPRITESHEET_COLS: usize = 3;
 const SPRITESHEET_ROWS: usize = 1;
@@ -40,7 +40,7 @@ fn main() {
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
-                        resolution: (SCREEN_WITDH, SCREEN_HEIGHT).into(),
+                        resolution: (WINDOW_WITDH, WINDOW_HEIGHT).into(),
                         title: "Havoc Resurgence".to_string(),
                         ..Default::default()
                     }),
