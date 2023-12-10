@@ -72,7 +72,11 @@ fn setup(
         let x = (i % MAP_WIDTH) as f32;
         let y = (i / MAP_WIDTH) as f32;
         commands.spawn(SpriteSheetBundle {
-            transform: Transform::from_xyz(x, y, 0f32),
+            transform: Transform::from_xyz(
+                x * SPRITE_TILE_WIDTH,
+                y * SPRITE_TILE_HEIGHT,
+                0f32,
+            ),
             sprite: TextureAtlasSprite::new(SPRITE_IDX_GRASS),
             texture_atlas: atlas_handle.clone(),
             ..Default::default()
