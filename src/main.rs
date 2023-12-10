@@ -1,5 +1,8 @@
 use bevy::prelude::*;
 
+const SCREEN_WITDH: f32 = 1280.0;
+const SCREEN_HEIGHT: f32 = 800.0;
+
 const SPRITESHEET_COLS: usize = 3;
 const SPRITESHEET_ROWS: usize = 1;
 const SPRITE_TILE_WIDTH: f32 = 64.0;
@@ -32,8 +35,19 @@ impl Map {
 
 fn main() {
     App::new()
-        .insert_resource(ClearColor(Color::rgb(0.5, 0.5, 0.9)))
-        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .insert_resource(ClearColor(Color::ANTIQUE_WHITE))
+        .add_plugins(
+            DefaultPlugins
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        resolution: (SCREEN_WITDH, SCREEN_HEIGHT).into(),
+                        title: "Havoc Resurgence".to_string(),
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                })
+                .set(ImagePlugin::default_nearest()),
+        )
         .add_systems(Startup, setup)
         .add_systems(Update, check_exit_events)
         .run();
