@@ -31,8 +31,19 @@ impl TileType {
 }
 
 #[derive(Component)]
+struct Player;
+
+#[derive(Bundle)]
+struct PlayerBundle {
+    player: Player,
+}
+
+#[derive(Component)]
 struct Map {
+    pub width: usize,
+    pub height: usize,
     pub tiles: Vec<TileType>,
+    pub entities: Vec<Option<Entity>>,
 }
 
 impl Map {
@@ -47,7 +58,16 @@ impl Map {
                 tiles.push(TileType::Grass)
             }
         }
-        return Map { tiles };
+        return Map {
+            width,
+            height,
+            tiles: tiles.clone(),
+            entities: vec![None; tiles.len()],
+        };
+    }
+
+    fn add_entity(&mut self, entity: Entity, pos_x: usize, pos_y: usize) {
+        self.entities[pos_x + pos_y * self.width] = Some(entity)
     }
 }
 
@@ -89,6 +109,7 @@ fn setup(
 
     let atlas_handle = texture_atlases.add(texture_atlas);
 
+    let playerEntity = commands.spawn(PlayerBundle { player: Player {} }).id();
     commands.spawn(SpriteSheetBundle {
         transform: Transform {
             translation: Vec3::new(100f32, 100f32, 0f32),
@@ -99,7 +120,9 @@ fn setup(
         ..Default::default()
     });
 
-    let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
+    let mut map = Map::new(MAP_WIDTH, MAP_HEIGHT);
+    map.add_entity(playerEntity, 1, 1);
+    // draw tiles
     let top_left_x = WINDOW_WITDH / -2.0;
     let top_left_y = WINDOW_HEIGHT / 2.0;
     for (tile_i, tile_type) in map.tiles.iter().enumerate() {
