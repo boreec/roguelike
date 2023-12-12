@@ -51,6 +51,12 @@ fn setup(
 
     let atlas_handle = texture_atlases.add(texture_atlas);
 
+    let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
+    spawn_tiles(&mut commands, &map, &atlas_handle);
+    spawn_player(&mut commands, &atlas_handle);
+}
+
+fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
     commands.spawn(PlayerBundle {
         player: Player {},
         position: MapPosition::new(0, 0),
@@ -61,15 +67,11 @@ fn setup(
             ..Default::default()
         },
     });
-
-    let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
-    spawn_tiles(commands, map, atlas_handle);
 }
-
 fn spawn_tiles(
-    mut commands: Commands,
-    map: Map,
-    atlas_handle: Handle<TextureAtlas>,
+    commands: &mut Commands,
+    map: &Map,
+    atlas_handle: &Handle<TextureAtlas>,
 ) {
     let top_left_x = WINDOW_WITDH / -2.0;
     let top_left_y = WINDOW_HEIGHT / 2.0;
