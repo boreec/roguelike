@@ -62,7 +62,7 @@ fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
         position: MapPosition::new(0, 0),
         sprite: SpriteSheetBundle {
             texture_atlas: atlas_handle.clone(),
-            transform: Transform::from_xyz(0.0, 0.0, 0.0),
+            transform: Transform::from_xyz(0.0, 0.0, Z_INDEX_PLAYER),
             sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
             ..Default::default()
         },
@@ -89,7 +89,11 @@ fn spawn_tiles(
             r#type: TileType::Grass,
             position: MapPosition::new(tile_x, tile_y),
             sprite: SpriteSheetBundle {
-                transform: Transform::from_xyz(sprite_x, sprite_y, 0.0),
+                transform: Transform::from_xyz(
+                    sprite_x,
+                    sprite_y,
+                    Z_INDEX_TILE,
+                ),
                 sprite: TextureAtlasSprite::new(tile_type.to_sprite_idx()),
                 texture_atlas: atlas_handle.clone(),
                 ..Default::default()

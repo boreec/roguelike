@@ -13,5 +13,5 @@ pub const SPRITE_IDX_PLAYER: usize = 2;
 pub const MAP_WIDTH: usize = 10;
 pub const MAP_HEIGHT: usize = 10;
 
-pub const TILE_Z_INDEX: f32 = 0.0;
-pub const ENTITY_Z_INDEX: f32 = 1.0;
+pub const Z_INDEX_TILE: f32 = 0.0;
+pub const Z_INDEX_PLAYER: f32 = 1.0;
