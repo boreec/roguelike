@@ -73,21 +73,16 @@ fn spawn_tiles(
     map: &Map,
     atlas_handle: &Handle<TextureAtlas>,
 ) {
-    let top_left_x = WINDOW_WITDH / -2.0;
-    let top_left_y = WINDOW_HEIGHT / 2.0;
     for (tile_i, tile_type) in map.tiles.iter().enumerate() {
-        let tile_x = tile_i % MAP_WIDTH;
-        let tile_y = tile_i / MAP_WIDTH;
-        let sprite_x = top_left_x
-            + tile_x as f32 * SPRITE_TILE_WIDTH
-            + SPRITE_TILE_WIDTH / 2.0;
-        let sprite_y = top_left_y
-            - tile_y as f32 * SPRITE_TILE_HEIGHT
-            - SPRITE_TILE_HEIGHT / 2.0;
+        let map_position = MapPosition {
+            x: tile_i % map.width,
+            y: tile_i / map.width,
+        };
+        let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
         commands.spawn(TileBundle {
             tile: Tile,
             r#type: TileType::Grass,
-            position: MapPosition::new(tile_x, tile_y),
+            position: map_position,
             sprite: SpriteSheetBundle {
                 transform: Transform::from_xyz(
                     sprite_x,
@@ -100,6 +95,19 @@ fn spawn_tiles(
             },
         });
     }
+}
+
+fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
+    let top_left_x = WINDOW_WITDH / -2.0;
+    let top_left_y = WINDOW_HEIGHT / 2.0;
+    (
+        top_left_x
+            + map_position.x as f32 * SPRITE_TILE_WIDTH
+            + SPRITE_TILE_WIDTH / 2.0,
+        top_left_y
+            - map_position.y as f32 * SPRITE_TILE_HEIGHT
+            - SPRITE_TILE_HEIGHT / 2.0,
+    )
 }
 
 fn check_exit_events(

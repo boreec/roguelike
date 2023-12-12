@@ -3,8 +3,8 @@ use bevy::prelude::*;
 
 #[derive(Component)]
 pub struct MapPosition {
-    x: usize,
-    y: usize,
+    pub x: usize,
+    pub y: usize,
 }
 
 impl MapPosition {
