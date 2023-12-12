@@ -9,6 +9,10 @@ use consts::*;
 use map::*;
 use player::*;
 
+use tile::Tile;
+use tile::TileBundle;
+use tile::TileType;
+
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::ANTIQUE_WHITE))
@@ -48,10 +52,14 @@ fn setup(
     let atlas_handle = texture_atlases.add(texture_atlas);
 
     commands.spawn(PlayerBundle {
-        transform: Transform::from_xyz(0.0, 0.0, 0.0),
-        sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
         player: Player {},
         position: MapPosition::new(0, 0),
+        sprite: SpriteSheetBundle {
+            texture_atlas: atlas_handle.clone(),
+            transform: Transform::from_xyz(0.0, 0.0, 0.0),
+            sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
+            ..Default::default()
+        },
     });
 
     let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
@@ -66,21 +74,24 @@ fn spawn_tiles(
     let top_left_x = WINDOW_WITDH / -2.0;
     let top_left_y = WINDOW_HEIGHT / 2.0;
     for (tile_i, tile_type) in map.tiles.iter().enumerate() {
-        let tile_x = (tile_i % MAP_WIDTH) as f32;
-        let tile_y = (tile_i / MAP_WIDTH) as f32;
-        commands.spawn(SpriteSheetBundle {
-            transform: Transform::from_xyz(
-                top_left_x
-                    + tile_x * SPRITE_TILE_WIDTH
-                    + SPRITE_TILE_WIDTH / 2.0,
-                top_left_y
-                    - tile_y * SPRITE_TILE_HEIGHT
-                    - SPRITE_TILE_HEIGHT / 2.0,
-                0.0,
-            ),
-            sprite: TextureAtlasSprite::new(tile_type.to_sprite_idx()),
-            texture_atlas: atlas_handle.clone(),
-            ..Default::default()
+        let tile_x = tile_i % MAP_WIDTH;
+        let tile_y = tile_i / MAP_WIDTH;
+        let sprite_x = top_left_x
+            + (tile_x as f32) * SPRITE_TILE_WIDTH
+            + SPRITE_TILE_WIDTH / 2.0;
+        let sprite_y = top_left_y
+            - (tile_y as f32) * SPRITE_TILE_HEIGHT
+            - SPRITE_TILE_HEIGHT / 2.0;
+        commands.spawn(TileBundle {
+            tile: Tile {},
+            r#type: TileType::Grass,
+            position: MapPosition::new(tile_x, tile_y),
+            sprite: SpriteSheetBundle {
+                transform: Transform::from_xyz(sprite_x, sprite_y, 0.0),
+                sprite: TextureAtlasSprite::new(tile_type.to_sprite_idx()),
+                texture_atlas: atlas_handle.clone(),
+                ..Default::default()
+            },
         });
     }
 }

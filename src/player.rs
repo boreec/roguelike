@@ -8,6 +8,5 @@ pub struct Player;
 pub struct PlayerBundle {
     pub player: Player,
     pub position: MapPosition,
-    pub sprite: TextureAtlasSprite,
-    pub transform: Transform,
+    pub sprite: SpriteSheetBundle,
 }

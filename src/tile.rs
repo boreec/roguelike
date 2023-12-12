@@ -23,7 +23,8 @@ impl TileType {
 
 #[derive(Bundle)]
 pub struct TileBundle {
-    tile: Tile,
-    r#type: TileType,
-    position: MapPosition,
+    pub tile: Tile,
+    pub r#type: TileType,
+    pub position: MapPosition,
+    pub sprite: SpriteSheetBundle,
 }
