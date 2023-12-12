@@ -47,17 +47,22 @@ fn setup(
 
     let atlas_handle = texture_atlases.add(texture_atlas);
 
-    let player_entity = commands
-        .spawn(PlayerBundle {
-            transform: Transform::from_xyz(0.0, 0.0, 0.0),
-            sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
-            player: Player {},
-            position: MapPosition::new(0, 0),
-        })
-        .id();
+    commands.spawn(PlayerBundle {
+        transform: Transform::from_xyz(0.0, 0.0, 0.0),
+        sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
+        player: Player {},
+        position: MapPosition::new(0, 0),
+    });
 
-    let mut map = Map::new(MAP_WIDTH, MAP_HEIGHT);
-    // draw tiles
+    let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
+    spawn_tiles(commands, map, atlas_handle);
+}
+
+fn spawn_tiles(
+    mut commands: Commands,
+    map: Map,
+    atlas_handle: Handle<TextureAtlas>,
+) {
     let top_left_x = WINDOW_WITDH / -2.0;
     let top_left_y = WINDOW_HEIGHT / 2.0;
     for (tile_i, tile_type) in map.tiles.iter().enumerate() {
