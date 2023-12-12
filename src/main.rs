@@ -1,75 +1,13 @@
 use bevy::prelude::*;
 
-const WINDOW_WITDH: f32 = 1280.0;
-const WINDOW_HEIGHT: f32 = 800.0;
+mod consts;
+mod map;
+mod player;
+mod tile;
 
-const SPRITESHEET_COLS: usize = 3;
-const SPRITESHEET_ROWS: usize = 1;
-const SPRITE_TILE_WIDTH: f32 = 64.0;
-const SPRITE_TILE_HEIGHT: f32 = 64.0;
-
-const SPRITE_IDX_GRASS_WITH_FLOWER: usize = 0;
-const SPRITE_IDX_GRASS: usize = 1;
-const SPRITE_IDX_PLAYER: usize = 2;
-
-const MAP_WIDTH: usize = 10;
-const MAP_HEIGHT: usize = 10;
-
-#[derive(Clone)]
-enum TileType {
-    Grass,
-    GrassWithFlower,
-}
-
-impl TileType {
-    pub fn to_sprite_idx(&self) -> usize {
-        match self {
-            TileType::Grass => SPRITE_IDX_GRASS,
-            TileType::GrassWithFlower => SPRITE_IDX_GRASS_WITH_FLOWER,
-        }
-    }
-}
-
-#[derive(Component)]
-struct Player;
-
-#[derive(Bundle)]
-struct PlayerBundle {
-    player: Player,
-}
-
-#[derive(Component)]
-struct Map {
-    pub width: usize,
-    pub height: usize,
-    pub tiles: Vec<TileType>,
-    pub entities: Vec<Option<Entity>>,
-}
-
-impl Map {
-    fn new(width: usize, height: usize) -> Self {
-        let mut tiles = Vec::new();
-        for i in 0..(width * height) {
-            let x = i / width;
-            let y = i % width;
-            if y == 0 || y == height - 1 || x == 0 || x == width - 1 {
-                tiles.push(TileType::GrassWithFlower)
-            } else {
-                tiles.push(TileType::Grass)
-            }
-        }
-        return Map {
-            width,
-            height,
-            tiles: tiles.clone(),
-            entities: vec![None; tiles.len()],
-        };
-    }
-
-    fn add_entity(&mut self, entity: Entity, pos_x: usize, pos_y: usize) {
-        self.entities[pos_x + pos_y * self.width] = Some(entity)
-    }
-}
+use consts::*;
+use map::*;
+use player::*;
 
 fn main() {
     App::new()
@@ -109,19 +47,16 @@ fn setup(
 
     let atlas_handle = texture_atlases.add(texture_atlas);
 
-    let playerEntity = commands.spawn(PlayerBundle { player: Player {} }).id();
-    commands.spawn(SpriteSheetBundle {
-        transform: Transform {
-            translation: Vec3::new(100f32, 100f32, 0f32),
-            ..Default::default()
-        },
-        sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
-        texture_atlas: atlas_handle.clone(),
-        ..Default::default()
-    });
+    let player_entity = commands
+        .spawn(PlayerBundle {
+            transform: Transform::from_xyz(0.0, 0.0, 0.0),
+            sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
+            player: Player {},
+            position: MapPosition::new(0, 0),
+        })
+        .id();
 
     let mut map = Map::new(MAP_WIDTH, MAP_HEIGHT);
-    map.add_entity(playerEntity, 1, 1);
     // draw tiles
     let top_left_x = WINDOW_WITDH / -2.0;
     let top_left_y = WINDOW_HEIGHT / 2.0;
@@ -136,7 +71,7 @@ fn setup(
                 top_left_y
                     - tile_y * SPRITE_TILE_HEIGHT
                     - SPRITE_TILE_HEIGHT / 2.0,
-                0f32,
+                0.0,
             ),
             sprite: TextureAtlasSprite::new(tile_type.to_sprite_idx()),
             texture_atlas: atlas_handle.clone(),
