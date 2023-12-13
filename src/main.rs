@@ -112,21 +112,26 @@ fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
     )
 }
 
-fn check_player_movement(input: Res<Input<KeyCode>>) {
-    if input.just_pressed(KeyCode::Right) {
-        println!("move to the right");
-    }
+fn check_player_movement(
+    mut query: Query<&mut MapPosition, With<Player>>,
+    input: Res<Input<KeyCode>>,
+) {
+    for mut position in query.iter_mut() {
+        if input.just_pressed(KeyCode::Right) {
+            position.x += 1;
+        }
 
-    if input.just_pressed(KeyCode::Left) {
-        println!("move to the left");
-    }
+        if input.just_pressed(KeyCode::Left) {
+            position.x -= 1;
+        }
 
-    if input.just_pressed(KeyCode::Up) {
-        println!("move to the up");
-    }
+        if input.just_pressed(KeyCode::Up) {
+            position.y += 1;
+        }
 
-    if input.just_pressed(KeyCode::Down) {
-        println!("move to the bottom");
+        if input.just_pressed(KeyCode::Down) {
+            position.y -= 1;
+        }
     }
 }
 
