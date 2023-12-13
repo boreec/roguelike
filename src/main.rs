@@ -1,10 +1,12 @@
 use bevy::prelude::*;
 
+mod camera;
 mod consts;
 mod map;
 mod player;
 mod tile;
 
+use camera::MainCamera;
 use consts::*;
 use map::*;
 use player::*;
@@ -29,7 +31,10 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_systems(Startup, setup)
-        .add_systems(Update, (check_exit_events, check_player_movement))
+        .add_systems(
+            Update,
+            (check_exit_events, check_player_movement, render_player),
+        )
         .run();
 }
 
@@ -38,7 +43,7 @@ fn setup(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn((Camera2dBundle::default(), MainCamera));
 
     let texture_atlas = TextureAtlas::from_grid(
         asset_server.load("img/tileset.png"),
@@ -142,4 +147,12 @@ fn check_exit_events(
     if input.just_pressed(KeyCode::Escape) {
         exit_events.send(bevy::app::AppExit);
     }
+}
+
+fn render_player(
+    mut query: Query<(&mut Transform, &MapPosition), With<Player>>,
+) {
+    let (mut transform, map_position) = query.single_mut();
+    let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
+    transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
 }
