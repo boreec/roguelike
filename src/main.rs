@@ -122,19 +122,19 @@ fn check_player_movement(
     input: Res<Input<KeyCode>>,
 ) {
     for mut position in query.iter_mut() {
-        if input.just_pressed(KeyCode::Right) {
+        if input.any_just_pressed([KeyCode::Right, KeyCode::D]) {
             position.x += 1;
         }
 
-        if input.just_pressed(KeyCode::Left) {
+        if input.any_just_pressed([KeyCode::Left, KeyCode::A]) {
             position.x -= 1;
         }
 
-        if input.just_pressed(KeyCode::Up) {
+        if input.any_just_pressed([KeyCode::Up, KeyCode::W]) {
             position.y += 1;
         }
 
-        if input.just_pressed(KeyCode::Down) {
+        if input.any_just_pressed([KeyCode::Down, KeyCode::S]) {
             position.y -= 1;
         }
     }
