@@ -29,7 +29,7 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_systems(Startup, setup)
-        .add_systems(Update, check_exit_events)
+        .add_systems(Update, (check_exit_events, check_player_movement))
         .run();
 }
 
@@ -110,6 +110,24 @@ fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
             - map_position.y as f32 * SPRITE_TILE_HEIGHT
             - SPRITE_TILE_HEIGHT / 2.0,
     )
+}
+
+fn check_player_movement(input: Res<Input<KeyCode>>) {
+    if input.just_pressed(KeyCode::Right) {
+        println!("move to the right");
+    }
+
+    if input.just_pressed(KeyCode::Left) {
+        println!("move to the left");
+    }
+
+    if input.just_pressed(KeyCode::Up) {
+        println!("move to the up");
+    }
+
+    if input.just_pressed(KeyCode::Down) {
+        println!("move to the bottom");
+    }
 }
 
 fn check_exit_events(
