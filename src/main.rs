@@ -33,7 +33,11 @@ fn main() {
         .add_systems(Startup, setup)
         .add_systems(
             Update,
-            (check_exit_events, check_player_movement, render_player),
+            (
+                check_exit_events,
+                check_player_movement,
+                update_camera_position,
+            ),
         )
         .run();
 }
@@ -149,7 +153,7 @@ fn check_exit_events(
     }
 }
 
-fn render_player(
+fn update_camera_position(
     mut query_player: Query<(&mut Transform, &MapPosition), With<Player>>,
     mut query_main_camera: Query<
         (&mut Transform, &MainCamera),
