@@ -57,12 +57,14 @@ fn setup(
 }
 
 fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
+    let map_position = MapPosition::new(0, 0);
+    let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn(PlayerBundle {
         player: Player,
-        position: MapPosition::new(0, 0),
+        position: map_position,
         sprite: SpriteSheetBundle {
             texture_atlas: atlas_handle.clone(),
-            transform: Transform::from_xyz(0.0, 0.0, Z_INDEX_PLAYER),
+            transform: Transform::from_xyz(sprite_x, sprite_y, Z_INDEX_PLAYER),
             sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
             ..Default::default()
         },
