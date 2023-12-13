@@ -150,9 +150,16 @@ fn check_exit_events(
 }
 
 fn render_player(
-    mut query: Query<(&mut Transform, &MapPosition), With<Player>>,
+    mut query_player: Query<(&mut Transform, &MapPosition), With<Player>>,
+    mut query_main_camera: Query<
+        (&mut Transform, &MainCamera),
+        Without<Player>,
+    >,
 ) {
-    let (mut transform, map_position) = query.single_mut();
+    let (mut transform, map_position) = query_player.single_mut();
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
-    transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
+
+    let (mut camera_transform, camera) = query_main_camera.single_mut();
+    camera_transform.translation =
+        Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
 }
