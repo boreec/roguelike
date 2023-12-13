@@ -131,11 +131,11 @@ fn check_player_movement(
         }
 
         if input.any_just_pressed([KeyCode::Up, KeyCode::W]) {
-            position.y += 1;
+            position.y -= 1;
         }
 
         if input.any_just_pressed([KeyCode::Down, KeyCode::S]) {
-            position.y -= 1;
+            position.y += 1;
         }
     }
 }
