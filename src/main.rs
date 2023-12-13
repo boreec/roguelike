@@ -154,16 +154,16 @@ fn check_exit_events(
 }
 
 fn update_camera_position(
-    mut query_player: Query<(&mut Transform, &MapPosition), With<Player>>,
+    query_player: Query<&MapPosition, With<Player>>,
     mut query_main_camera: Query<
-        (&mut Transform, &MainCamera),
-        Without<Player>,
+        &mut Transform,
+        (With<MainCamera>, Without<Player>),
     >,
 ) {
-    let (mut transform, map_position) = query_player.single_mut();
-    let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
+    let position_player = query_player.single();
+    let (sprite_x, sprite_y) = calculate_sprite_position(&position_player);
 
-    let (mut camera_transform, camera) = query_main_camera.single_mut();
+    let mut camera_transform = query_main_camera.single_mut();
     camera_transform.translation =
         Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
 }
