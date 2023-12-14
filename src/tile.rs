@@ -1,7 +1,9 @@
 use crate::consts::*;
 use crate::map::MapPosition;
 
-use bevy::prelude::*;
+use bevy::prelude::Bundle;
+use bevy::prelude::Component;
+use bevy::prelude::SpriteSheetBundle;
 
 #[derive(Component)]
 pub struct Tile;
@@ -13,10 +15,10 @@ pub enum TileType {
 }
 
 impl TileType {
-    pub fn to_sprite_idx(&self) -> usize {
+    pub const fn to_sprite_idx(&self) -> usize {
         match self {
-            TileType::Grass => SPRITE_IDX_GRASS,
-            TileType::GrassWithFlower => SPRITE_IDX_GRASS_WITH_FLOWER,
+            Self::Grass => SPRITE_IDX_GRASS,
+            Self::GrassWithFlower => SPRITE_IDX_GRASS_WITH_FLOWER,
         }
     }
 }
