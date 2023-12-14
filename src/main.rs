@@ -123,26 +123,49 @@ fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
 }
 
 fn check_player_movement(
-    mut query: Query<&mut MapPosition, With<Player>>,
+    mut query_player: Query<&mut MapPosition, With<Player>>,
     input: Res<Input<KeyCode>>,
 ) {
-    for mut position in query.iter_mut() {
-        if input.any_just_pressed([KeyCode::Right, KeyCode::D]) {
-            position.x += 1;
-        }
-
-        if input.any_just_pressed([KeyCode::Left, KeyCode::A]) {
-            position.x -= 1;
-        }
-
-        if input.any_just_pressed([KeyCode::Up, KeyCode::W]) {
-            position.y -= 1;
-        }
-
-        if input.any_just_pressed([KeyCode::Down, KeyCode::S]) {
-            position.y += 1;
+    let mut player_position = query_player.single_mut();
+    if input.any_just_pressed([KeyCode::Right, KeyCode::D]) {
+        if can_move_right(&player_position) {
+            player_position.x += 1;
         }
     }
+
+    if input.any_just_pressed([KeyCode::Left, KeyCode::A]) {
+        if can_move_left(&player_position) {
+            player_position.x -= 1;
+        }
+    }
+
+    if input.any_just_pressed([KeyCode::Up, KeyCode::W]) {
+        if can_move_up(&player_position) {
+            player_position.y -= 1;
+        }
+    }
+
+    if input.any_just_pressed([KeyCode::Down, KeyCode::S]) {
+        if can_move_down(&player_position) {
+            player_position.y += 1;
+        }
+    }
+}
+
+fn can_move_left(player_position: &MapPosition) -> bool {
+    player_position.x > 0
+}
+
+fn can_move_right(player_position: &MapPosition) -> bool {
+    player_position.x < MAP_WIDTH - 1
+}
+
+fn can_move_up(player_position: &MapPosition) -> bool {
+    player_position.y > 0
+}
+
+fn can_move_down(player_position: &MapPosition) -> bool {
+    player_position.y < MAP_HEIGHT - 1
 }
 
 fn check_exit_events(

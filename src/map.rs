@@ -1,7 +1,7 @@
 use crate::tile::TileType;
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Component, Debug)]
 pub struct MapPosition {
     pub x: usize,
     pub y: usize,
