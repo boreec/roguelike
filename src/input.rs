@@ -11,25 +11,25 @@ pub fn check_player_input(
     let mut player_position = query_player.single_mut();
     if input.any_just_pressed([KeyCode::Right, KeyCode::D]) {
         if can_move_right(&player_position) {
-            player_position.x += 1;
+            move_right(&mut player_position)
         }
     }
 
     if input.any_just_pressed([KeyCode::Left, KeyCode::A]) {
         if can_move_left(&player_position) {
-            player_position.x -= 1;
+            move_left(&mut player_position)
         }
     }
 
     if input.any_just_pressed([KeyCode::Up, KeyCode::W]) {
         if can_move_up(&player_position) {
-            player_position.y -= 1;
+            move_up(&mut player_position);
         }
     }
 
     if input.any_just_pressed([KeyCode::Down, KeyCode::S]) {
         if can_move_down(&player_position) {
-            player_position.y += 1;
+            move_down(&mut player_position);
         }
     }
 }
