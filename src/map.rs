@@ -1,5 +1,7 @@
 use crate::tile::TileType;
-use bevy::prelude::*;
+
+use bevy::prelude::Component;
+use bevy::prelude::Entity;
 
 #[derive(Component, Debug)]
 pub struct MapPosition {
@@ -9,7 +11,7 @@ pub struct MapPosition {
 
 impl MapPosition {
     pub fn new(x: usize, y: usize) -> Self {
-        MapPosition { x, y }
+        Self { x, y }
     }
 }
 
@@ -28,16 +30,16 @@ impl Map {
             let x = i / width;
             let y = i % width;
             if y == 0 || y == height - 1 || x == 0 || x == width - 1 {
-                tiles.push(TileType::GrassWithFlower)
+                tiles.push(TileType::GrassWithFlower);
             } else {
-                tiles.push(TileType::Grass)
+                tiles.push(TileType::Grass);
             }
         }
-        return Map {
+        Self {
             width,
             height,
             tiles: tiles.clone(),
             entities: vec![None; tiles.len()],
-        };
+        }
     }
 }
