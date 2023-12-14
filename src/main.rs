@@ -1,5 +1,3 @@
-use bevy::prelude::*;
-
 mod camera;
 mod consts;
 mod map;
@@ -7,13 +5,20 @@ mod player;
 mod tile;
 
 use camera::MainCamera;
+
 use consts::*;
-use map::*;
-use player::*;
+
+use map::Map;
+use map::MapPosition;
+
+use player::Player;
+use player::PlayerBundle;
 
 use tile::Tile;
 use tile::TileBundle;
 use tile::TileType;
+
+use bevy::prelude::*;
 
 fn main() {
     App::new()

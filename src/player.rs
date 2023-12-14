@@ -1,5 +1,8 @@
 use crate::map::MapPosition;
-use bevy::prelude::*;
+
+use bevy::prelude::Bundle;
+use bevy::prelude::Component;
+use bevy::prelude::SpriteSheetBundle;
 
 #[derive(Component)]
 pub struct Player;
