@@ -40,8 +40,4 @@ impl Map {
             entities: vec![None; tiles.len()],
         };
     }
-
-    pub fn add_entity(&mut self, entity: Entity, pos_x: usize, pos_y: usize) {
-        self.entities[pos_x + pos_y * self.width] = Some(entity)
-    }
 }
