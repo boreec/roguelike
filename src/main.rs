@@ -37,6 +37,7 @@ fn main() {
                 check_exit_events,
                 check_player_movement,
                 update_camera_position,
+                update_player_sprite,
             ),
         )
         .run();
@@ -165,5 +166,14 @@ fn update_camera_position(
 
     let mut camera_transform = query_main_camera.single_mut();
     camera_transform.translation =
+        Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
+}
+
+fn update_player_sprite(
+    mut query_player: Query<(&mut Transform, &MapPosition), With<Player>>,
+) {
+    let (mut sprite_transform, position_player) = query_player.single_mut();
+    let (sprite_x, sprite_y) = calculate_sprite_position(&position_player);
+    sprite_transform.translation =
         Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
 }
