@@ -152,19 +152,19 @@ fn check_player_movement(
     }
 }
 
-fn can_move_left(player_position: &MapPosition) -> bool {
+const fn can_move_left(player_position: &MapPosition) -> bool {
     player_position.x > 0
 }
 
-fn can_move_right(player_position: &MapPosition) -> bool {
+const fn can_move_right(player_position: &MapPosition) -> bool {
     player_position.x < MAP_WIDTH - 1
 }
 
-fn can_move_up(player_position: &MapPosition) -> bool {
+const fn can_move_up(player_position: &MapPosition) -> bool {
     player_position.y > 0
 }
 
-fn can_move_down(player_position: &MapPosition) -> bool {
+const fn can_move_down(player_position: &MapPosition) -> bool {
     player_position.y < MAP_HEIGHT - 1
 }
 
@@ -185,7 +185,7 @@ fn update_camera_position(
     >,
 ) {
     let position_player = query_player.single();
-    let (sprite_x, sprite_y) = calculate_sprite_position(&position_player);
+    let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
 
     let mut camera_transform = query_main_camera.single_mut();
     camera_transform.translation =
@@ -196,7 +196,7 @@ fn update_player_sprite(
     mut query_player: Query<(&mut Transform, &MapPosition), With<Player>>,
 ) {
     let (mut sprite_transform, position_player) = query_player.single_mut();
-    let (sprite_x, sprite_y) = calculate_sprite_position(&position_player);
+    let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
     sprite_transform.translation =
         Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
 }
