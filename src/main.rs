@@ -1,24 +1,19 @@
 mod camera;
 mod consts;
+mod input;
 mod map;
+mod movement;
 mod player;
 mod tile;
 
-use camera::MainCamera;
-
-use consts::*;
-
-use map::Map;
-use map::MapPosition;
-
-use player::Player;
-use player::PlayerBundle;
-
-use tile::Tile;
-use tile::TileBundle;
-use tile::TileType;
-
 use bevy::prelude::*;
+
+use crate::camera::*;
+use crate::consts::*;
+use crate::input::*;
+use crate::map::*;
+use crate::player::*;
+use crate::tile::*;
 
 fn main() {
     App::new()
@@ -40,7 +35,7 @@ fn main() {
             Update,
             (
                 check_exit_events,
-                check_player_movement,
+                check_player_input,
                 update_camera_position,
                 update_player_sprite,
             ),
@@ -125,61 +120,6 @@ fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
             - map_position.y as f32 * SPRITE_TILE_HEIGHT
             - SPRITE_TILE_HEIGHT / 2.0,
     )
-}
-
-fn check_player_movement(
-    mut query_player: Query<&mut MapPosition, With<Player>>,
-    input: Res<Input<KeyCode>>,
-) {
-    let mut player_position = query_player.single_mut();
-    if input.any_just_pressed([KeyCode::Right, KeyCode::D]) {
-        if can_move_right(&player_position) {
-            player_position.x += 1;
-        }
-    }
-
-    if input.any_just_pressed([KeyCode::Left, KeyCode::A]) {
-        if can_move_left(&player_position) {
-            player_position.x -= 1;
-        }
-    }
-
-    if input.any_just_pressed([KeyCode::Up, KeyCode::W]) {
-        if can_move_up(&player_position) {
-            player_position.y -= 1;
-        }
-    }
-
-    if input.any_just_pressed([KeyCode::Down, KeyCode::S]) {
-        if can_move_down(&player_position) {
-            player_position.y += 1;
-        }
-    }
-}
-
-const fn can_move_left(player_position: &MapPosition) -> bool {
-    player_position.x > 0
-}
-
-const fn can_move_right(player_position: &MapPosition) -> bool {
-    player_position.x < MAP_WIDTH - 1
-}
-
-const fn can_move_up(player_position: &MapPosition) -> bool {
-    player_position.y > 0
-}
-
-const fn can_move_down(player_position: &MapPosition) -> bool {
-    player_position.y < MAP_HEIGHT - 1
-}
-
-fn check_exit_events(
-    input: Res<Input<KeyCode>>,
-    mut exit_events: ResMut<Events<bevy::app::AppExit>>,
-) {
-    if input.just_pressed(KeyCode::Escape) {
-        exit_events.send(bevy::app::AppExit);
-    }
 }
 
 fn update_camera_position(
