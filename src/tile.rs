@@ -15,10 +15,10 @@ pub enum TileType {
 }
 
 impl TileType {
-    pub const fn to_sprite_idx(&self) -> usize {
-        match self {
-            Self::Grass => SPRITE_IDX_GRASS,
-            Self::GrassWithFlower => SPRITE_IDX_GRASS_WITH_FLOWER,
+    pub const fn to_sprite_idx(tile_type: &TileType) -> usize {
+        match tile_type {
+            TileType::Grass => SPRITE_IDX_GRASS,
+            TileType::GrassWithFlower => SPRITE_IDX_GRASS_WITH_FLOWER,
         }
     }
 }

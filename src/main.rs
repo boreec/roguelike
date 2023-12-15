@@ -61,8 +61,7 @@ fn setup(
 
     let atlas_handle = texture_atlases.add(texture_atlas);
 
-    let map = Map::new(MAP_WIDTH, MAP_HEIGHT);
-    spawn_tiles(&mut commands, &map, &atlas_handle);
+    spawn_map(&mut commands, &atlas_handle);
     spawn_player(&mut commands, &atlas_handle);
 }
 
@@ -80,28 +79,33 @@ fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
         },
     });
 }
-fn spawn_tiles(
-    commands: &mut Commands,
-    map: &Map,
-    atlas_handle: &Handle<TextureAtlas>,
-) {
-    for (tile_i, tile_type) in map.tiles.iter().enumerate() {
-        let map_position = MapPosition {
-            x: tile_i % map.width,
-            y: tile_i / map.width,
+
+fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
+    commands.spawn(MapBundle {
+        map: Map,
+        size: MapSize::new(MAP_WIDTH, MAP_HEIGHT),
+    });
+
+    for i in 0..(MAP_WIDTH * MAP_HEIGHT) {
+        let tile_position = MapPosition {
+            x: i % MAP_WIDTH,
+            y: i / MAP_WIDTH,
         };
-        let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
+        let (sprite_x, sprite_y) = calculate_sprite_position(&tile_position);
+        let tile_type = TileType::Grass;
         commands.spawn(TileBundle {
             tile: Tile,
-            r#type: TileType::Grass,
-            position: map_position,
+            r#type: tile_type.clone(),
+            position: tile_position,
             sprite: SpriteSheetBundle {
                 transform: Transform::from_xyz(
                     sprite_x,
                     sprite_y,
                     Z_INDEX_TILE,
                 ),
-                sprite: TextureAtlasSprite::new(tile_type.to_sprite_idx()),
+                sprite: TextureAtlasSprite::new(TileType::to_sprite_idx(
+                    &tile_type,
+                )),
                 texture_atlas: atlas_handle.clone(),
                 ..Default::default()
             },
@@ -110,14 +114,9 @@ fn spawn_tiles(
 }
 
 fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
-    let top_left_x = WINDOW_WITDH / -2.0;
-    let top_left_y = WINDOW_HEIGHT / 2.0;
     (
-        top_left_x
-            + map_position.x as f32 * SPRITE_TILE_WIDTH
-            + SPRITE_TILE_WIDTH / 2.0,
-        top_left_y
-            - map_position.y as f32 * SPRITE_TILE_HEIGHT
+        map_position.x as f32 * SPRITE_TILE_WIDTH + SPRITE_TILE_WIDTH / 2.0,
+        -1f32 * map_position.y as f32 * SPRITE_TILE_HEIGHT
             - SPRITE_TILE_HEIGHT / 2.0,
     )
 }
