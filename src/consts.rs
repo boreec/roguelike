@@ -15,3 +15,5 @@ pub const MAP_HEIGHT: usize = 10;
 
 pub const Z_INDEX_TILE: f32 = 0.0;
 pub const Z_INDEX_PLAYER: f32 = 1.0;
+
+pub const ZOOM_INCREMENT: f32 = 0.5;
