@@ -130,17 +130,14 @@ pub fn check_camera_zoom(
     use bevy::input::mouse::MouseScrollUnit;
     let mut projection = query_main_camera.single_mut();
     let mut log_scale = projection.scale.ln();
-    for ev in scroll_evr.iter() {
-        match ev.unit {
-            MouseScrollUnit::Line => {
-                if ev.y > 0f32 && projection.scale > CAMERA_ZOOM_IN_MAX {
-                    log_scale -= CAMERA_ZOOM_INCREMENT;
-                } else if ev.y < 0f32 && projection.scale < CAMERA_ZOOM_OUT_MAX
-                {
-                    log_scale += CAMERA_ZOOM_INCREMENT;
-                }
-            }
-            _ => {}
+    for ev in scroll_evr.read() {
+        if ev.unit != MouseScrollUnit::Line {
+            continue;
+        }
+        if ev.y > 0f32 && projection.scale > CAMERA_ZOOM_IN_MAX {
+            log_scale -= CAMERA_ZOOM_INCREMENT;
+        } else if ev.y < 0f32 && projection.scale < CAMERA_ZOOM_OUT_MAX {
+            log_scale += CAMERA_ZOOM_INCREMENT;
         }
     }
     projection.scale = log_scale.exp();
