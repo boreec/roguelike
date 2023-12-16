@@ -1,7 +1,27 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
-    hooks:
-    -   id: check-yaml
-    -   id: end-of-file-fixer
-    -   id: trailing-whitespace
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.3.0
+      hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+    - repo: local
+      hooks:
+      - id: fmt
+        name: cargo fmt
+        description: Format files with cargo fmt.
+        entry: cargo fmt --
+        language: system
+        types: [rust]
+        stages: [commit]
+        args: []
+
+      - id: test
+        name: cargo test
+        description: Run tests with cargo test.
+        entry: cargo test --
+        language: rust
+        types: [rust]
+        stages: [push]
+        args: []
