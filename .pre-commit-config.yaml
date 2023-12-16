@@ -23,5 +23,5 @@ repos:
         entry: cargo test --
         language: rust
         types: [rust]
-        stages: [push]
+        stages: [commit]
         args: []
