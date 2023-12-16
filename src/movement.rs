@@ -69,4 +69,13 @@ mod tests {
         assert!(can_move_right(&POSITION_BOTTOM_LEFT, &MAP_FIVE_BY_FIVE));
         assert!(can_move_right(&POSITION_MIDDLE, &MAP_FIVE_BY_FIVE));
     }
+
+    #[test]
+    fn test_can_move_up() {
+        assert!(!can_move_up(&POSITION_TOP_LEFT));
+        assert!(!can_move_up(&POSITION_TOP_RIGHT));
+        assert!(can_move_up(&POSITION_BOTTOM_LEFT));
+        assert!(can_move_up(&POSITION_BOTTOM_RIGHT));
+        assert!(can_move_up(&POSITION_MIDDLE));
+    }
 }
