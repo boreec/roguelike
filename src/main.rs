@@ -128,21 +128,22 @@ pub fn check_camera_zoom(
     mut query_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
 ) {
     use bevy::input::mouse::MouseScrollUnit;
-    let mut orthographic_projection = query_main_camera.single_mut();
-    let mut log_scale = orthographic_projection.scale.ln();
+    let mut projection = query_main_camera.single_mut();
+    let mut log_scale = projection.scale.ln();
     for ev in scroll_evr.iter() {
         match ev.unit {
             MouseScrollUnit::Line => {
-                if ev.y > 0f32 {
-                    log_scale -= ZOOM_INCREMENT;
-                } else {
-                    log_scale += ZOOM_INCREMENT;
+                if ev.y > 0f32 && projection.scale > CAMERA_ZOOM_IN_MAX {
+                    log_scale -= CAMERA_ZOOM_INCREMENT;
+                } else if ev.y < 0f32 && projection.scale < CAMERA_ZOOM_OUT_MAX
+                {
+                    log_scale += CAMERA_ZOOM_INCREMENT;
                 }
             }
             _ => {}
         }
     }
-    orthographic_projection.scale = log_scale.exp();
+    projection.scale = log_scale.exp();
 }
 
 fn update_camera_position(
