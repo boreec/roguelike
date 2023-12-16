@@ -12,6 +12,7 @@ pub struct Tile;
 pub enum TileType {
     Grass,
     GrassWithFlower,
+    GrassWithStone,
 }
 
 impl TileType {
@@ -19,6 +20,7 @@ impl TileType {
         match tile_type {
             TileType::Grass => SPRITE_IDX_GRASS,
             TileType::GrassWithFlower => SPRITE_IDX_GRASS_WITH_FLOWER,
+            TileType::GrassWithStone => SPRITE_IDX_GRASS_WITH_STONE,
         }
     }
 }

@@ -16,6 +16,8 @@ use crate::map::*;
 use crate::player::*;
 use crate::tile::*;
 
+use rand::prelude::*;
+
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::ANTIQUE_WHITE))
@@ -94,7 +96,17 @@ fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
             y: i / MAP_WIDTH,
         };
         let (sprite_x, sprite_y) = calculate_sprite_position(&tile_position);
-        let tile_type = TileType::Grass;
+        let tile_type = {
+            let mut rng = thread_rng();
+            let throw = rng.gen_range(0..100);
+            if throw < 25 {
+                TileType::GrassWithFlower
+            } else if throw < 50 {
+                TileType::GrassWithStone
+            } else {
+                TileType::Grass
+            }
+        };
         commands.spawn(TileBundle {
             tile: Tile,
             r#type: tile_type.clone(),
