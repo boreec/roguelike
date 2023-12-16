@@ -42,7 +42,10 @@ pub const fn can_move_down(
 mod tests {
     use super::*;
 
-    // const _MAP_FIVE_BY_FIVE: MapSize = MapSize::new(5, 5);
+    const MAP_FIVE_BY_FIVE: MapSize = MapSize {
+        width: 5,
+        height: 5,
+    };
     const POSITION_MIDDLE: MapPosition = MapPosition { x: 2, y: 2 };
     const POSITION_TOP_LEFT: MapPosition = MapPosition { x: 0, y: 0 };
     const POSITION_TOP_RIGHT: MapPosition = MapPosition { x: 4, y: 0 };
@@ -56,5 +59,14 @@ mod tests {
         assert!(can_move_left(&POSITION_TOP_RIGHT));
         assert!(can_move_left(&POSITION_BOTTOM_RIGHT));
         assert!(can_move_left(&POSITION_MIDDLE));
+    }
+
+    #[test]
+    fn test_can_move_right() {
+        assert!(!can_move_right(&POSITION_TOP_RIGHT, &MAP_FIVE_BY_FIVE));
+        assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &MAP_FIVE_BY_FIVE));
+        assert!(can_move_right(&POSITION_TOP_LEFT, &MAP_FIVE_BY_FIVE));
+        assert!(can_move_right(&POSITION_BOTTOM_LEFT, &MAP_FIVE_BY_FIVE));
+        assert!(can_move_right(&POSITION_MIDDLE, &MAP_FIVE_BY_FIVE));
     }
 }
