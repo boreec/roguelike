@@ -6,6 +6,7 @@ mod movement;
 mod player;
 mod tile;
 
+use bevy::input::mouse::MouseWheel;
 use bevy::prelude::*;
 
 use crate::camera::*;
@@ -36,6 +37,7 @@ fn main() {
             (
                 check_exit_events,
                 check_player_input,
+                check_camera_zoom,
                 update_camera_position,
                 update_player_sprite,
             ),
@@ -119,6 +121,29 @@ fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
         -1f32 * map_position.y as f32 * SPRITE_TILE_HEIGHT
             - SPRITE_TILE_HEIGHT / 2.0,
     )
+}
+
+pub fn check_camera_zoom(
+    mut scroll_evr: EventReader<MouseWheel>,
+    mut query_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
+) {
+    use bevy::input::mouse::MouseScrollUnit;
+    let mut orthographic_projection = query_main_camera.single_mut();
+    let zoom_increment = 2f32;
+    let mut log_scale = orthographic_projection.scale.ln();
+    for ev in scroll_evr.iter() {
+        match ev.unit {
+            MouseScrollUnit::Line => {
+                if ev.y > 0f32 {
+                    log_scale -= zoom_increment;
+                } else {
+                    log_scale += zoom_increment;
+                }
+            }
+            _ => {}
+        }
+    }
+    orthographic_projection.scale = log_scale.exp();
 }
 
 fn update_camera_position(
