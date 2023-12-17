@@ -1,5 +1,4 @@
 use crate::map::*;
-use crate::tile::*;
 
 pub fn move_left(position: &mut MapPosition) {
     position.x -= 1;
@@ -47,13 +46,20 @@ pub fn can_move_up(player_position: &MapPosition, map: &Map) -> bool {
     }
 }
 
-pub const fn can_move_down(player_position: &MapPosition, map: &Map) -> bool {
-    player_position.y < map.height - 1
+pub fn can_move_down(player_position: &MapPosition, map: &Map) -> bool {
+    if player_position.y < map.height - 1 {
+        map.tiles[player_position.x + (player_position.y + 1) * map.width]
+            .clone()
+            .is_walkable()
+    } else {
+        false
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::tile::TileType;
 
     fn create_five_by_five_map() -> Map {
         Map {
