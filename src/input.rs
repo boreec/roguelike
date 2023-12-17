@@ -25,7 +25,7 @@ pub fn check_player_input(
     }
 
     if input.any_just_pressed([KeyCode::Up, KeyCode::W]) {
-        if can_move_up(&player_position) {
+        if can_move_up(&player_position, &map) {
             move_up(&mut player_position);
         }
     }

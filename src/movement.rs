@@ -37,8 +37,14 @@ pub fn can_move_right(player_position: &MapPosition, map: &Map) -> bool {
     }
 }
 
-pub const fn can_move_up(player_position: &MapPosition) -> bool {
-    player_position.y > 0
+pub fn can_move_up(player_position: &MapPosition, map: &Map) -> bool {
+    if player_position.y > 0 {
+        map.tiles[player_position.x + (player_position.y - 1) * map.width]
+            .clone()
+            .is_walkable()
+    } else {
+        false
+    }
 }
 
 pub const fn can_move_down(player_position: &MapPosition, map: &Map) -> bool {
@@ -85,11 +91,12 @@ mod tests {
 
     #[test]
     fn test_can_move_up() {
-        assert!(!can_move_up(&POSITION_TOP_LEFT));
-        assert!(!can_move_up(&POSITION_TOP_RIGHT));
-        assert!(can_move_up(&POSITION_BOTTOM_LEFT));
-        assert!(can_move_up(&POSITION_BOTTOM_RIGHT));
-        assert!(can_move_up(&POSITION_MIDDLE));
+        let map = create_five_by_five_map();
+        assert!(!can_move_up(&POSITION_TOP_LEFT, &map));
+        assert!(!can_move_up(&POSITION_TOP_RIGHT, &map));
+        assert!(can_move_up(&POSITION_BOTTOM_LEFT, &map));
+        assert!(can_move_up(&POSITION_BOTTOM_RIGHT, &map));
+        assert!(can_move_up(&POSITION_MIDDLE, &map));
     }
 
     #[test]
