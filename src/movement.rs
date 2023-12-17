@@ -77,41 +77,41 @@ mod tests {
 
     #[test]
     fn test_can_move_left() {
-        let map = create_plain_map();
-        assert!(!can_move_left(&POSITION_TOP_LEFT, &map));
-        assert!(!can_move_left(&POSITION_BOTTOM_LEFT, &map));
-        assert!(can_move_left(&POSITION_TOP_RIGHT, &map));
-        assert!(can_move_left(&POSITION_BOTTOM_RIGHT, &map));
-        assert!(can_move_left(&POSITION_MIDDLE, &map));
+        let map_plain = create_plain_map();
+        assert!(!can_move_left(&POSITION_TOP_LEFT, &map_plain));
+        assert!(!can_move_left(&POSITION_BOTTOM_LEFT, &map_plain));
+        assert!(can_move_left(&POSITION_TOP_RIGHT, &map_plain));
+        assert!(can_move_left(&POSITION_BOTTOM_RIGHT, &map_plain));
+        assert!(can_move_left(&POSITION_MIDDLE, &map_plain));
     }
 
     #[test]
     fn test_can_move_right() {
-        let map = create_plain_map();
-        assert!(!can_move_right(&POSITION_TOP_RIGHT, &map));
-        assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &map));
-        assert!(can_move_right(&POSITION_TOP_LEFT, &map));
-        assert!(can_move_right(&POSITION_BOTTOM_LEFT, &map));
-        assert!(can_move_right(&POSITION_MIDDLE, &map));
+        let map_plain = create_plain_map();
+        assert!(!can_move_right(&POSITION_TOP_RIGHT, &map_plain));
+        assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &map_plain));
+        assert!(can_move_right(&POSITION_TOP_LEFT, &map_plain));
+        assert!(can_move_right(&POSITION_BOTTOM_LEFT, &map_plain));
+        assert!(can_move_right(&POSITION_MIDDLE, &map_plain));
     }
 
     #[test]
     fn test_can_move_up() {
-        let map = create_plain_map();
-        assert!(!can_move_up(&POSITION_TOP_LEFT, &map));
-        assert!(!can_move_up(&POSITION_TOP_RIGHT, &map));
-        assert!(can_move_up(&POSITION_BOTTOM_LEFT, &map));
-        assert!(can_move_up(&POSITION_BOTTOM_RIGHT, &map));
-        assert!(can_move_up(&POSITION_MIDDLE, &map));
+        let map_plain = create_plain_map();
+        assert!(!can_move_up(&POSITION_TOP_LEFT, &map_plain));
+        assert!(!can_move_up(&POSITION_TOP_RIGHT, &map_plain));
+        assert!(can_move_up(&POSITION_BOTTOM_LEFT, &map_plain));
+        assert!(can_move_up(&POSITION_BOTTOM_RIGHT, &map_plain));
+        assert!(can_move_up(&POSITION_MIDDLE, &map_plain));
     }
 
     #[test]
     fn test_can_move_down() {
-        let map = create_plain_map();
-        assert!(!can_move_down(&POSITION_BOTTOM_LEFT, &map));
-        assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map));
-        assert!(can_move_down(&POSITION_TOP_LEFT, &map));
-        assert!(can_move_down(&POSITION_TOP_RIGHT, &map));
-        assert!(can_move_down(&POSITION_MIDDLE, &map));
+        let map_plain = create_plain_map();
+        assert!(!can_move_down(&POSITION_BOTTOM_LEFT, &map_plain));
+        assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map_plain));
+        assert!(can_move_down(&POSITION_TOP_LEFT, &map_plain));
+        assert!(can_move_down(&POSITION_TOP_RIGHT, &map_plain));
+        assert!(can_move_down(&POSITION_MIDDLE, &map_plain));
     }
 }
