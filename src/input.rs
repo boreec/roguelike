@@ -19,7 +19,7 @@ pub fn check_player_input(
     }
 
     if input.any_just_pressed([KeyCode::Left, KeyCode::A]) {
-        if can_move_left(&player_position) {
+        if can_move_left(&player_position, &map) {
             move_left(&mut player_position)
         }
     }
