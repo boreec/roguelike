@@ -23,6 +23,14 @@ impl TileType {
             TileType::GrassWithStone => SPRITE_IDX_GRASS_WITH_STONE,
         }
     }
+
+    pub const fn is_walkable(tile_type: &TileType) -> bool {
+        match tile_type {
+            TileType::Grass => true,
+            TileType::GrassWithFlower => true,
+            TileType::GrassWithStone => false,
+        }
+    }
 }
 
 #[derive(Bundle)]
