@@ -22,5 +22,5 @@ pedantic = "warn"
 nursery = "warn"
 
 [dependencies]
-bevy = "0.12.1"
+bevy = {version = "0.12.1", features = ["dynamic_linking"]}
 rand = "0.8.5"
