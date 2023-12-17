@@ -61,23 +61,23 @@ mod tests {
     use super::*;
     use crate::tile::TileType;
 
-    fn create_five_by_five_map() -> Map {
+    fn create_plain_map() -> Map {
         Map {
-            width: 5,
-            height: 5,
-            tiles: vec![TileType::Grass; 5 * 5],
+            width: 3,
+            height: 3,
+            tiles: vec![TileType::Grass; 3 * 3],
         }
     }
 
-    const POSITION_MIDDLE: MapPosition = MapPosition { x: 2, y: 2 };
+    const POSITION_MIDDLE: MapPosition = MapPosition { x: 1, y: 1 };
     const POSITION_TOP_LEFT: MapPosition = MapPosition { x: 0, y: 0 };
-    const POSITION_TOP_RIGHT: MapPosition = MapPosition { x: 4, y: 0 };
-    const POSITION_BOTTOM_LEFT: MapPosition = MapPosition { x: 0, y: 4 };
-    const POSITION_BOTTOM_RIGHT: MapPosition = MapPosition { x: 4, y: 4 };
+    const POSITION_TOP_RIGHT: MapPosition = MapPosition { x: 2, y: 0 };
+    const POSITION_BOTTOM_LEFT: MapPosition = MapPosition { x: 0, y: 2 };
+    const POSITION_BOTTOM_RIGHT: MapPosition = MapPosition { x: 2, y: 2 };
 
     #[test]
     fn test_can_move_left() {
-        let map = create_five_by_five_map();
+        let map = create_plain_map();
         assert!(!can_move_left(&POSITION_TOP_LEFT, &map));
         assert!(!can_move_left(&POSITION_BOTTOM_LEFT, &map));
         assert!(can_move_left(&POSITION_TOP_RIGHT, &map));
@@ -87,7 +87,7 @@ mod tests {
 
     #[test]
     fn test_can_move_right() {
-        let map = create_five_by_five_map();
+        let map = create_plain_map();
         assert!(!can_move_right(&POSITION_TOP_RIGHT, &map));
         assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &map));
         assert!(can_move_right(&POSITION_TOP_LEFT, &map));
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn test_can_move_up() {
-        let map = create_five_by_five_map();
+        let map = create_plain_map();
         assert!(!can_move_up(&POSITION_TOP_LEFT, &map));
         assert!(!can_move_up(&POSITION_TOP_RIGHT, &map));
         assert!(can_move_up(&POSITION_BOTTOM_LEFT, &map));
@@ -107,7 +107,7 @@ mod tests {
 
     #[test]
     fn test_can_move_down() {
-        let map = create_five_by_five_map();
+        let map = create_plain_map();
         assert!(!can_move_down(&POSITION_BOTTOM_LEFT, &map));
         assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map));
         assert!(can_move_down(&POSITION_TOP_LEFT, &map));
