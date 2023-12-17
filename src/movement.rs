@@ -69,6 +69,24 @@ mod tests {
         }
     }
 
+    fn create_stone_map() -> Map {
+        Map {
+            width: 3,
+            height: 3,
+            tiles: vec![
+                TileType::Grass,
+                TileType::GrassWithStone,
+                TileType::Grass,
+                TileType::GrassWithStone,
+                TileType::Grass,
+                TileType::GrassWithStone,
+                TileType::Grass,
+                TileType::GrassWithStone,
+                TileType::Grass,
+            ],
+        }
+    }
+
     const POSITION_MIDDLE: MapPosition = MapPosition { x: 1, y: 1 };
     const POSITION_TOP_LEFT: MapPosition = MapPosition { x: 0, y: 0 };
     const POSITION_TOP_RIGHT: MapPosition = MapPosition { x: 2, y: 0 };
@@ -83,6 +101,13 @@ mod tests {
         assert!(can_move_left(&POSITION_TOP_RIGHT, &map_plain));
         assert!(can_move_left(&POSITION_BOTTOM_RIGHT, &map_plain));
         assert!(can_move_left(&POSITION_MIDDLE, &map_plain));
+
+        let map_stone = create_stone_map();
+        assert!(!can_move_left(&POSITION_TOP_LEFT, &map_stone));
+        assert!(!can_move_left(&POSITION_TOP_RIGHT, &map_stone));
+        assert!(!can_move_left(&POSITION_BOTTOM_LEFT, &map_stone));
+        assert!(!can_move_left(&POSITION_BOTTOM_RIGHT, &map_stone));
+        assert!(!can_move_left(&POSITION_MIDDLE, &map_stone));
     }
 
     #[test]
@@ -93,6 +118,13 @@ mod tests {
         assert!(can_move_right(&POSITION_TOP_LEFT, &map_plain));
         assert!(can_move_right(&POSITION_BOTTOM_LEFT, &map_plain));
         assert!(can_move_right(&POSITION_MIDDLE, &map_plain));
+
+        let map_stone = create_stone_map();
+        assert!(!can_move_right(&POSITION_TOP_LEFT, &map_stone));
+        assert!(!can_move_right(&POSITION_TOP_RIGHT, &map_stone));
+        assert!(!can_move_right(&POSITION_BOTTOM_LEFT, &map_stone));
+        assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &map_stone));
+        assert!(!can_move_right(&POSITION_MIDDLE, &map_stone));
     }
 
     #[test]
@@ -103,6 +135,13 @@ mod tests {
         assert!(can_move_up(&POSITION_BOTTOM_LEFT, &map_plain));
         assert!(can_move_up(&POSITION_BOTTOM_RIGHT, &map_plain));
         assert!(can_move_up(&POSITION_MIDDLE, &map_plain));
+
+        let map_stone = create_stone_map();
+        assert!(!can_move_up(&POSITION_TOP_LEFT, &map_stone));
+        assert!(!can_move_up(&POSITION_TOP_RIGHT, &map_stone));
+        assert!(!can_move_up(&POSITION_BOTTOM_LEFT, &map_stone));
+        assert!(!can_move_up(&POSITION_BOTTOM_RIGHT, &map_stone));
+        assert!(!can_move_up(&POSITION_MIDDLE, &map_stone));
     }
 
     #[test]
@@ -113,5 +152,12 @@ mod tests {
         assert!(can_move_down(&POSITION_TOP_LEFT, &map_plain));
         assert!(can_move_down(&POSITION_TOP_RIGHT, &map_plain));
         assert!(can_move_down(&POSITION_MIDDLE, &map_plain));
+
+        let map_stone = create_stone_map();
+        assert!(!can_move_down(&POSITION_TOP_LEFT, &map_stone));
+        assert!(!can_move_down(&POSITION_TOP_RIGHT, &map_stone));
+        assert!(!can_move_down(&POSITION_BOTTOM_LEFT, &map_stone));
+        assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map_stone));
+        assert!(!can_move_down(&POSITION_MIDDLE, &map_stone));
     }
 }
