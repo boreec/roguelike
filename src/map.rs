@@ -1,9 +1,12 @@
 use bevy::prelude::Component;
 
+use crate::tile::*;
+
 #[derive(Component)]
 pub struct Map {
     pub width: usize,
     pub height: usize,
+    pub tiles: Vec<TileType>,
 }
 
 #[derive(Component, Debug)]

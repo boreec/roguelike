@@ -85,11 +85,7 @@ fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
 }
 
 fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
-    commands.spawn(Map {
-        width: MAP_WIDTH,
-        height: MAP_HEIGHT,
-    });
-
+    let mut tiles = vec![];
     for i in 0..(MAP_WIDTH * MAP_HEIGHT) {
         let tile_position = MapPosition {
             x: i % MAP_WIDTH,
@@ -107,6 +103,7 @@ fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
                 TileType::Grass
             }
         };
+        tiles.push(tile_type.clone());
         commands.spawn(TileBundle {
             tile: Tile,
             r#type: tile_type.clone(),
@@ -125,6 +122,12 @@ fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
             },
         });
     }
+
+    commands.spawn(Map {
+        width: MAP_WIDTH,
+        height: MAP_HEIGHT,
+        tiles,
+    });
 }
 
 fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
