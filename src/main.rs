@@ -85,9 +85,9 @@ fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
 }
 
 fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
-    commands.spawn(MapBundle {
-        map: Map,
-        size: MapSize::new(MAP_WIDTH, MAP_HEIGHT),
+    commands.spawn(Map {
+        width: MAP_WIDTH,
+        height: MAP_HEIGHT,
     });
 
     for i in 0..(MAP_WIDTH * MAP_HEIGHT) {

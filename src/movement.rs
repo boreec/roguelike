@@ -20,29 +20,23 @@ pub const fn can_move_left(player_position: &MapPosition) -> bool {
     player_position.x > 0
 }
 
-pub const fn can_move_right(
-    player_position: &MapPosition,
-    map_size: &MapSize,
-) -> bool {
-    player_position.x < map_size.width - 1
+pub const fn can_move_right(player_position: &MapPosition, map: &Map) -> bool {
+    player_position.x < map.width - 1
 }
 
 pub const fn can_move_up(player_position: &MapPosition) -> bool {
     player_position.y > 0
 }
 
-pub const fn can_move_down(
-    player_position: &MapPosition,
-    map_size: &MapSize,
-) -> bool {
-    player_position.y < map_size.height - 1
+pub const fn can_move_down(player_position: &MapPosition, map: &Map) -> bool {
+    player_position.y < map.height - 1
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const MAP_FIVE_BY_FIVE: MapSize = MapSize {
+    const MAP_FIVE_BY_FIVE: Map = Map {
         width: 5,
         height: 5,
     };
