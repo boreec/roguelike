@@ -21,8 +21,14 @@ pub const fn can_move_left(player_position: &MapPosition) -> bool {
     player_position.x > 0
 }
 
-pub const fn can_move_right(player_position: &MapPosition, map: &Map) -> bool {
-    player_position.x < map.width - 1
+pub fn can_move_right(player_position: &MapPosition, map: &Map) -> bool {
+    if player_position.x < map.width - 1 {
+        map.tiles[player_position.x + player_position.y * map.width + 1]
+            .clone()
+            .is_walkable()
+    } else {
+        false
+    }
 }
 
 pub const fn can_move_up(player_position: &MapPosition) -> bool {

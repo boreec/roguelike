@@ -24,8 +24,8 @@ impl TileType {
         }
     }
 
-    pub const fn is_walkable(tile_type: &TileType) -> bool {
-        match tile_type {
+    pub fn is_walkable(self) -> bool {
+        match self {
             TileType::Grass => true,
             TileType::GrassWithFlower => true,
             TileType::GrassWithStone => false,
