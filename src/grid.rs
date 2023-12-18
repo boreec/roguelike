@@ -61,9 +61,16 @@ pub fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
     }
 }
 
+pub fn despawn_grid_lines(commands: &mut Commands, grid_entities: Vec<Entity>) {
+    for entity in grid_entities.iter() {
+        commands.entity(*entity).despawn();
+    }
+}
+
 pub fn display_grid(
     mut commands: Commands,
     query_map: Query<&Map>,
+    query_grid_entities: Query<Entity, With<Sprite>>,
     mut grid_state: ResMut<GridState>,
     input: Res<Input<KeyCode>>,
 ) {
@@ -71,16 +78,15 @@ pub fn display_grid(
         return;
     }
 
-    let map = query_map.single();
     match grid_state.clone() {
         GridState::On => {
-            println!("grid state on");
-            // grid_state.flip();
+            let grid_entities = query_grid_entities.iter().collect();
+            despawn_grid_lines(&mut commands, grid_entities);
         }
         GridState::Off => {
+            let map = query_map.single();
             spawn_grid_vertical_lines(&mut commands, &map);
             spawn_grid_horizontal_lines(&mut commands, &map);
-            println!("grid_state off");
         }
     }
     grid_state.flip();
