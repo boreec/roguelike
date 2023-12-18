@@ -159,7 +159,15 @@ pub fn check_camera_zoom(
     projection.scale = log_scale.exp();
 }
 
-pub fn display_grid(mut commands: Commands, query_map: Query<&Map>) {
+pub fn display_grid(
+    mut commands: Commands,
+    query_map: Query<&Map>,
+    input: Res<Input<KeyCode>>,
+) {
+    if !input.just_pressed(KeyCode::G) {
+        return;
+    }
+
     let map = query_map.single();
     let mut line_length = map.height as f32 * SPRITE_TILE_HEIGHT;
     for i in 0..=map.width {
