@@ -23,7 +23,7 @@ use rand::prelude::*;
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::ANTIQUE_WHITE))
-        .insert_resource(GridState::On)
+        .insert_resource(GridState::Off)
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
