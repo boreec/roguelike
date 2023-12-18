@@ -4,6 +4,21 @@ use crate::calculate_sprite_position;
 use crate::consts::*;
 use crate::map::*;
 
+#[derive(Clone, Resource)]
+pub enum GridState {
+    On,
+    Off,
+}
+
+impl GridState {
+    pub fn flip(&mut self) {
+        *self = match *self {
+            GridState::On => GridState::Off,
+            GridState::Off => GridState::On,
+        }
+    }
+}
+
 pub fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
     let line_length = map.height as f32 * SPRITE_TILE_HEIGHT;
     for i in 0..=map.width {
@@ -49,6 +64,7 @@ pub fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
 pub fn display_grid(
     mut commands: Commands,
     query_map: Query<&Map>,
+    mut grid_state: ResMut<GridState>,
     input: Res<Input<KeyCode>>,
 ) {
     if !input.just_pressed(KeyCode::G) {
@@ -56,6 +72,16 @@ pub fn display_grid(
     }
 
     let map = query_map.single();
-    spawn_grid_vertical_lines(&mut commands, &map);
-    spawn_grid_horizontal_lines(&mut commands, &map);
+    match grid_state.clone() {
+        GridState::On => {
+            println!("grid state on");
+            // grid_state.flip();
+        }
+        GridState::Off => {
+            spawn_grid_vertical_lines(&mut commands, &map);
+            spawn_grid_horizontal_lines(&mut commands, &map);
+            println!("grid_state off");
+        }
+    }
+    grid_state.flip();
 }
