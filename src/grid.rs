@@ -19,13 +19,16 @@ impl GridState {
     }
 }
 
+#[derive(Component)]
+pub struct Grid;
+
 pub fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
     let line_length = map.height as f32 * SPRITE_TILE_HEIGHT;
     for i in 0..=map.width {
         let position_anchor = MapPosition { x: i, y: 0 };
         let (line_x, _) = calculate_sprite_position(&position_anchor);
         commands.spawn((
-            Name::new(GRID_ENTITY_NAME),
+            Grid,
             SpriteBundle {
                 sprite: Sprite {
                     color: GRID_COLOR,
@@ -49,7 +52,7 @@ pub fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
         let position_anchor = MapPosition { x: 0, y: j };
         let (_, line_y) = calculate_sprite_position(&position_anchor);
         commands.spawn((
-            Name::new(GRID_ENTITY_NAME),
+            Grid,
             SpriteBundle {
                 sprite: Sprite {
                     color: GRID_COLOR,
@@ -76,7 +79,7 @@ pub fn despawn_grid_lines(commands: &mut Commands, grid_entities: Vec<Entity>) {
 pub fn display_grid(
     mut commands: Commands,
     query_map: Query<&Map>,
-    query_grid_entities: Query<(Entity, &Name), With<Sprite>>,
+    query_grid_entities: Query<Entity, With<Grid>>,
     mut grid_state: ResMut<GridState>,
     input: Res<Input<KeyCode>>,
 ) {
@@ -86,13 +89,10 @@ pub fn display_grid(
 
     match grid_state.clone() {
         GridState::On => {
-            let mut grid_entities: Vec<Entity> = vec![];
-            for (entity, name) in query_grid_entities.iter() {
-                if name.as_str() == GRID_ENTITY_NAME {
-                    grid_entities.push(entity);
-                }
-            }
-            despawn_grid_lines(&mut commands, grid_entities);
+            despawn_grid_lines(
+                &mut commands,
+                query_grid_entities.iter().collect(),
+            );
         }
         GridState::Off => {
             let map = query_map.single();
