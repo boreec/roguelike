@@ -42,7 +42,7 @@ mkdir -p assets/img
 mv ~/Downloads/tileset.png assets/img
 ```
 
-## Bulding the program
+## Building the program
 
 The game is written in Rust. Make sure to install it and run the following:
 
