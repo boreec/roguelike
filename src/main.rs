@@ -20,10 +20,29 @@ use crate::tile::*;
 
 use rand::prelude::*;
 
+#[derive(Resource)]
+pub struct GameTurn {
+    current: usize,
+}
+
+impl Default for GameTurn {
+    fn default() -> Self {
+        Self { current: 0 }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+pub enum GameState {
+    #[default]
+    PlayerTurn,
+    EnemyTurn,
+}
+
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::ANTIQUE_WHITE))
         .insert_resource(GridState::Off)
+        .insert_resource(GameTurn::default())
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
@@ -36,13 +55,18 @@ fn main() {
                 })
                 .set(ImagePlugin::default_nearest()),
         )
+        .add_state::<GameState>()
         .add_systems(Startup, setup)
         .add_systems(
             Update,
+            check_player_input.run_if(in_state(GameState::PlayerTurn)),
+        )
+        .add_systems(OnEnter(GameState::EnemyTurn), increase_game_turn)
+        .add_systems(
+            Update,
             (
-                check_exit_events,
-                check_player_input,
                 check_camera_zoom,
+                check_exit_events,
                 update_camera_position,
                 update_player_sprite,
                 display_grid,
@@ -184,4 +208,13 @@ fn update_player_sprite(
     let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
     sprite_transform.translation =
         Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
+}
+
+fn increase_game_turn(
+    mut next_state: ResMut<NextState<GameState>>,
+    mut game_turn: ResMut<GameTurn>,
+) {
+    println!("game turn: {}", game_turn.current);
+    game_turn.current += 1;
+    next_state.set(GameState::PlayerTurn);
 }
