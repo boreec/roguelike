@@ -1,10 +1,9 @@
 # Havoc Resurgence
 
 This project is a work-in-progress 2D turn-based roguelike game, still in the
-early stages. The project's scope is not well defined at this point. I consider
-it as a prototype for my own amusement.
-
-The game is built with Rust and Bevy.
+early stages. The scope is not well defined for the moment, but I consider
+this to be a prototype to deepen my skills in Rust, Bevy and game development
+in general.
 
 # Inspirations
 
