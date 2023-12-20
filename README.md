@@ -1,9 +1,9 @@
 # Havoc Resurgence
 
-This project is a work-in-progress 2D turn-based roguelike game, still in the
-early stages. The scope is not well defined for the moment, but I consider
-this to be a prototype to deepen my skills in Rust, Bevy and game development
-in general.
+This project is an ongoing 2D turn-based roguelike game that is still in its
+early stages of development. The scope is not well-defined at the moment, but I
+view it as a game prototype, serving as an opportunity to enhance my skills in
+Rust, Bevy, and game development in general.
 
 # Inspirations
 
@@ -13,42 +13,50 @@ in general.
 - [Into the Breach](https://en.wikipedia.org/wiki/Into_the_Breach)
 - [NetHack](https://en.wikipedia.org/wiki/NetHack)
 - [Tales of Maj'Eyal](https://en.wikipedia.org/wiki/Tales_of_Maj%27Eyal)
+- [Triangle Strategy](https://en.wikipedia.org/wiki/Triangle_Strategy)
 
 # Running the game
 
 ## Cloning repository
 
-For those not familiar with `git`, you will need to clone the repository:
+First of all, clone the repository:
+
 ```console
 git clone https://github.com/boreec/havoc-resurgence.git
 ```
 
-Move to the cloned repository folder and follow the instructions below:
+Move to the cloned repository folder:
+
 ```console
 cd havoc-resurgence
 ```
 
 ## Fetching the assets
 
-The repository contains only game code. For the assets, download files from the
-following MEGA link: https://mega.nz/folder/h68WgZgS#wVV9Hj5B5O265B3UC4DYpQ
+Assets are provided in a zip archive aside from the repository. It is available
+via the following link: https://mega.nz/folder/h68WgZgS#wVV9Hj5B5O265B3UC4DYpQ
 
-In order to make the assets accessible by the game program, create a folder
-`assets/img` and move the downloaded files in that folder.
+Once downloaded, move `assets.zip` to the current directory and unzip it:
 
-For example:
 ```console
-mkdir -p assets/img
-mv ~/Downloads/tileset.png assets/img
+mv path/to/assets.zip .
+unzip assets.zip
 ```
 
-## Building the program
+## Building the game
 
-The game is written in Rust. Make sure to install it and run the following:
+Requirements:
+
+- [Rust](https://www.rust-lang.org/)
+
+The source code can be compiled with cargo (be patient!):
 
 ```console
 cargo run -r
 ```
+
+Note: XUbuntu is the only tested system so far, others may require further
+adjustments (see Rust and Bevy documentation).
 
 ## Unit tests (optional)
 
