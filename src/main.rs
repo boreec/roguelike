@@ -6,6 +6,7 @@ mod map;
 mod movement;
 mod player;
 mod tile;
+mod ui;
 
 use bevy::input::mouse::MouseWheel;
 use bevy::prelude::*;
@@ -17,6 +18,7 @@ use crate::input::*;
 use crate::map::*;
 use crate::player::*;
 use crate::tile::*;
+use crate::ui::*;
 
 use rand::prelude::*;
 
@@ -96,26 +98,6 @@ fn setup(
     spawn_map(&mut commands, &atlas_handle);
     spawn_player(&mut commands, &atlas_handle);
     spawn_turn_counter_text(&mut commands, asset_server);
-}
-
-#[derive(Component)]
-pub struct UiTurnText;
-
-fn spawn_turn_counter_text(
-    commands: &mut Commands,
-    asset_server: Res<AssetServer>,
-) {
-    commands.spawn((
-        UiTurnText,
-        TextBundle::from_section(
-            "Turn 12391-9231",
-            TextStyle {
-                font: asset_server.load("fonts/RubikDoodleShadow-Regular.ttf"),
-                font_size: 100.0,
-                color: UI_TEXT_TURN_COLOR,
-            },
-        ),
-    ));
 }
 
 fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
