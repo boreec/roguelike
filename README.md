@@ -65,3 +65,10 @@ You can also run unit tests with:
 ```console
 cargo test
 ```
+
+# Credits
+
+The following people participated to this project directly or indirectly.
+
+- Fonts:
+    - "GABOED" by Greentrik6789
