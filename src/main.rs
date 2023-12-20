@@ -71,6 +71,7 @@ fn main() {
                 check_exit_events,
                 update_camera_position,
                 update_player_sprite,
+                update_turn_counter_text,
                 display_grid,
             ),
         )
@@ -217,7 +218,6 @@ fn increase_game_turn(
     mut next_state: ResMut<NextState<GameState>>,
     mut game_turn: ResMut<GameTurn>,
 ) {
-    println!("game turn: {}", game_turn.current);
     game_turn.current += 1;
     next_state.set(GameState::PlayerTurn);
 }

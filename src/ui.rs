@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::consts::*;
+use crate::GameTurn;
 
 #[derive(Component)]
 pub struct UiTurnText;
@@ -20,4 +21,12 @@ pub fn spawn_turn_counter_text(
             },
         ),
     ));
+}
+
+pub fn update_turn_counter_text(
+    mut query: Query<&mut Text, With<UiTurnText>>,
+    game_turn: Res<GameTurn>,
+) {
+    let mut text = query.single_mut();
+    text.sections[0].value = format!("Turn #{}", game_turn.current);
 }
