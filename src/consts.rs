@@ -26,3 +26,5 @@ pub const CAMERA_ZOOM_OUT_MAX: f32 = 4.0;
 
 pub const GRID_COLOR: Color = Color::BLACK;
 pub const GRID_LINE_WIDTH: f32 = 2.0;
+
+pub const UI_TEXT_TURN_COLOR: Color = Color::BLACK;

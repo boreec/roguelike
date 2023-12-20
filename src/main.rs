@@ -112,7 +112,7 @@ fn spawn_turn_counter_text(
             TextStyle {
                 font: asset_server.load("fonts/RubikDoodleShadow-Regular.ttf"),
                 font_size: 100.0,
-                color: Color::RED,
+                color: UI_TEXT_TURN_COLOR,
             },
         ),
     ));
