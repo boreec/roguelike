@@ -15,8 +15,8 @@ pub fn spawn_turn_counter_text(
         TextBundle::from_section(
             "Turn 12391-9231",
             TextStyle {
-                font: asset_server.load("fonts/RubikDoodleShadow-Regular.ttf"),
-                font_size: 100.0,
+                font: asset_server.load("fonts/GABOED.ttf"),
+                font_size: UI_TEXT_TURN_SIZE,
                 color: UI_TEXT_TURN_COLOR,
             },
         ),
@@ -28,5 +28,5 @@ pub fn update_turn_counter_text(
     game_turn: Res<GameTurn>,
 ) {
     let mut text = query.single_mut();
-    text.sections[0].value = format!("Turn #{}", game_turn.current);
+    text.sections[0].value = format!("TURN #{}", game_turn.current);
 }
