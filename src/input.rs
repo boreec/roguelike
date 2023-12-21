@@ -1,9 +1,6 @@
 use bevy::prelude::*;
 
-use crate::map::*;
-use crate::movement::*;
-use crate::player::Player;
-use crate::GameState;
+use crate::prelude::*;
 
 pub fn check_player_input(
     mut next_state: ResMut<NextState<GameState>>,

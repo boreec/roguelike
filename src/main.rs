@@ -1,6 +1,6 @@
 mod camera;
 mod consts;
-mod grid;
+mod debug;
 mod input;
 mod map;
 mod movement;
@@ -10,20 +10,24 @@ mod states;
 mod tile;
 mod ui;
 
-use bevy::prelude::*;
+mod prelude {
+    pub use crate::calculate_sprite_position;
+    pub use crate::camera::*;
+    pub use crate::consts::*;
+    pub use crate::debug::*;
+    pub use crate::input::*;
+    pub use crate::map::*;
+    pub use crate::movement::*;
+    pub use crate::player::*;
+    pub use crate::resources::*;
+    pub use crate::states::*;
+    pub use crate::tile::*;
+    pub use crate::ui::*;
+    pub use bevy::prelude::*;
+    pub use rand::prelude::*;
+}
 
-use crate::camera::*;
-use crate::consts::*;
-use crate::grid::*;
-use crate::input::*;
-use crate::map::*;
-use crate::player::*;
-use crate::resources::*;
-use crate::states::*;
-use crate::tile::*;
-use crate::ui::*;
-
-use rand::prelude::*;
+use prelude::*;
 
 fn main() {
     App::new()
@@ -42,6 +46,7 @@ fn main() {
                 })
                 .set(ImagePlugin::default_nearest()),
             CameraPlugin,
+            DebugPlugin,
             UiPlugin,
         ))
         .add_state::<GameState>()
@@ -57,7 +62,6 @@ fn main() {
                 check_exit_events,
                 update_player_sprite,
                 update_turn_counter_text,
-                display_grid,
             ),
         )
         .run();
@@ -147,7 +151,7 @@ fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
     });
 }
 
-fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
+pub fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
     (
         map_position.x as f32 * SPRITE_TILE_WIDTH + SPRITE_TILE_WIDTH / 2.0,
         -1f32 * map_position.y as f32 * SPRITE_TILE_HEIGHT
