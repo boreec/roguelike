@@ -12,7 +12,7 @@ pub enum TileType {
 }
 
 impl TileType {
-    pub const fn to_sprite_idx(tile_type: &TileType) -> usize {
+    pub const fn to_sprite_idx(tile_type: &Self) -> usize {
         match tile_type {
             Self::Grass => SPRITE_IDX_GRASS,
             Self::GrassWithFlower => SPRITE_IDX_GRASS_WITH_FLOWER,
@@ -20,7 +20,7 @@ impl TileType {
         }
     }
 
-    pub const fn is_walkable(self) -> bool {
+    pub const fn is_walkable(&self) -> bool {
         match self {
             Self::Grass => true,
             Self::GrassWithFlower => true,
