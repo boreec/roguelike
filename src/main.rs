@@ -56,6 +56,7 @@ fn main() {
                 })
                 .set(ImagePlugin::default_nearest()),
             CameraPlugin,
+            UiPlugin,
         ))
         .add_state::<GameState>()
         .add_systems(Startup, setup)
