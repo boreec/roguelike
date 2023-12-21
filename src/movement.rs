@@ -1,4 +1,4 @@
-use crate::map::*;
+use crate::prelude::*;
 
 pub fn move_left(position: &mut MapPosition) {
     position.x -= 1;
