@@ -20,6 +20,7 @@ unsafe_code = "forbid"
 all = "warn"
 pedantic = "warn"
 nursery = "warn"
+module_name_repetitions = "allow"
 
 [dependencies]
 bevy = {version = "0.12.1", features = ["dynamic_linking"]}
