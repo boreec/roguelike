@@ -6,6 +6,7 @@ mod map;
 mod movement;
 mod player;
 mod resources;
+mod states;
 mod tile;
 mod ui;
 
@@ -18,17 +19,11 @@ use crate::input::*;
 use crate::map::*;
 use crate::player::*;
 use crate::resources::*;
+use crate::states::*;
 use crate::tile::*;
 use crate::ui::*;
 
 use rand::prelude::*;
-
-#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
-pub enum GameState {
-    #[default]
-    PlayerTurn,
-    EnemyTurn,
-}
 
 fn main() {
     App::new()
