@@ -2,15 +2,9 @@ use bevy::prelude::*;
 
 use crate::GameState;
 
-#[derive(Resource)]
+#[derive(Default, Resource)]
 pub struct GameTurn {
     pub current: usize,
-}
-
-impl Default for GameTurn {
-    fn default() -> Self {
-        Self { current: 0 }
-    }
 }
 
 pub fn increase_game_turn(
