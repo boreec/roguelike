@@ -1,6 +1,5 @@
-use bevy::prelude::*;
-
 use crate::prelude::*;
+use bevy::prelude::*;
 
 pub fn check_player_input(
     mut next_state: ResMut<NextState<GameState>>,
@@ -11,32 +10,32 @@ pub fn check_player_input(
     let mut player_position = query_player.single_mut();
     let map = query_map.single();
 
-    if input.any_just_pressed([KeyCode::Right, KeyCode::D]) {
-        if can_move_right(&player_position, &map) {
-            move_right(&mut player_position);
-            next_state.set(GameState::EnemyTurn);
-        }
+    if input.any_just_pressed([KeyCode::Right, KeyCode::D])
+        && can_move_right(&player_position, &map)
+    {
+        move_right(&mut player_position);
+        next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Left, KeyCode::A]) {
-        if can_move_left(&player_position, &map) {
-            move_left(&mut player_position);
-            next_state.set(GameState::EnemyTurn);
-        }
+    if input.any_just_pressed([KeyCode::Left, KeyCode::A])
+        && can_move_left(&player_position, &map)
+    {
+        move_left(&mut player_position);
+        next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Up, KeyCode::W]) {
-        if can_move_up(&player_position, &map) {
-            move_up(&mut player_position);
-            next_state.set(GameState::EnemyTurn);
-        }
+    if input.any_just_pressed([KeyCode::Up, KeyCode::W])
+        && can_move_up(&player_position, &map)
+    {
+        move_up(&mut player_position);
+        next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Down, KeyCode::S]) {
-        if can_move_down(&player_position, &map) {
-            move_down(&mut player_position);
-            next_state.set(GameState::EnemyTurn);
-        }
+    if input.any_just_pressed([KeyCode::Down, KeyCode::S])
+        && can_move_down(&player_position, &map)
+    {
+        move_down(&mut player_position);
+        next_state.set(GameState::EnemyTurn);
     }
 }
 
