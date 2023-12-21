@@ -8,7 +8,6 @@ mod player;
 mod tile;
 mod ui;
 
-use bevy::input::mouse::MouseWheel;
 use bevy::prelude::*;
 
 use crate::camera::*;
@@ -45,7 +44,7 @@ fn main() {
         .insert_resource(ClearColor(Color::ANTIQUE_WHITE))
         .insert_resource(GridState::Off)
         .insert_resource(GameTurn::default())
-        .add_plugins(
+        .add_plugins((
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
@@ -56,7 +55,8 @@ fn main() {
                     ..Default::default()
                 })
                 .set(ImagePlugin::default_nearest()),
-        )
+            CameraPlugin,
+        ))
         .add_state::<GameState>()
         .add_systems(Startup, setup)
         .add_systems(
@@ -67,9 +67,7 @@ fn main() {
         .add_systems(
             Update,
             (
-                check_camera_zoom,
                 check_exit_events,
-                update_camera_position,
                 update_player_sprite,
                 update_turn_counter_text,
                 display_grid,
@@ -168,41 +166,6 @@ fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
         -1f32 * map_position.y as f32 * SPRITE_TILE_HEIGHT
             - SPRITE_TILE_HEIGHT / 2.0,
     )
-}
-
-pub fn check_camera_zoom(
-    mut scroll_evr: EventReader<MouseWheel>,
-    mut query_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
-) {
-    use bevy::input::mouse::MouseScrollUnit;
-    let mut projection = query_main_camera.single_mut();
-    let mut log_scale = projection.scale.ln();
-    for ev in scroll_evr.read() {
-        if ev.unit != MouseScrollUnit::Line {
-            continue;
-        }
-        if ev.y > 0f32 && projection.scale > CAMERA_ZOOM_IN_MAX {
-            log_scale -= CAMERA_ZOOM_INCREMENT;
-        } else if ev.y < 0f32 && projection.scale < CAMERA_ZOOM_OUT_MAX {
-            log_scale += CAMERA_ZOOM_INCREMENT;
-        }
-    }
-    projection.scale = log_scale.exp();
-}
-
-fn update_camera_position(
-    query_player: Query<&MapPosition, With<Player>>,
-    mut query_main_camera: Query<
-        &mut Transform,
-        (With<MainCamera>, Without<Player>),
-    >,
-) {
-    let position_player = query_player.single();
-    let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
-
-    let mut camera_transform = query_main_camera.single_mut();
-    camera_transform.translation =
-        Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
 }
 
 fn update_player_sprite(
