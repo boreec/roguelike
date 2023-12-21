@@ -80,7 +80,6 @@ fn setup(
 
     spawn_map(&mut commands, &atlas_handle);
     spawn_player(&mut commands, &atlas_handle);
-    spawn_turn_counter_text(&mut commands, asset_server);
 }
 
 fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
