@@ -13,11 +13,15 @@ impl Plugin for UiPlugin {
 #[derive(Component)]
 pub struct UiTurnText;
 
-pub fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn setup_ui(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    game_turn: Res<GameTurn>,
+) {
     commands.spawn((
         UiTurnText,
         TextBundle::from_section(
-            "Turn 0",
+            format!("Turn {}", game_turn.current),
             TextStyle {
                 font: asset_server.load("fonts/GABOED.ttf"),
                 font_size: UI_TEXT_TURN_SIZE,
