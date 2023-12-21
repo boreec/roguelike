@@ -5,6 +5,7 @@ mod input;
 mod map;
 mod movement;
 mod player;
+mod resources;
 mod tile;
 mod ui;
 
@@ -16,21 +17,11 @@ use crate::grid::*;
 use crate::input::*;
 use crate::map::*;
 use crate::player::*;
+use crate::resources::*;
 use crate::tile::*;
 use crate::ui::*;
 
 use rand::prelude::*;
-
-#[derive(Resource)]
-pub struct GameTurn {
-    current: usize,
-}
-
-impl Default for GameTurn {
-    fn default() -> Self {
-        Self { current: 0 }
-    }
-}
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum GameState {
@@ -176,12 +167,4 @@ fn update_player_sprite(
     let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
     sprite_transform.translation =
         Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
-}
-
-fn increase_game_turn(
-    mut next_state: ResMut<NextState<GameState>>,
-    mut game_turn: ResMut<GameTurn>,
-) {
-    game_turn.current += 1;
-    next_state.set(GameState::PlayerTurn);
 }
