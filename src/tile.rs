@@ -1,9 +1,5 @@
-use crate::consts::*;
-use crate::map::MapPosition;
-
-use bevy::prelude::Bundle;
-use bevy::prelude::Component;
-use bevy::prelude::SpriteSheetBundle;
+use crate::prelude::*;
+use bevy::prelude::*;
 
 #[derive(Component)]
 pub struct Tile;
