@@ -1,10 +1,6 @@
+use crate::prelude::*;
 use bevy::input::mouse::MouseWheel;
 use bevy::prelude::*;
-
-use crate::calculate_sprite_position;
-use crate::consts::*;
-use crate::map::*;
-use crate::player::*;
 
 pub struct CameraPlugin;
 
