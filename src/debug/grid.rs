@@ -10,8 +10,8 @@ pub enum GridState {
 impl GridState {
     pub fn flip(&mut self) {
         *self = match *self {
-            GridState::On => GridState::Off,
-            GridState::Off => GridState::On,
+            Self::On => Self::Off,
+            Self::Off => Self::On,
         }
     }
 }
