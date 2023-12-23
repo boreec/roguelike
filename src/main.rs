@@ -49,8 +49,11 @@ fn main() {
             DebugPlugin,
             UiPlugin,
         ))
+        .add_state::<AppState>()
         .add_state::<GameState>()
         .add_systems(Startup, setup)
+        .add_systems(OnEnter(AppState::Setup), load_assets)
+        .add_systems(Update, check_assets.run_if(in_state(AppState::Setup)))
         .add_systems(
             Update,
             (check_player_input, check_exit_events, update_player_sprite)
@@ -58,6 +61,11 @@ fn main() {
         )
         .add_systems(OnEnter(GameState::EnemyTurn), increase_game_turn)
         .run();
+}
+
+fn load_assets() {}
+fn check_assets(mut next_state: ResMut<NextState<AppState>>) {
+    next_state.set(AppState::InGame);
 }
 
 fn setup(
@@ -75,7 +83,6 @@ fn setup(
         None,
         None,
     );
-
     let atlas_handle = texture_atlases.add(texture_atlas);
 
     spawn_map(&mut commands, &atlas_handle);
