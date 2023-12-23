@@ -1,6 +1,12 @@
+use bevy::asset::LoadedFolder;
 use bevy::prelude::*;
 
 use crate::GameState;
+
+#[derive(Default, Resource)]
+pub struct TilesetFolder {
+    pub loaded_folder: Handle<LoadedFolder>,
+}
 
 #[derive(Default, Resource)]
 pub struct GameTurn {

@@ -23,6 +23,7 @@ mod prelude {
     pub use crate::states::*;
     pub use crate::tile::*;
     pub use crate::ui::*;
+    pub use bevy::asset::LoadedFolder;
     pub use bevy::prelude::*;
     pub use rand::prelude::*;
 }
@@ -63,9 +64,22 @@ fn main() {
         .run();
 }
 
-fn load_assets() {}
-fn check_assets(mut next_state: ResMut<NextState<AppState>>) {
-    next_state.set(AppState::InGame);
+fn load_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
+    commands.insert_resource(TilesetFolder {
+        loaded_folder: asset_server.load_folder("img"),
+    });
+}
+
+fn check_assets(
+    mut next_state: ResMut<NextState<AppState>>,
+    tileset_folder: ResMut<TilesetFolder>,
+    mut events: EventReader<AssetEvent<LoadedFolder>>,
+) {
+    for event in events.read() {
+        if event.is_loaded_with_dependencies(&tileset_folder.loaded_folder) {
+            next_state.set(AppState::InGame);
+        }
+    }
 }
 
 fn setup(
