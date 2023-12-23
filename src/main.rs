@@ -90,7 +90,7 @@ fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
         position: map_position,
         sprite: SpriteSheetBundle {
             texture_atlas: atlas_handle.clone(),
-            transform: Transform::from_xyz(sprite_x, sprite_y, Z_INDEX_PLAYER),
+            transform: Transform::from_xyz(sprite_x, sprite_y, Z_INDEX_ACTOR),
             sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
             ..Default::default()
         },
@@ -156,6 +156,5 @@ fn update_player_sprite(
 ) {
     let (mut sprite_transform, position_player) = query_player.single_mut();
     let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
-    sprite_transform.translation =
-        Vec3::new(sprite_x, sprite_y, Z_INDEX_PLAYER);
+    sprite_transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
 }
