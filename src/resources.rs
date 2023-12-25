@@ -1,6 +1,9 @@
-use bevy::prelude::*;
+use bevy::{asset::LoadedFolder, prelude::*};
 
 use crate::GameState;
+
+#[derive(Default, Resource)]
+pub struct TilesetFolder(pub Handle<LoadedFolder>);
 
 #[derive(Default, Resource)]
 pub struct GameTurn {

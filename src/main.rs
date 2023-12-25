@@ -27,6 +27,7 @@ mod prelude {
     pub use rand::prelude::*;
 }
 
+use bevy::asset::LoadedFolder;
 use prelude::*;
 
 fn main() {
@@ -56,7 +57,7 @@ fn main() {
             Update,
             check_assets.run_if(in_state(AppState::LoadingAssets)),
         )
-        .add_systems(OnEnter(AppState::InGame), setup)
+        .add_systems(OnEnter(GameState::Initializing), setup)
         .add_systems(
             Update,
             (check_player_input, check_exit_events, update_player_sprite)
@@ -66,24 +67,40 @@ fn main() {
         .run();
 }
 
-fn load_assets() {
+fn load_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
+    commands.insert_resource(TilesetFolder(asset_server.load_folder("img")));
     println!("asset loading...");
 }
 
-fn check_assets(mut app_next_state: ResMut<NextState<AppState>>) {
-    println!("asset loaded!");
-    app_next_state.set(AppState::InGame);
+fn check_assets(
+    mut app_next_state: ResMut<NextState<AppState>>,
+    mut game_next_state: ResMut<NextState<GameState>>,
+    mut events: EventReader<AssetEvent<LoadedFolder>>,
+) {
+    for event in events.read() {
+        match event {
+            AssetEvent::LoadedWithDependencies { id } => {
+                println!("asset loaded!");
+                app_next_state.set(AppState::InGame);
+                game_next_state.set(GameState::Initializing);
+            }
+            _ => {}
+        }
+    }
 }
 
 fn setup(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
+    tileset_folder: Res<TilesetFolder>,
+    loaded_folders: Res<Assets<LoadedFolder>>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    mut game_next_state: ResMut<NextState<GameState>>,
 ) {
     commands.spawn((Camera2dBundle::default(), MainCamera));
 
+    let folder = loaded_folders.get(&tileset_folder.0).unwrap();
     let texture_atlas = TextureAtlas::from_grid(
-        asset_server.load("img/tileset.png"),
+        folder.handles[0].clone().typed::<Image>(),
         Vec2::new(SPRITE_TILE_WIDTH, SPRITE_TILE_HEIGHT),
         SPRITESHEET_COLS,
         SPRITESHEET_ROWS,
@@ -95,6 +112,7 @@ fn setup(
 
     spawn_map(&mut commands, &atlas_handle);
     spawn_player(&mut commands, &atlas_handle);
+    game_next_state.set(GameState::PlayerTurn);
 }
 
 fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
