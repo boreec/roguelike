@@ -41,9 +41,11 @@ pub fn check_player_input(
 
 pub fn check_exit_events(
     input: Res<Input<KeyCode>>,
+    mut app_next_state: ResMut<NextState<AppState>>,
     mut exit_events: ResMut<Events<bevy::app::AppExit>>,
 ) {
     if input.just_pressed(KeyCode::Escape) {
+        app_next_state.set(AppState::Finished);
         exit_events.send(bevy::app::AppExit);
     }
 }

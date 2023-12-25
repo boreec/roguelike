@@ -49,15 +49,30 @@ fn main() {
             DebugPlugin,
             UiPlugin,
         ))
+        .add_state::<AppState>()
         .add_state::<GameState>()
-        .add_systems(Startup, setup)
+        .add_systems(OnEnter(AppState::LoadingAssets), load_assets)
+        .add_systems(
+            Update,
+            check_assets.run_if(in_state(AppState::LoadingAssets)),
+        )
+        .add_systems(OnEnter(AppState::InGame), setup)
         .add_systems(
             Update,
             (check_player_input, check_exit_events, update_player_sprite)
-                .run_if(in_state(GameState::PlayerTurn)),
+                .run_if(in_state(AppState::InGame)),
         )
         .add_systems(OnEnter(GameState::EnemyTurn), increase_game_turn)
         .run();
+}
+
+fn load_assets() {
+    println!("asset loading...");
+}
+
+fn check_assets(mut app_next_state: ResMut<NextState<AppState>>) {
+    println!("asset loaded!");
+    app_next_state.set(AppState::InGame);
 }
 
 fn setup(
