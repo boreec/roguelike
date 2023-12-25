@@ -23,11 +23,11 @@ mod prelude {
     pub use crate::states::*;
     pub use crate::tile::*;
     pub use crate::ui::*;
+    pub use bevy::asset::LoadedFolder;
     pub use bevy::prelude::*;
     pub use rand::prelude::*;
 }
 
-use bevy::asset::LoadedFolder;
 use prelude::*;
 
 fn main() {
@@ -57,7 +57,11 @@ fn main() {
             Update,
             check_assets.run_if(in_state(AppState::LoadingAssets)),
         )
-        .add_systems(OnEnter(GameState::Initializing), setup)
+        .add_systems(OnExit(GameState::Uninitialized), initialize_resources)
+        .add_systems(
+            OnEnter(GameState::Initializing),
+            (setup_game, spawn_map, spawn_player),
+        )
         .add_systems(
             Update,
             (check_player_input, check_exit_events, update_player_sprite)
@@ -68,8 +72,8 @@ fn main() {
 }
 
 fn load_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.insert_resource(TilesetFolder(asset_server.load_folder("img")));
     println!("asset loading...");
+    commands.insert_resource(TilesetFolder(asset_server.load_folder("img")));
 }
 
 fn check_assets(
@@ -79,7 +83,7 @@ fn check_assets(
 ) {
     for event in events.read() {
         match event {
-            AssetEvent::LoadedWithDependencies { id } => {
+            AssetEvent::LoadedWithDependencies { id: _ } => {
                 println!("asset loaded!");
                 app_next_state.set(AppState::InGame);
                 game_next_state.set(GameState::Initializing);
@@ -89,15 +93,12 @@ fn check_assets(
     }
 }
 
-fn setup(
+fn initialize_resources(
     mut commands: Commands,
     tileset_folder: Res<TilesetFolder>,
     loaded_folders: Res<Assets<LoadedFolder>>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-    mut game_next_state: ResMut<NextState<GameState>>,
 ) {
-    commands.spawn((Camera2dBundle::default(), MainCamera));
-
     let folder = loaded_folders.get(&tileset_folder.0).unwrap();
     let texture_atlas = TextureAtlas::from_grid(
         folder.handles[0].clone().typed::<Image>(),
@@ -109,20 +110,21 @@ fn setup(
     );
 
     let atlas_handle = texture_atlases.add(texture_atlas);
-
-    spawn_map(&mut commands, &atlas_handle);
-    spawn_player(&mut commands, &atlas_handle);
-    game_next_state.set(GameState::PlayerTurn);
+    commands.insert_resource(TilesetMain(atlas_handle));
 }
 
-fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
+fn setup_game(mut commands: Commands) {
+    commands.spawn((Camera2dBundle::default(), MainCamera));
+}
+
+fn spawn_player(mut commands: Commands, tileset: Res<TilesetMain>) {
     let map_position = MapPosition::new(0, 0);
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn(PlayerBundle {
         player: Player,
         position: map_position,
         sprite: SpriteSheetBundle {
-            texture_atlas: atlas_handle.clone(),
+            texture_atlas: tileset.0.clone(),
             transform: Transform::from_xyz(sprite_x, sprite_y, Z_INDEX_ACTOR),
             sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
             ..Default::default()
@@ -130,7 +132,7 @@ fn spawn_player(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
     });
 }
 
-fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
+fn spawn_map(mut commands: Commands, tileset: Res<TilesetMain>) {
     let mut tiles = vec![];
     for i in 0..(MAP_WIDTH * MAP_HEIGHT) {
         let tile_position = MapPosition {
@@ -163,7 +165,7 @@ fn spawn_map(commands: &mut Commands, atlas_handle: &Handle<TextureAtlas>) {
                 sprite: TextureAtlasSprite::new(TileType::to_sprite_idx(
                     &tile_type,
                 )),
-                texture_atlas: atlas_handle.clone(),
+                texture_atlas: tileset.0.clone(),
                 ..Default::default()
             },
         });
