@@ -1,4 +1,4 @@
-# Havoc Resurgence
+# Roguelike
 
 This project is an ongoing 2D turn-based roguelike game that is still in its
 early stages of development. The scope is not well-defined at the moment, but I
@@ -22,13 +22,13 @@ Rust, Bevy, and game development in general.
 First of all, clone the repository:
 
 ```console
-git clone https://github.com/boreec/havoc-resurgence.git
+git clone https://github.com/boreec/roguelike.git
 ```
 
 Move to the cloned repository folder:
 
 ```console
-cd havoc-resurgence
+cd roguelike
 ```
 
 ## Fetching the assets
