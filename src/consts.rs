@@ -2,6 +2,7 @@ use bevy::prelude::Color;
 
 pub const WINDOW_WITDH: f32 = 1280.0;
 pub const WINDOW_HEIGHT: f32 = 800.0;
+pub const WINDOW_TITLE: &str = "roguelike";
 
 pub const SPRITESHEET_COLS: usize = 4;
 pub const SPRITESHEET_ROWS: usize = 1;
