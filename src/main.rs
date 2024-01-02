@@ -57,15 +57,16 @@ fn main() {
             Update,
             check_assets.run_if(in_state(AppState::LoadingAssets)),
         )
-        .add_systems(OnExit(GameState::Uninitialized), initialize_resources)
         .add_systems(
-            OnEnter(GameState::Initializing),
-            (setup_game, spawn_map, spawn_player),
+            OnEnter(AppState::InGame),
+            (initialize_resources, setup_game),
         )
+        .add_systems(OnEnter(GameState::InitializingMap), initialize_map)
+        .add_systems(OnEnter(GameState::InitializingPlayer), initialize_player)
         .add_systems(
             Update,
             (check_player_input, check_exit_events, update_player_sprite)
-                .run_if(in_state(AppState::InGame)),
+                .run_if(in_state(GameState::PlayerTurn)),
         )
         .add_systems(OnEnter(GameState::EnemyTurn), increase_game_turn)
         .run();
@@ -78,7 +79,6 @@ fn load_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 fn check_assets(
     mut app_next_state: ResMut<NextState<AppState>>,
-    mut game_next_state: ResMut<NextState<GameState>>,
     mut events: EventReader<AssetEvent<LoadedFolder>>,
 ) {
     for event in events.read() {
@@ -86,7 +86,6 @@ fn check_assets(
             AssetEvent::LoadedWithDependencies { id: _ } => {
                 println!("asset loaded!");
                 app_next_state.set(AppState::InGame);
-                game_next_state.set(GameState::Initializing);
             }
             _ => {}
         }
@@ -98,6 +97,7 @@ fn initialize_resources(
     tileset_folder: Res<TilesetFolder>,
     loaded_folders: Res<Assets<LoadedFolder>>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    mut game_next_state: ResMut<NextState<GameState>>,
 ) {
     let folder = loaded_folders.get(&tileset_folder.0).unwrap();
     let texture_atlas = TextureAtlas::from_grid(
@@ -111,13 +111,19 @@ fn initialize_resources(
 
     let atlas_handle = texture_atlases.add(texture_atlas);
     commands.insert_resource(TilesetMain(atlas_handle));
+
+    game_next_state.set(GameState::InitializingMap)
 }
 
 fn setup_game(mut commands: Commands) {
     commands.spawn((Camera2dBundle::default(), MainCamera));
 }
 
-fn spawn_player(mut commands: Commands, tileset: Res<TilesetMain>) {
+fn initialize_player(
+    mut commands: Commands,
+    mut game_next_state: ResMut<NextState<GameState>>,
+    tileset: Res<TilesetMain>,
+) {
     let map_position = MapPosition::new(0, 0);
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn(PlayerBundle {
@@ -130,9 +136,14 @@ fn spawn_player(mut commands: Commands, tileset: Res<TilesetMain>) {
             ..Default::default()
         },
     });
+    game_next_state.set(GameState::PlayerTurn);
 }
 
-fn spawn_map(mut commands: Commands, tileset: Res<TilesetMain>) {
+fn initialize_map(
+    mut commands: Commands,
+    mut game_next_state: ResMut<NextState<GameState>>,
+    tileset: Res<TilesetMain>,
+) {
     let mut tiles = vec![];
     for i in 0..(MAP_WIDTH * MAP_HEIGHT) {
         let tile_position = MapPosition {
@@ -176,6 +187,8 @@ fn spawn_map(mut commands: Commands, tileset: Res<TilesetMain>) {
         height: MAP_HEIGHT,
         tiles,
     });
+
+    game_next_state.set(GameState::InitializingPlayer);
 }
 
 pub fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {

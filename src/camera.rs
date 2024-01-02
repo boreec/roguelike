@@ -9,7 +9,7 @@ impl Plugin for CameraPlugin {
         app.add_systems(
             Update,
             (check_camera_zoom, update_camera_position)
-                .run_if(in_state(AppState::InGame)),
+                .run_if(in_state(GameState::PlayerTurn)),
         );
     }
 }

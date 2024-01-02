@@ -12,7 +12,8 @@ pub enum AppState {
 pub enum GameState {
     #[default]
     Uninitialized,
-    Initializing,
+    InitializingMap,
+    InitializingPlayer,
     PlayerTurn,
     EnemyTurn,
 }
