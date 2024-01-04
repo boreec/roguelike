@@ -122,9 +122,11 @@ fn setup_game(mut commands: Commands) {
 fn initialize_player(
     mut commands: Commands,
     mut game_next_state: ResMut<NextState<GameState>>,
+    query_map: Query<&Map>,
     tileset: Res<TilesetMain>,
 ) {
-    let map_position = MapPosition::new(0, 0);
+    let map = query_map.single();
+    let map_position = map.generate_random_spawning_position();
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn(PlayerBundle {
         player: Player,

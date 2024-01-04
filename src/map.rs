@@ -8,6 +8,27 @@ pub struct Map {
     pub tiles: Vec<TileType>,
 }
 
+impl Map {
+    pub fn generate_random_spawning_position(&self) -> MapPosition {
+        let spawnable_positions: Vec<_> = self
+            .tiles
+            .iter()
+            .enumerate()
+            .filter(|(_, tile)| tile.is_walkable())
+            .map(|(index, _)| index)
+            .collect();
+
+        if spawnable_positions.is_empty() {
+            panic!("There are no spawnable positions");
+        }
+
+        let mut rng = rand::thread_rng();
+        let index = *spawnable_positions.choose(&mut rng).unwrap();
+
+        MapPosition::new(index % self.width, index / self.height)
+    }
+}
+
 #[derive(Component, Debug)]
 pub struct MapPosition {
     pub x: usize,
