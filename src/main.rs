@@ -1,4 +1,5 @@
 mod camera;
+mod cellular_automaton;
 mod consts;
 mod debug;
 mod input;
@@ -13,6 +14,7 @@ mod ui;
 mod prelude {
     pub use crate::calculate_sprite_position;
     pub use crate::camera::*;
+    pub use crate::cellular_automaton::*;
     pub use crate::consts::*;
     pub use crate::debug::*;
     pub use crate::input::*;
@@ -146,28 +148,21 @@ fn initialize_map(
     mut game_next_state: ResMut<NextState<GameState>>,
     tileset: Res<TilesetMain>,
 ) {
-    let mut tiles = vec![];
-    for i in 0..(MAP_WIDTH * MAP_HEIGHT) {
+    let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, true);
+    for _ in 0..50 {
+        ca.transition();
+    }
+    let m = Map::from(ca);
+
+    for (i, tile) in m.tiles.iter().enumerate() {
         let tile_position = MapPosition {
-            x: i % MAP_WIDTH,
-            y: i / MAP_WIDTH,
+            x: i % m.width,
+            y: i / m.width,
         };
         let (sprite_x, sprite_y) = calculate_sprite_position(&tile_position);
-        let tile_type = {
-            let mut rng = thread_rng();
-            let throw = rng.gen_range(0..100);
-            if throw < 25 {
-                TileType::GrassWithFlower
-            } else if throw < 50 {
-                TileType::GrassWithStone
-            } else {
-                TileType::Grass
-            }
-        };
-        tiles.push(tile_type.clone());
         commands.spawn(TileBundle {
             tile: Tile,
-            r#type: tile_type.clone(),
+            r#type: tile.clone(),
             position: tile_position,
             sprite: SpriteSheetBundle {
                 transform: Transform::from_xyz(
@@ -175,20 +170,14 @@ fn initialize_map(
                     sprite_y,
                     Z_INDEX_TILE,
                 ),
-                sprite: TextureAtlasSprite::new(TileType::to_sprite_idx(
-                    &tile_type,
-                )),
+                sprite: TextureAtlasSprite::new(TileType::to_sprite_idx(&tile)),
                 texture_atlas: tileset.0.clone(),
                 ..Default::default()
             },
         });
     }
 
-    commands.spawn(Map {
-        width: MAP_WIDTH,
-        height: MAP_HEIGHT,
-        tiles,
-    });
+    commands.spawn(m);
 
     game_next_state.set(GameState::InitializingPlayer);
 }
