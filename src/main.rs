@@ -37,6 +37,7 @@ fn main() {
         .insert_resource(ClearColor(Color::ANTIQUE_WHITE))
         .insert_resource(GridState::Off)
         .insert_resource(GameTurn::default())
+        .insert_resource(Msaa::Off)
         .add_plugins((
             DefaultPlugins
                 .set(WindowPlugin {
