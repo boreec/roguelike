@@ -149,10 +149,10 @@ fn initialize_map(
     mut game_next_state: ResMut<NextState<GameState>>,
     tileset: Res<TilesetMain>,
 ) {
-    let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, true);
-    for _ in 0..50 {
-        ca.transition();
-    }
+    let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, 0.5);
+    // for _ in 0..50 {
+    //     ca.transition();
+    // }
     let m = Map::from(ca);
 
     for (i, tile) in m.tiles.iter().enumerate() {

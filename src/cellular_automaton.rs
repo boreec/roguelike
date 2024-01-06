@@ -13,21 +13,16 @@ pub struct CellularAutomaton {
 }
 
 impl CellularAutomaton {
-    pub fn new(width: usize, height: usize, randomize: bool) -> Self {
-        let cells: Vec<CellularState> = if randomize {
-            let mut c = Vec::<CellularState>::new();
-            let mut rng = rand::thread_rng();
-            for i in 0..(width * height) {
-                if rng.gen_bool(0.5) {
-                    c.push(CellularState::Dead);
-                } else {
-                    c.push(CellularState::Alive);
-                }
+    pub fn new(width: usize, height: usize, alive_probability: f64) -> Self {
+        let mut cells: Vec<CellularState> = Vec::<CellularState>::new();
+        let mut rng = rand::thread_rng();
+        for i in 0..(width * height) {
+            if rng.gen_bool(alive_probability) {
+                cells.push(CellularState::Dead);
+            } else {
+                cells.push(CellularState::Alive);
             }
-            c
-        } else {
-            vec![CellularState::Dead; width * height]
-        };
+        }
 
         Self {
             width,
@@ -124,9 +119,9 @@ mod tests {
 
     #[test]
     fn test_collect_neighbours() {
-        let ca1x1 = CellularAutomaton::new(1, 1, false);
-        let ca1x2 = CellularAutomaton::new(1, 2, false);
-        let ca3x3 = CellularAutomaton::new(3, 3, false);
+        let ca1x1 = CellularAutomaton::new(1, 1, 0f64);
+        let ca1x2 = CellularAutomaton::new(1, 2, 0f64);
+        let ca3x3 = CellularAutomaton::new(3, 3, 0f64);
 
         let pos00_neighbours = ca3x3.collect_neighbours_from(0, 0);
         let pos01_neighbours = ca3x3.collect_neighbours_from(0, 1);

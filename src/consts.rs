@@ -15,8 +15,8 @@ pub const SPRITE_IDX_GRASS_WITH_STONE: usize = 2;
 pub const SPRITE_IDX_PLAYER: usize = 3;
 pub const SPRITE_IDX_RABBIT: usize = 4;
 
-pub const MAP_WIDTH: usize = 50;
-pub const MAP_HEIGHT: usize = 50;
+pub const MAP_WIDTH: usize = 100;
+pub const MAP_HEIGHT: usize = 100;
 
 pub const Z_INDEX_TILE: f32 = 0.0;
 pub const Z_INDEX_GRID: f32 = 0.5;
