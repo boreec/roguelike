@@ -150,9 +150,10 @@ fn initialize_map(
     tileset: Res<TilesetMain>,
 ) {
     let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, 0.5);
-    // for _ in 0..50 {
-    //     ca.transition();
-    // }
+    for _ in 0..50 {
+        ca.transition();
+    }
+    ca.smooth();
     let m = Map::from(ca);
 
     for (i, tile) in m.tiles.iter().enumerate() {

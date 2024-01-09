@@ -1,6 +1,6 @@
 use rand::Rng;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq)]
 pub enum CellularState {
     Alive,
     Dead,
@@ -110,6 +110,39 @@ impl CellularAutomaton {
             }
         }
         self.cells = next_generation;
+    }
+
+    pub fn smooth(&mut self) {
+        let mut current_generation = self.cells.clone();
+        let mut has_changed = true;
+
+        while has_changed {
+            has_changed = false;
+            let mut next_generation = current_generation.clone();
+
+            for (i, c) in current_generation.iter().enumerate() {
+                let c_x = i % self.width;
+                let c_y = i / self.width;
+                let c_neighbours = self.collect_neighbours_from(c_x, c_y);
+                let alive_neighbours = {
+                    let mut a = 0;
+                    for c in c_neighbours {
+                        match current_generation[c.0 + c.1 * self.width] {
+                            CellularState::Alive => a = a + 1,
+                            CellularState::Dead => {}
+                        }
+                    }
+                    a
+                };
+
+                if c == &CellularState::Dead && alive_neighbours > 3 {
+                    next_generation[i] = CellularState::Alive;
+                    has_changed = true;
+                }
+            }
+            current_generation = next_generation.clone();
+        }
+        self.cells = current_generation;
     }
 }
 
