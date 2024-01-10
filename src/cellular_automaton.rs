@@ -14,15 +14,15 @@ pub struct CellularAutomaton {
 
 impl CellularAutomaton {
     pub fn new(width: usize, height: usize, alive_probability: f64) -> Self {
-        let mut cells: Vec<CellularState> = Vec::<CellularState>::new();
-        let mut rng = rand::thread_rng();
-        for i in 0..(width * height) {
-            if rng.gen_bool(alive_probability) {
-                cells.push(CellularState::Dead);
-            } else {
-                cells.push(CellularState::Alive);
-            }
-        }
+        let cells = (0..width * height)
+            .map(|_| {
+                if rand::thread_rng().gen_bool(alive_probability) {
+                    CellularState::Dead
+                } else {
+                    CellularState::Alive
+                }
+            })
+            .collect();
 
         Self {
             width,
@@ -31,66 +31,11 @@ impl CellularAutomaton {
         }
     }
 
-    // collect von neumann neighbours of a position
-    pub fn collect_neighbours_from(
-        &self,
-        x: usize,
-        y: usize,
-    ) -> Vec<(usize, usize)> {
-        let mut neighbours = Vec::new();
-
-        // left neighbour
-        if x > 0 {
-            neighbours.push((x - 1, y));
-        }
-        // right neighbour
-        if x < self.width - 1 {
-            neighbours.push((x + 1, y));
-        }
-        // top neighbour
-        if y > 0 {
-            neighbours.push((x, y - 1));
-        }
-        // bottom neighbour
-        if y < self.height - 1 {
-            neighbours.push((x, y + 1));
-        }
-        // top right neighbour
-        if x < self.width - 1 && y > 0 {
-            neighbours.push((x + 1, y - 1));
-        }
-        // top left neighbour
-        if x > 0 && y > 0 {
-            neighbours.push((x - 1, y - 1));
-        }
-        // bottom right neighbour
-        if x < self.width - 1 && y < self.height - 1 {
-            neighbours.push((x + 1, y + 1));
-        }
-        // bottom left neighbour
-        if x > 0 && y < self.height - 1 {
-            neighbours.push((x - 1, y + 1));
-        }
-
-        neighbours
-    }
-
     pub fn transition(&mut self) {
         let mut next_generation = self.cells.clone();
         for (i, c) in self.cells.iter().enumerate() {
-            let c_x = i % self.width;
-            let c_y = i / self.width;
-            let c_neighbours = self.collect_neighbours_from(c_x, c_y);
-            let alive_neighbours = {
-                let mut a = 0;
-                for c in c_neighbours {
-                    match self.cells[c.0 + c.1 * self.width] {
-                        CellularState::Alive => a = a + 1,
-                        CellularState::Dead => {}
-                    }
-                }
-                a
-            };
+            let alive_neighbours =
+                count_neighbours_in_state(self, i, CellularState::Alive);
 
             next_generation[i] = match c {
                 CellularState::Alive => {
@@ -121,21 +66,10 @@ impl CellularAutomaton {
             let mut next_generation = current_generation.clone();
 
             for (i, c) in current_generation.iter().enumerate() {
-                let c_x = i % self.width;
-                let c_y = i / self.width;
-                let c_neighbours = self.collect_neighbours_from(c_x, c_y);
-                let alive_neighbours = {
-                    let mut a = 0;
-                    for c in c_neighbours {
-                        match current_generation[c.0 + c.1 * self.width] {
-                            CellularState::Alive => a = a + 1,
-                            CellularState::Dead => {}
-                        }
-                    }
-                    a
-                };
+                let alive_neighbours =
+                    count_neighbours_in_state(self, i, CellularState::Alive);
 
-                if c == &CellularState::Dead && alive_neighbours > 3 {
+                if c == &CellularState::Dead && alive_neighbours > 3u8 {
                     next_generation[i] = CellularState::Alive;
                     has_changed = true;
                 }
@@ -146,42 +80,87 @@ impl CellularAutomaton {
     }
 }
 
+pub fn enumerate_neighbours(
+    automaton: &CellularAutomaton,
+    i: usize,
+) -> Vec<usize> {
+    let mut neighbours = Vec::new();
+    let x = i % automaton.width;
+    let y = i / automaton.width;
+    // left neighbour
+    if x > 0 {
+        neighbours.push(i - 1);
+    }
+    // right neighbour
+    if x < automaton.width - 1 {
+        neighbours.push(i + 1);
+    }
+    // top neighbour
+    if y > 0 {
+        neighbours.push((y - 1) * automaton.width + x);
+    }
+    // bottom neighbour
+    if y < automaton.height - 1 {
+        neighbours.push((y + 1) * automaton.width + x);
+    }
+    // top right neighbour
+    if x < automaton.width - 1 && y > 0 {
+        neighbours.push((y - 1) * automaton.width + x + 1);
+    }
+    // top left neighbour
+    if x > 0 && y > 0 {
+        neighbours.push((y - 1) * automaton.width + x - 1);
+    }
+    // bottom right neighbour
+    if x < automaton.width - 1 && y < automaton.height - 1 {
+        neighbours.push((y + 1) * automaton.width + x + 1);
+    }
+    // bottom left neighbour
+    if x > 0 && y < automaton.height - 1 {
+        neighbours.push((y + 1) * automaton.width + x - 1);
+    }
+
+    neighbours
+}
+
+pub fn count_neighbours_in_state(
+    automaton: &CellularAutomaton,
+    cell_i: usize,
+    cell_state: CellularState,
+) -> u8 {
+    let neighbours = enumerate_neighbours(automaton, cell_i);
+    let mut neighbours_in_state = 0u8;
+    for n_i in neighbours {
+        if automaton.cells[n_i] == cell_state {
+            neighbours_in_state += 1u8;
+        }
+    }
+    neighbours_in_state
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_collect_neighbours() {
+    fn test_enumerate_neighbours() {
         let ca1x1 = CellularAutomaton::new(1, 1, 0f64);
         let ca1x2 = CellularAutomaton::new(1, 2, 0f64);
         let ca3x3 = CellularAutomaton::new(3, 3, 0f64);
 
-        let pos00_neighbours = ca3x3.collect_neighbours_from(0, 0);
-        let pos01_neighbours = ca3x3.collect_neighbours_from(0, 1);
-        let pos02_neighbours = ca3x3.collect_neighbours_from(0, 2);
-        let pos10_neighbours = ca3x3.collect_neighbours_from(1, 0);
-        let pos11_neighbours = ca3x3.collect_neighbours_from(1, 1);
-        let pos12_neighbours = ca3x3.collect_neighbours_from(1, 2);
-        let pos20_neighbours = ca3x3.collect_neighbours_from(2, 0);
-        let pos21_neighbours = ca3x3.collect_neighbours_from(2, 1);
-        let pos22_neighbours = ca3x3.collect_neighbours_from(2, 2);
+        assert_eq!(enumerate_neighbours(&ca3x3, 0).len(), 3);
+        assert_eq!(enumerate_neighbours(&ca3x3, 1).len(), 5);
+        assert_eq!(enumerate_neighbours(&ca3x3, 2).len(), 3);
+        assert_eq!(enumerate_neighbours(&ca3x3, 3).len(), 5);
+        assert_eq!(enumerate_neighbours(&ca3x3, 4).len(), 8);
+        assert_eq!(enumerate_neighbours(&ca3x3, 5).len(), 5);
+        assert_eq!(enumerate_neighbours(&ca3x3, 6).len(), 3);
+        assert_eq!(enumerate_neighbours(&ca3x3, 7).len(), 5);
+        assert_eq!(enumerate_neighbours(&ca3x3, 8).len(), 3);
 
-        assert_eq!(pos00_neighbours.len(), 3);
-        assert_eq!(pos01_neighbours.len(), 5);
-        assert_eq!(pos02_neighbours.len(), 3);
-        assert_eq!(pos10_neighbours.len(), 5);
-        assert_eq!(pos11_neighbours.len(), 8);
-        assert_eq!(pos12_neighbours.len(), 5);
-        assert_eq!(pos20_neighbours.len(), 3);
-        assert_eq!(pos21_neighbours.len(), 5);
-        assert_eq!(pos22_neighbours.len(), 3);
+        assert_eq!(enumerate_neighbours(&ca1x2, 0).len(), 1);
+        assert_eq!(enumerate_neighbours(&ca1x2, 1).len(), 1);
 
-        let pos00_neighbours = ca1x2.collect_neighbours_from(0, 0);
-        let pos01_neighbours = ca1x2.collect_neighbours_from(0, 1);
-        assert_eq!(pos00_neighbours.len(), 1);
-        assert_eq!(pos01_neighbours.len(), 1);
-
-        let pos00_neighbours = ca1x1.collect_neighbours_from(0, 0);
-        assert_eq!(pos00_neighbours.len(), 0);
+        assert_eq!(enumerate_neighbours(&ca1x1, 0).len(), 0);
     }
 }
