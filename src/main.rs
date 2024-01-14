@@ -85,12 +85,9 @@ fn check_assets(
     mut events: EventReader<AssetEvent<LoadedFolder>>,
 ) {
     for event in events.read() {
-        match event {
-            AssetEvent::LoadedWithDependencies { id: _ } => {
-                println!("asset loaded!");
-                app_next_state.set(AppState::InGame);
-            }
-            _ => {}
+        if let AssetEvent::LoadedWithDependencies { id: _ } = event {
+            println!("asset loaded!");
+            app_next_state.set(AppState::InGame);
         }
     }
 }
