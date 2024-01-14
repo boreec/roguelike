@@ -17,9 +17,9 @@ impl CellularAutomaton {
         let cells = (0..width * height)
             .map(|_| {
                 if rand::thread_rng().gen_bool(alive_probability) {
-                    CellularState::Dead
-                } else {
                     CellularState::Alive
+                } else {
+                    CellularState::Dead
                 }
             })
             .collect();
