@@ -31,6 +31,18 @@ impl CellularAutomaton {
         }
     }
 
+    /// Advances the cellular automaton to the next generation based on
+    /// predefined transition rules.
+    ///
+    /// This function applies rules to each cell, determining its state in the
+    /// next generation based on the count of alive neighbors. The transition
+    /// follows standard rules for Conway's Game of Life.
+    ///
+    /// # Remarks
+    ///
+    /// - Living cells with fewer than 2 or more than 3 alive neighbors die.
+    /// - Dead cells with exactly 3 alive neighbors become alive.
+    /// - Cells with 2 or 3 alive neighbors remain in their current state.
     pub fn transition(&mut self) {
         let mut next_generation = self.cells.clone();
         for (i, c) in self.cells.iter().enumerate() {
@@ -57,6 +69,12 @@ impl CellularAutomaton {
         self.cells = next_generation;
     }
 
+    /// Applies a smoothing operation to the cellular automaton, updating cell
+    // states based on neighboring conditions.
+    ///
+    /// It iteratively processes the current generation of cells, updating each
+    /// cell's state based on the count of alive neighbors. The process
+    /// continues until no further changes occur.
     pub fn smooth(&mut self) {
         let mut current_generation = self.cells.clone();
         let mut has_changed = true;
@@ -85,7 +103,7 @@ impl CellularAutomaton {
 ///
 /// # Arguments
 ///
-/// `automaton`: A reference to a **CellularAutomaton** structure.
+/// `automaton`: A reference to a `CellularAutomaton` structure.
 /// `i`: The flat index of the target cell in the cells vector.
 ///
 /// # Returns
@@ -134,6 +152,17 @@ pub fn enumerate_neighbors(
     neighbors
 }
 
+/// Counts the number of neighboring cells in a specified state around a given cell.
+///
+/// # Arguments
+///
+/// * `automaton` - The cellular automaton.
+/// * `cell_i` - Index of the target cell.
+/// * `cell_state` - The state to count in neighboring cells.
+///
+/// # Returns
+///
+/// The count of neighboring cells in the specified state.
 pub fn count_neighbors_in_state(
     automaton: &CellularAutomaton,
     cell_i: usize,
