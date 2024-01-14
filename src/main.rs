@@ -169,7 +169,7 @@ fn initialize_map(
                     sprite_y,
                     Z_INDEX_TILE,
                 ),
-                sprite: TextureAtlasSprite::new(TileType::to_sprite_idx(&tile)),
+                sprite: TextureAtlasSprite::new(TileType::to_sprite_idx(tile)),
                 texture_atlas: tileset.0.clone(),
                 ..Default::default()
             },

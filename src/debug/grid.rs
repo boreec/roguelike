@@ -68,7 +68,7 @@ pub fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
 }
 
 pub fn despawn_grid_lines(commands: &mut Commands, grid_entities: Vec<Entity>) {
-    for entity in grid_entities.iter() {
+    for entity in &grid_entities {
         commands.entity(*entity).despawn();
     }
 }
@@ -93,8 +93,8 @@ pub fn display_grid(
         }
         GridState::Off => {
             let map = query_map.single();
-            spawn_grid_vertical_lines(&mut commands, &map);
-            spawn_grid_horizontal_lines(&mut commands, &map);
+            spawn_grid_vertical_lines(&mut commands, map);
+            spawn_grid_horizontal_lines(&mut commands, map);
         }
     }
     grid_state.flip();
