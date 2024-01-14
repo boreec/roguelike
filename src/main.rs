@@ -112,7 +112,7 @@ fn initialize_resources(
     let atlas_handle = texture_atlases.add(texture_atlas);
     commands.insert_resource(TilesetMain(atlas_handle));
 
-    game_next_state.set(GameState::InitializingMap)
+    game_next_state.set(GameState::InitializingMap);
 }
 
 fn setup_game(mut commands: Commands) {
