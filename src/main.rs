@@ -5,6 +5,7 @@ mod debug;
 mod input;
 mod map;
 mod movement;
+mod noise;
 mod player;
 mod resources;
 mod states;
@@ -20,6 +21,7 @@ mod prelude {
     pub use crate::input::*;
     pub use crate::map::*;
     pub use crate::movement::*;
+    pub use crate::noise::*;
     pub use crate::player::*;
     pub use crate::resources::*;
     pub use crate::states::*;
