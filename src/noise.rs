@@ -7,8 +7,20 @@ pub struct PerlinNoise {
 impl PerlinNoise {
     pub fn new() -> Self {
         PerlinNoise {
-            permutation: generate_permutation(),
+            permutation: Self::generate_permutation(),
         }
+    }
+
+    fn generate_permutation() -> [u8; 512] {
+        let mut permutation: Vec<u8> = (0..=255).collect();
+        let mut rng = rand::thread_rng();
+        permutation.shuffle(&mut rng);
+
+        let mut result = [0; 512];
+        result[..256].copy_from_slice(&permutation);
+        result[256..].copy_from_slice(&permutation);
+
+        result
     }
 
     pub fn perlin_noise(&self, x: f64, y: f64) -> f64 {
@@ -44,17 +56,6 @@ impl PerlinNoise {
         // And interpolate the results along y
         lerp(x1, x2, v)
     }
-}
-pub fn generate_permutation() -> [u8; 512] {
-    let mut permutation: Vec<u8> = (0..=255).collect();
-    let mut rng = rand::thread_rng();
-    permutation.shuffle(&mut rng);
-
-    let mut result = [0; 512];
-    result[..256].copy_from_slice(&permutation);
-    result[256..].copy_from_slice(&permutation);
-
-    result
 }
 
 fn fade(t: f64) -> f64 {
