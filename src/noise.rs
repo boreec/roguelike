@@ -24,8 +24,8 @@ impl PerlinNoise {
     }
 
     pub fn perlin_noise(&self, x: f64, y: f64) -> f64 {
-        let X = x as i32 & 255;
-        let Y = y as i32 & 255;
+        let x_wrapped = x as i32 & 255;
+        let y_wrapped = y as i32 & 255;
 
         let x_frac = x - x.floor();
         let y_frac = y - y.floor();
@@ -35,10 +35,10 @@ impl PerlinNoise {
         let v = fade(y_frac);
 
         // Hash coordinates of the 8 cube corners
-        let a = self.permutation[X as usize] + Y as u8;
+        let a = self.permutation[x_wrapped as usize] + y_wrapped as u8;
         let aa = self.permutation[a as usize];
         let ab = self.permutation[(a + 1) as usize];
-        let b = self.permutation[(X + 1) as usize] + Y as u8;
+        let b = self.permutation[(x_wrapped + 1) as usize] + y_wrapped as u8;
         let ba = self.permutation[b as usize];
         let bb = self.permutation[(b + 1) as usize];
 
@@ -62,7 +62,7 @@ fn fade(t: f64) -> f64 {
     t * t * t * (t * (t * 6.0 - 15.0) + 10.0)
 }
 
-fn grad(hash: u8, x: f64, y: f64) -> f64 {
+fn grad(hash: u8, x: f64, _y: f64) -> f64 {
     let h = hash & 15;
     let grad = 1.0 + (h & 7) as f64; // Gradient value 1-8
     if (h & 8) != 0 {
