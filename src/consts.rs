@@ -31,3 +31,5 @@ pub const GRID_LINE_WIDTH: f32 = 2.0;
 
 pub const UI_TEXT_TURN_COLOR: Color = Color::BLACK;
 pub const UI_TEXT_TURN_SIZE: f32 = 20.0;
+
+pub const PERLIN_NOISE_SCALE: f64 = 0.1;
