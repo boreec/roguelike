@@ -46,6 +46,31 @@ impl From<CellularAutomaton> for Map {
     }
 }
 
+impl From<(PerlinNoise, usize, usize)> for Map {
+    fn from(tuple: (PerlinNoise, usize, usize)) -> Self {
+        let mut cells: Vec<TileType> = Vec::new();
+        let scale = 0.1;
+        for i in 0..tuple.1 {
+            for j in 0..tuple.2 {
+                let x_scaled = i as f64 * scale;
+                let y_scaled = j as f64 * scale;
+                let noise_value = tuple.0.perlin_noise(x_scaled, y_scaled);
+                if noise_value > 0.5 {
+                    cells.push(TileType::Grass);
+                } else {
+                    cells.push(TileType::GrassWithStone);
+                }
+                println!("{}", noise_value);
+            }
+        }
+        Self {
+            width: tuple.1,
+            height: tuple.2,
+            tiles: cells,
+        }
+    }
+}
+
 #[derive(Component, Debug)]
 pub struct MapPosition {
     pub x: usize,
