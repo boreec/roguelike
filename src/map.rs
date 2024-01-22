@@ -30,6 +30,15 @@ impl Map {
 }
 
 impl From<CellularAutomaton> for Map {
+    /// Constructs a `Map` using a cellular automaton.
+    ///
+    /// # Arguments
+    ///
+    /// - `ca`: A `CellularAutomaton` initialized struct.
+    ///
+    /// # Returns
+    ///
+    /// A `Map` where the tiles are determined by the cellular automaton state.    
     fn from(ca: CellularAutomaton) -> Self {
         Self {
             width: ca.width,
@@ -47,6 +56,16 @@ impl From<CellularAutomaton> for Map {
 }
 
 impl From<(PerlinNoise, usize, usize)> for Map {
+    /// Constructs a `Map` using Perlin noise.
+    ///
+    /// # Arguments
+    ///
+    /// - `tuple`: A tuple with three parameters representing a `PerlinNoise` struct,
+    ///            the width, and the height of the map.
+    ///
+    /// # Returns
+    ///
+    /// A `Map` where the tiles are determined by Perlin noise.
     fn from(tuple: (PerlinNoise, usize, usize)) -> Self {
         let mut cells: Vec<TileType> = Vec::new();
         for i in 0..tuple.1 {
