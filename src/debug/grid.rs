@@ -4,7 +4,7 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct Grid;
 
-pub fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
+fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
     let line_length = map.height as f32 * SPRITE_TILE_HEIGHT;
     for i in 0..=map.width {
         let position_anchor = MapPosition { x: i, y: 0 };
@@ -28,7 +28,7 @@ pub fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
     }
 }
 
-pub fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
+fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
     let line_length = map.width as f32 * SPRITE_TILE_WIDTH;
     for j in 0..=map.height {
         let position_anchor = MapPosition { x: 0, y: j };
@@ -52,7 +52,7 @@ pub fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
     }
 }
 
-pub fn despawn_grid_lines(commands: &mut Commands, grid_entities: Vec<Entity>) {
+fn despawn_grid_lines(commands: &mut Commands, grid_entities: Vec<Entity>) {
     for entity in &grid_entities {
         commands.entity(*entity).despawn();
     }
