@@ -80,10 +80,6 @@ pub fn display_grid(
     mut grid_state: ResMut<GridState>,
     input: Res<Input<KeyCode>>,
 ) {
-    if !input.just_pressed(KeyCode::G) {
-        return;
-    }
-
     match grid_state.clone() {
         GridState::On => {
             despawn_grid_lines(

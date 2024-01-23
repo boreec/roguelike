@@ -17,3 +17,19 @@ pub enum GameState {
     PlayerTurn,
     EnemyTurn,
 }
+
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+pub enum ExecutionMode {
+    #[default]
+    Release,
+    Debug,
+}
+
+impl ExecutionMode {
+    pub fn flip(&mut self) {
+        *self = match *self {
+            Self::Release => Self::Debug,
+            Self::Debug => Self::Release,
+        }
+    }
+}
