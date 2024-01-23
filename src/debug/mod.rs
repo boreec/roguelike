@@ -13,10 +13,8 @@ impl Plugin for DebugPlugin {
                 Update,
                 check_execution_mode.run_if(in_state(GameState::PlayerTurn)),
             )
-            .add_systems(
-                Update,
-                display_grid.run_if(in_state(ExecutionMode::Debug)),
-            );
+            .add_systems(OnEnter(ExecutionMode::Debug), show_grid)
+            .add_systems(OnExit(ExecutionMode::Debug), hide_grid);
     }
 }
 

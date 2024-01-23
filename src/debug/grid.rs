@@ -1,21 +1,6 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
-#[derive(Clone, Resource)]
-pub enum GridState {
-    On,
-    Off,
-}
-
-impl GridState {
-    pub fn flip(&mut self) {
-        *self = match *self {
-            Self::On => Self::Off,
-            Self::Off => Self::On,
-        }
-    }
-}
-
 #[derive(Component)]
 pub struct Grid;
 
@@ -73,25 +58,15 @@ pub fn despawn_grid_lines(commands: &mut Commands, grid_entities: Vec<Entity>) {
     }
 }
 
-pub fn display_grid(
+pub fn show_grid(mut commands: Commands, query_map: Query<&Map>) {
+    let map = query_map.single();
+    spawn_grid_vertical_lines(&mut commands, map);
+    spawn_grid_horizontal_lines(&mut commands, map);
+}
+
+pub fn hide_grid(
     mut commands: Commands,
-    query_map: Query<&Map>,
     query_grid_entities: Query<Entity, With<Grid>>,
-    mut grid_state: ResMut<GridState>,
-    input: Res<Input<KeyCode>>,
 ) {
-    match grid_state.clone() {
-        GridState::On => {
-            despawn_grid_lines(
-                &mut commands,
-                query_grid_entities.iter().collect(),
-            );
-        }
-        GridState::Off => {
-            let map = query_map.single();
-            spawn_grid_vertical_lines(&mut commands, map);
-            spawn_grid_horizontal_lines(&mut commands, map);
-        }
-    }
-    grid_state.flip();
+    despawn_grid_lines(&mut commands, query_grid_entities.iter().collect());
 }
