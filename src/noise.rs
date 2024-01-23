@@ -6,7 +6,7 @@ pub struct PerlinNoise {
 
 impl PerlinNoise {
     pub fn new() -> Self {
-        PerlinNoise {
+        Self {
             permutation: Self::generate_permutation(),
         }
     }
