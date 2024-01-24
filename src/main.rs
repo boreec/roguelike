@@ -1,6 +1,6 @@
 mod camera;
 mod cellular_automaton;
-mod consts;
+mod constants;
 mod debug;
 mod input;
 mod map;
@@ -16,7 +16,7 @@ mod prelude {
     pub use crate::calculate_sprite_position;
     pub use crate::camera::*;
     pub use crate::cellular_automaton::*;
-    pub use crate::consts::*;
+    pub use crate::constants::*;
     pub use crate::debug::*;
     pub use crate::input::*;
     pub use crate::map::*;

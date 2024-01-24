@@ -1,7 +1,7 @@
-mod constant;
+mod constants;
 
 use crate::prelude::*;
-use constant::*;
+use constants::*;
 
 use bevy::input::mouse::MouseWheel;
 use bevy::prelude::*;

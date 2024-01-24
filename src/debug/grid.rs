@@ -1,4 +1,4 @@
-use crate::debug::constant::*;
+use crate::debug::constants::*;
 use crate::prelude::*;
 use bevy::prelude::*;
 

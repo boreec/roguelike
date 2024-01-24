@@ -1,7 +1,7 @@
-mod constant;
+mod constants;
 mod grid;
 
-use constant::*;
+use constants::*;
 use grid::*;
 
 use crate::prelude::*;
