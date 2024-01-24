@@ -1,5 +1,8 @@
+mod constant;
 mod grid;
-pub use grid::*;
+
+use constant::*;
+use grid::*;
 
 use crate::prelude::*;
 use bevy::prelude::*;
@@ -23,10 +26,10 @@ pub fn check_execution_mode(
     current_execution_mode: Res<State<ExecutionMode>>,
     mut next_execution_mode: ResMut<NextState<ExecutionMode>>,
 ) {
-    if keys.just_pressed(KeyCode::D) {
+    if keys.just_pressed(DEBUG_MODE_KEY) {
         let mut next_state = current_execution_mode.get().clone();
         next_state.flip();
         next_execution_mode.set(next_state);
-        keys.reset(KeyCode::D);
+        keys.reset(DEBUG_MODE_KEY);
     }
 }
