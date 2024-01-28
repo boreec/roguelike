@@ -158,7 +158,7 @@ fn initialize_map(
 
     commands.spawn(m);
 
-    game_next_state.set(GameState::InitializingPlayer);
+    game_next_state.set(GameState::InitializingActors);
 }
 
 pub fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
