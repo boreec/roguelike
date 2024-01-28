@@ -1,5 +1,7 @@
+mod constants;
 mod player;
 
+pub use constants::*;
 pub use player::*;
 
 use crate::prelude::*;
