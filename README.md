@@ -5,15 +5,13 @@ early stages of development. The scope is not well-defined at the moment, but I
 view it as a game prototype, serving as an opportunity to enhance my skills in
 Rust, Bevy, and game development in general.
 
-# Inspirations
+# Devlog
 
-- [Dofus](https://en.wikipedia.org/wiki/Dofus)
-- [Dwarf Fortress](https://en.wikipedia.org/wiki/Dwarf_Fortress)
-- [Final Fantasy Tactics Advance](https://en.wikipedia.org/wiki/Final_Fantasy_Tactics_Advance)
-- [Into the Breach](https://en.wikipedia.org/wiki/Into_the_Breach)
-- [NetHack](https://en.wikipedia.org/wiki/NetHack)
-- [Tales of Maj'Eyal](https://en.wikipedia.org/wiki/Tales_of_Maj%27Eyal)
-- [Triangle Strategy](https://en.wikipedia.org/wiki/Triangle_Strategy)
+This project development is covered by a written devlog with the following
+entries:
+
+1. 29/12/2023: [devlog #0 - A Roguelike for 2024](https://boreec.github.io/posts/devlog-0000/)
+2. 31/01/2024: WIP
 
 # Running the game
 
