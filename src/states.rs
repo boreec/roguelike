@@ -13,6 +13,7 @@ pub enum GameState {
     #[default]
     Uninitialized,
     InitializingMap,
+    InitializingActors,
     InitializingPlayer,
     PlayerTurn,
     EnemyTurn,
