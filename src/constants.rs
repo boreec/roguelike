@@ -19,7 +19,6 @@ pub const MAP_WIDTH: usize = 50;
 pub const MAP_HEIGHT: usize = 50;
 
 pub const Z_INDEX_TILE: f32 = 0.0;
-pub const Z_INDEX_GRID: f32 = 0.5;
 pub const Z_INDEX_ACTOR: f32 = 1.0;
 
 pub const UI_TEXT_TURN_COLOR: Color = Color::BLACK;

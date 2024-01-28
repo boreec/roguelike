@@ -21,7 +21,7 @@ fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
                 transform: Transform::from_xyz(
                     line_x - SPRITE_TILE_WIDTH / 2.0,
                     map.height as f32 * SPRITE_TILE_HEIGHT / -2.,
-                    Z_INDEX_GRID,
+                    Z_INDEX_GRID_LINES,
                 ),
                 ..default()
             },
@@ -45,7 +45,7 @@ fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
                 transform: Transform::from_xyz(
                     map.width as f32 * SPRITE_TILE_HEIGHT / 2.,
                     line_y + SPRITE_TILE_HEIGHT - SPRITE_TILE_HEIGHT / 2.,
-                    Z_INDEX_GRID,
+                    Z_INDEX_GRID_LINES,
                 ),
                 ..default()
             },

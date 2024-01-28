@@ -16,20 +16,22 @@ pub fn spawn_tile_coordinate_labels(
             let (text_x, text_y) = calculate_sprite_position(&tile_position);
             commands.spawn((
                 TileCoordinateLabel,
-                TextBundle::from_section(
-                    format!("({},{})", j, i),
-                    TextStyle {
-                        font: asset_server.load("fonts/GABOED.ttf"),
-                        font_size: TILE_COORDINATE_LABEL_FONT_SIZE,
-                        color: TILE_COORDINATE_LABEL_FONT_COLOR,
-                    },
-                )
-                .with_style(Style {
-                    position_type: PositionType::Absolute,
-                    top: Val::Px(-text_y),
-                    right: Val::Px(text_x),
-                    ..default()
-                }),
+                Text2dBundle {
+                    text: Text::from_section(
+                        format!("({},{})", j, i),
+                        TextStyle {
+                            font: asset_server.load("fonts/GABOED.ttf"),
+                            font_size: TILE_COORDINATE_LABEL_FONT_SIZE,
+                            color: TILE_COORDINATE_LABEL_FONT_COLOR,
+                        },
+                    ),
+                    transform: Transform::from_xyz(
+                        text_x,
+                        text_y,
+                        Z_INDEX_TILE_COORDINATES,
+                    ),
+                    ..Default::default()
+                },
             ));
         }
     }
@@ -61,8 +63,4 @@ pub fn hide_tile_coordinate_labels(
         &mut commands,
         query_label_entities.iter().collect(),
     );
-}
-
-pub fn update_label_position() {
-    println!("todo: Update label position!")
 }

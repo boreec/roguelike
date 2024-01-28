@@ -25,10 +25,6 @@ impl Plugin for DebugPlugin {
             .add_systems(
                 OnExit(ExecutionMode::Debug),
                 (hide_grid, hide_tile_coordinate_labels),
-            )
-            .add_systems(
-                OnEnter(GameState::PlayerTurn),
-                update_label_position.run_if(in_state(ExecutionMode::Debug)),
             );
     }
 }
