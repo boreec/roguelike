@@ -12,12 +12,10 @@ pub struct PlayerBundle {
 }
 
 pub fn initialize_player(
-    mut commands: Commands,
-    mut game_next_state: ResMut<NextState<GameState>>,
-    query_map: Query<&Map>,
-    tileset: Res<TilesetMain>,
+    commands: &mut Commands,
+    map: &Map,
+    tileset: &TilesetMain,
 ) {
-    let map = query_map.single();
     let map_position = map.generate_random_spawning_position();
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn(PlayerBundle {
@@ -30,7 +28,6 @@ pub fn initialize_player(
             ..Default::default()
         },
     });
-    game_next_state.set(GameState::PlayerTurn);
 }
 
 pub fn update_player_sprite(

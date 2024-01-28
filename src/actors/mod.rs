@@ -15,11 +15,19 @@ impl Plugin for ActorsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             OnEnter(GameState::InitializingActors),
-            initialize_rabbits.run_if(in_state(AppState::InGame)),
-        )
-        .add_systems(
-            OnEnter(GameState::InitializingPlayer),
-            initialize_player.run_if(in_state(AppState::InGame)),
+            initialize_actors.run_if(in_state(AppState::InGame)),
         );
     }
+}
+
+pub fn initialize_actors(
+    mut commands: Commands,
+    query_map: Query<&Map>,
+    tileset: Res<TilesetMain>,
+    mut next_game_state: ResMut<NextState<GameState>>,
+) {
+    let map = query_map.single();
+    initialize_rabbits(&mut commands, map, &tileset);
+    initialize_player(&mut commands, map, &tileset);
+    next_game_state.set(GameState::PlayerTurn);
 }

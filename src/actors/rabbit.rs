@@ -12,12 +12,10 @@ pub struct RabbitBundle {
 }
 
 pub fn initialize_rabbits(
-    mut commands: Commands,
-    mut game_next_state: ResMut<NextState<GameState>>,
-    query_map: Query<&Map>,
-    tileset: Res<TilesetMain>,
+    commands: &mut Commands,
+    map: &Map,
+    tileset: &TilesetMain,
 ) {
-    let map = query_map.single();
     for _ in 0..3 {
         let map_position = map.generate_random_spawning_position();
         let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
@@ -36,5 +34,4 @@ pub fn initialize_rabbits(
             },
         });
     }
-    game_next_state.set(GameState::InitializingPlayer);
 }
