@@ -10,7 +10,7 @@ Rust, Bevy, and game development in general.
 This project development is covered by a written devlog with the following
 entries:
 
-1. 29/12/2023: [devlog #0 - A Roguelike for 2024](https://boreec.github.io/posts/devlog-0000/)
+1. 29/12/2023: [devlog #0 - A Roguelike for 2024 ?](https://boreec.github.io/posts/devlog-0000/)
 2. 31/01/2024: WIP
 
 # Running the game
