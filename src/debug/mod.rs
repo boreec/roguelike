@@ -1,8 +1,10 @@
 mod constants;
 mod grid;
+mod tile;
 
 use constants::*;
 use grid::*;
+use tile::*;
 
 use crate::prelude::*;
 use bevy::prelude::*;
@@ -16,8 +18,18 @@ impl Plugin for DebugPlugin {
                 Update,
                 check_execution_mode.run_if(in_state(GameState::PlayerTurn)),
             )
-            .add_systems(OnEnter(ExecutionMode::Debug), show_grid)
-            .add_systems(OnExit(ExecutionMode::Debug), hide_grid);
+            .add_systems(
+                OnEnter(ExecutionMode::Debug),
+                (show_grid, show_tile_coordinate_labels),
+            )
+            .add_systems(
+                OnExit(ExecutionMode::Debug),
+                (hide_grid, hide_tile_coordinate_labels),
+            )
+            .add_systems(
+                OnEnter(GameState::PlayerTurn),
+                update_label_position.run_if(in_state(ExecutionMode::Debug)),
+            );
     }
 }
 
