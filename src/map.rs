@@ -73,7 +73,9 @@ impl From<(PerlinNoise, usize, usize)> for Map {
                 let x_scaled = i as f64 * PERLIN_NOISE_SCALE;
                 let y_scaled = j as f64 * PERLIN_NOISE_SCALE;
                 let noise_value = tuple.0.perlin_noise(x_scaled, y_scaled);
-                if noise_value > -0.25 {
+                if noise_value > 2.2 {
+                    cells.push(TileType::GrassWithFlower)
+                } else if noise_value > -0.25 {
                     cells.push(TileType::Grass);
                 } else {
                     cells.push(TileType::GrassWithStone);
