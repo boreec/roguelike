@@ -11,7 +11,8 @@ This project development is covered by a written devlog with the following
 entries:
 
 1. 29/12/2023: [devlog #0 - A Roguelike for 2024 ?](https://boreec.github.io/posts/devlog-0000/)
-2. 31/01/2024: WIP
+2. 31/01/2024: [devlog #1 - Procedural Map Generation](https://boreec.github.io/posts/devlog-0001/)
+3. 29/02/2024: WIP
 
 # Running the game
 
