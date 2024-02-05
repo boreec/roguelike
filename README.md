@@ -33,7 +33,7 @@ cd roguelike
 ## Fetching the assets
 
 Assets are provided in a zip archive aside from the repository. It is available
-via the following link: https://mega.nz/folder/h68WgZgS#wVV9Hj5B5O265B3UC4DYpQ
+via the following link: https://mega.nz/file/5qUkEYqC#P6rmZ2OU8Hy39POAD1sQq3LmMrcK6ny9ECNBh0ibncM
 
 Once downloaded, move `assets.zip` to the current directory and unzip it:
 
@@ -69,5 +69,5 @@ cargo test
 
 The following people participated to this project directly or indirectly.
 
-- Fonts:
-    - "GABOED" by Greentrik6789
+- Font: [GABOED](https://www.dafont.com/gaboed.font), by Greentrik6789
+- Palette: [RESURRECT 64](https://lospec.com/palette-list/resurrect-64), by Kerrie Lake
