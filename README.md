@@ -33,7 +33,7 @@ cd roguelike
 ## Fetching the assets
 
 Assets are provided in a zip archive aside from the repository. It is available
-via the following link: https://mega.nz/file/5qUkEYqC#P6rmZ2OU8Hy39POAD1sQq3LmMrcK6ny9ECNBh0ibncM
+via the following link: https://mega.nz/folder/h68WgZgS#wVV9Hj5B5O265B3UC4DYpQ
 
 Once downloaded, move `assets.zip` to the current directory and unzip it:
 
