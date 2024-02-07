@@ -78,7 +78,9 @@ fn main() {
 
 fn load_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
     println!("asset loading...");
-    commands.insert_resource(TilesetFolder(asset_server.load_folder("img")));
+    commands.insert_resource(TilesetFolder(
+        asset_server.load_folder("img/tileset"),
+    ));
 }
 
 fn check_assets(
@@ -101,17 +103,54 @@ fn initialize_resources(
     mut game_next_state: ResMut<NextState<GameState>>,
 ) {
     let folder = loaded_folders.get(&tileset_folder.0).unwrap();
-    let texture_atlas = TextureAtlas::from_grid(
-        folder.handles[0].clone().typed::<Image>(),
-        Vec2::new(SPRITE_TILE_WIDTH, SPRITE_TILE_HEIGHT),
-        SPRITESHEET_COLS,
-        SPRITESHEET_ROWS,
-        None,
-        None,
-    );
 
-    let atlas_handle = texture_atlases.add(texture_atlas);
-    commands.insert_resource(TilesetMain(atlas_handle));
+    for handle in &folder.handles {
+        if let Some(path) = handle.path() {
+            if let Some(stem) = path.path().file_stem() {
+                if let Some(stem_str) = stem.to_str() {
+                    match stem_str {
+                        "actor" => {
+                            let texture_atlas = TextureAtlas::from_grid(
+                                handle.clone().typed::<Image>(),
+                                Vec2::new(
+                                    SPRITE_TILE_WIDTH,
+                                    SPRITE_TILE_HEIGHT,
+                                ),
+                                TILESET_ACTOR_COLUMNS,
+                                TILESET_ACTOR_ROWS,
+                                None,
+                                None,
+                            );
+                            let atlas_handle =
+                                texture_atlases.add(texture_atlas);
+                            commands
+                                .insert_resource(TilesetActor(atlas_handle));
+                        }
+                        "terrain" => {
+                            let texture_atlas = TextureAtlas::from_grid(
+                                handle.clone().typed::<Image>(),
+                                Vec2::new(
+                                    SPRITE_TILE_WIDTH,
+                                    SPRITE_TILE_HEIGHT,
+                                ),
+                                TILESET_TERRAIN_COLUMNS,
+                                TILESET_TERRAIN_ROWS,
+                                None,
+                                None,
+                            );
+                            let atlas_handle =
+                                texture_atlases.add(texture_atlas);
+                            commands
+                                .insert_resource(TilesetTerrain(atlas_handle));
+                        }
+                        _ => {
+                            panic!("tileset unused");
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     game_next_state.set(GameState::InitializingMap);
 }
@@ -123,7 +162,7 @@ fn setup_game(mut commands: Commands) {
 fn initialize_map(
     mut commands: Commands,
     mut game_next_state: ResMut<NextState<GameState>>,
-    tileset: Res<TilesetMain>,
+    tileset: Res<TilesetTerrain>,
 ) {
     // let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, 0.5);
     // for _ in 0..50 {

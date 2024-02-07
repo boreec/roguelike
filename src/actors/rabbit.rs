@@ -14,7 +14,7 @@ pub struct RabbitBundle {
 pub fn initialize_rabbits(
     commands: &mut Commands,
     map: &Map,
-    tileset: &TilesetMain,
+    tileset: &TilesetActor,
 ) {
     for _ in 0..3 {
         let map_position = map.generate_random_spawning_position();
@@ -29,7 +29,7 @@ pub fn initialize_rabbits(
                     sprite_y,
                     Z_INDEX_ACTOR,
                 ),
-                sprite: TextureAtlasSprite::new(SPRITE_IDX_RABBIT),
+                sprite: TextureAtlasSprite::new(TILESET_ACTOR_IDX_RABBIT),
                 ..Default::default()
             },
         });

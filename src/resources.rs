@@ -6,7 +6,10 @@ use crate::GameState;
 pub struct TilesetFolder(pub Handle<LoadedFolder>);
 
 #[derive(Default, Resource)]
-pub struct TilesetMain(pub Handle<TextureAtlas>);
+pub struct TilesetActor(pub Handle<TextureAtlas>);
+
+#[derive(Default, Resource)]
+pub struct TilesetTerrain(pub Handle<TextureAtlas>);
 
 #[derive(Default, Resource)]
 pub struct GameTurn {

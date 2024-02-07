@@ -14,7 +14,7 @@ pub struct PlayerBundle {
 pub fn initialize_player(
     commands: &mut Commands,
     map: &Map,
-    tileset: &TilesetMain,
+    tileset: &TilesetActor,
 ) {
     let map_position = map.generate_random_spawning_position();
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
@@ -24,7 +24,7 @@ pub fn initialize_player(
         sprite: SpriteSheetBundle {
             texture_atlas: tileset.0.clone(),
             transform: Transform::from_xyz(sprite_x, sprite_y, Z_INDEX_ACTOR),
-            sprite: TextureAtlasSprite::new(SPRITE_IDX_PLAYER),
+            sprite: TextureAtlasSprite::new(TILESET_ACTOR_IDX_PLAYER),
             ..Default::default()
         },
     });

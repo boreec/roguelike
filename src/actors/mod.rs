@@ -23,7 +23,7 @@ impl Plugin for ActorsPlugin {
 pub fn initialize_actors(
     mut commands: Commands,
     query_map: Query<&Map>,
-    tileset: Res<TilesetMain>,
+    tileset: Res<TilesetActor>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     let map = query_map.single();
