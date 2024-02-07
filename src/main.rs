@@ -110,21 +110,11 @@ fn initialize_resources(
                 if let Some(stem_str) = stem.to_str() {
                     match stem_str {
                         "actor" => {
-                            let texture_atlas = TextureAtlas::from_grid(
-                                handle.clone().typed::<Image>(),
-                                Vec2::new(
-                                    SPRITE_TILE_WIDTH,
-                                    SPRITE_TILE_HEIGHT,
-                                ),
-                                TILESET_ACTOR_COLUMNS,
-                                TILESET_ACTOR_ROWS,
-                                None,
-                                None,
+                            initialize_tileset_actor_resource(
+                                handle,
+                                &mut texture_atlases,
+                                &mut commands,
                             );
-                            let atlas_handle =
-                                texture_atlases.add(texture_atlas);
-                            commands
-                                .insert_resource(TilesetActor(atlas_handle));
                         }
                         "terrain" => {
                             initialize_tileset_terrain_resource(
@@ -143,6 +133,23 @@ fn initialize_resources(
     }
 
     game_next_state.set(GameState::InitializingMap);
+}
+
+fn initialize_tileset_actor_resource(
+    handle: &UntypedHandle,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    commands: &mut Commands,
+) {
+    let texture_atlas = TextureAtlas::from_grid(
+        handle.clone().typed::<Image>(),
+        Vec2::new(SPRITE_TILE_WIDTH, SPRITE_TILE_HEIGHT),
+        TILESET_ACTOR_COLUMNS,
+        TILESET_ACTOR_ROWS,
+        None,
+        None,
+    );
+    let atlas_handle = texture_atlases.add(texture_atlas);
+    commands.insert_resource(TilesetActor(atlas_handle));
 }
 
 fn initialize_tileset_terrain_resource(
