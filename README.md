@@ -5,6 +5,8 @@ early stages of development. The scope is not well-defined at the moment, but I
 view it as a game prototype, serving as an opportunity to enhance my skills in
 Rust, Bevy, and game development in general.
 
+<img src="https://boreec.github.io/img/blog/devlog/roguelike-0015.png" width=400/>
+
 # Devlog
 
 This project development is covered by a written devlog with the following
