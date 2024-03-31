@@ -13,7 +13,7 @@ pub struct DebugPlugin;
 
 impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
-        app.add_state::<ExecutionMode>()
+        app.init_state::<ExecutionMode>()
             .add_systems(
                 Update,
                 check_execution_mode.run_if(in_state(GameState::PlayerTurn)),

@@ -56,8 +56,8 @@ fn main() {
             DebugPlugin,
             UiPlugin,
         ))
-        .add_state::<AppState>()
-        .add_state::<GameState>()
+        .init_state::<AppState>()
+        .init_state::<GameState>()
         .add_systems(OnEnter(AppState::LoadingAssets), load_assets)
         .add_systems(
             Update,
