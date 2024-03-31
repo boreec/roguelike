@@ -10,28 +10,28 @@ pub fn check_player_input(
     let mut player_position = query_player.single_mut();
     let map = query_map.single();
 
-    if input.any_just_pressed([KeyCode::Right, KeyCode::KeyD])
+    if input.any_just_pressed([KeyCode::ArrowRight, KeyCode::KeyD])
         && can_move_right(&player_position, map)
     {
         move_right(&mut player_position);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Left, KeyCode::KeyA])
+    if input.any_just_pressed([KeyCode::ArrowLeft, KeyCode::KeyA])
         && can_move_left(&player_position, map)
     {
         move_left(&mut player_position);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Up, KeyCode::KeyW])
+    if input.any_just_pressed([KeyCode::ArrowUp, KeyCode::KeyW])
         && can_move_up(&player_position, map)
     {
         move_up(&mut player_position);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Down, KeyCode::KeyS])
+    if input.any_just_pressed([KeyCode::ArrowDown, KeyCode::KeyS])
         && can_move_down(&player_position, map)
     {
         move_down(&mut player_position);
