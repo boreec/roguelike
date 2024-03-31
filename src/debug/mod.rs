@@ -30,7 +30,7 @@ impl Plugin for DebugPlugin {
 }
 
 pub fn check_execution_mode(
-    mut keys: ResMut<Input<KeyCode>>,
+    mut keys: ResMut<ButtonInput<KeyCode>>,
     current_execution_mode: Res<State<ExecutionMode>>,
     mut next_execution_mode: ResMut<NextState<ExecutionMode>>,
 ) {

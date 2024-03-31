@@ -5,33 +5,33 @@ pub fn check_player_input(
     mut next_state: ResMut<NextState<GameState>>,
     mut query_player: Query<&mut MapPosition, With<Player>>,
     query_map: Query<&Map>,
-    input: Res<Input<KeyCode>>,
+    input: Res<ButtonInput<KeyCode>>,
 ) {
     let mut player_position = query_player.single_mut();
     let map = query_map.single();
 
-    if input.any_just_pressed([KeyCode::Right, KeyCode::D])
+    if input.any_just_pressed([KeyCode::Right, KeyCode::KeyD])
         && can_move_right(&player_position, map)
     {
         move_right(&mut player_position);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Left, KeyCode::A])
+    if input.any_just_pressed([KeyCode::Left, KeyCode::KeyA])
         && can_move_left(&player_position, map)
     {
         move_left(&mut player_position);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Up, KeyCode::W])
+    if input.any_just_pressed([KeyCode::Up, KeyCode::KeyW])
         && can_move_up(&player_position, map)
     {
         move_up(&mut player_position);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::Down, KeyCode::S])
+    if input.any_just_pressed([KeyCode::Down, KeyCode::KeyS])
         && can_move_down(&player_position, map)
     {
         move_down(&mut player_position);
@@ -40,7 +40,7 @@ pub fn check_player_input(
 }
 
 pub fn check_exit_events(
-    input: Res<Input<KeyCode>>,
+    input: Res<ButtonInput<KeyCode>>,
     mut app_next_state: ResMut<NextState<AppState>>,
     mut exit_events: ResMut<Events<bevy::app::AppExit>>,
 ) {
