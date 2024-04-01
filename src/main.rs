@@ -56,8 +56,8 @@ fn main() {
             DebugPlugin,
             UiPlugin,
         ))
-        .add_state::<AppState>()
-        .add_state::<GameState>()
+        .init_state::<AppState>()
+        .init_state::<GameState>()
         .add_systems(OnEnter(AppState::LoadingAssets), load_assets)
         .add_systems(
             Update,
@@ -126,8 +126,12 @@ fn initialize_map(
                     sprite_y,
                     Z_INDEX_TILE,
                 ),
-                sprite: TextureAtlasSprite::new(TileType::to_sprite_idx(tile)),
-                texture_atlas: tileset.0.clone(),
+                sprite: Sprite::default(),
+                texture: tileset.1.clone(),
+                atlas: TextureAtlas {
+                    layout: tileset.0.clone(),
+                    index: TileType::to_sprite_idx(tile),
+                },
                 ..Default::default()
             },
         });

@@ -23,13 +23,17 @@ pub fn initialize_rabbits(
             rabbit: Rabbit,
             position: map_position,
             sprite: SpriteSheetBundle {
-                texture_atlas: tileset.0.clone(),
+                atlas: TextureAtlas {
+                    layout: tileset.0.clone(),
+                    index: TILESET_ACTOR_IDX_RABBIT,
+                },
                 transform: Transform::from_xyz(
                     sprite_x,
                     sprite_y,
                     Z_INDEX_ACTOR,
                 ),
-                sprite: TextureAtlasSprite::new(TILESET_ACTOR_IDX_RABBIT),
+                texture: tileset.1.clone(),
+                sprite: Sprite::default(),
                 ..Default::default()
             },
         });

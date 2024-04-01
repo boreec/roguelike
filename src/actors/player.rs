@@ -22,9 +22,13 @@ pub fn initialize_player(
         player: Player,
         position: map_position,
         sprite: SpriteSheetBundle {
-            texture_atlas: tileset.0.clone(),
+            atlas: TextureAtlas {
+                layout: tileset.0.clone(),
+                index: TILESET_ACTOR_IDX_PLAYER,
+            },
+            texture: tileset.1.clone(),
             transform: Transform::from_xyz(sprite_x, sprite_y, Z_INDEX_ACTOR),
-            sprite: TextureAtlasSprite::new(TILESET_ACTOR_IDX_PLAYER),
+            sprite: Sprite::default(),
             ..Default::default()
         },
     });

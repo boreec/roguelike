@@ -32,7 +32,7 @@ fn initialize_resources(
     mut commands: Commands,
     tileset_folder: Res<TilesetFolder>,
     loaded_folders: Res<Assets<LoadedFolder>>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    mut texture_atlases: ResMut<Assets<TextureAtlasLayout>>,
     mut game_next_state: ResMut<NextState<GameState>>,
 ) {
     let folder = loaded_folders.get(&tileset_folder.0).unwrap();

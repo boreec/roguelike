@@ -13,7 +13,7 @@ pub struct DebugPlugin;
 
 impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
-        app.add_state::<ExecutionMode>()
+        app.init_state::<ExecutionMode>()
             .add_systems(
                 Update,
                 check_execution_mode.run_if(in_state(GameState::PlayerTurn)),
@@ -30,7 +30,7 @@ impl Plugin for DebugPlugin {
 }
 
 pub fn check_execution_mode(
-    mut keys: ResMut<Input<KeyCode>>,
+    mut keys: ResMut<ButtonInput<KeyCode>>,
     current_execution_mode: Res<State<ExecutionMode>>,
     mut next_execution_mode: ResMut<NextState<ExecutionMode>>,
 ) {
