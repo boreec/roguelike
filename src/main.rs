@@ -127,6 +127,7 @@ fn initialize_map(
                     Z_INDEX_TILE,
                 ),
                 sprite: Sprite::default(),
+                texture: tileset.1.clone(),
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),
                     index: TileType::to_sprite_idx(tile),

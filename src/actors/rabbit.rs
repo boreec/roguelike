@@ -32,6 +32,7 @@ pub fn initialize_rabbits(
                     sprite_y,
                     Z_INDEX_ACTOR,
                 ),
+                texture: tileset.1.clone(),
                 sprite: Sprite::default(),
                 ..Default::default()
             },

@@ -26,6 +26,7 @@ pub fn initialize_player(
                 layout: tileset.0.clone(),
                 index: TILESET_ACTOR_IDX_PLAYER,
             },
+            texture: tileset.1.clone(),
             transform: Transform::from_xyz(sprite_x, sprite_y, Z_INDEX_ACTOR),
             sprite: Sprite::default(),
             ..Default::default()

@@ -7,10 +7,10 @@ use crate::prelude::*;
 pub struct TilesetFolder(pub Handle<LoadedFolder>);
 
 #[derive(Default, Resource)]
-pub struct TilesetActor(pub Handle<TextureAtlasLayout>);
+pub struct TilesetActor(pub Handle<TextureAtlasLayout>, pub Handle<Image>);
 
 #[derive(Default, Resource)]
-pub struct TilesetTerrain(pub Handle<TextureAtlasLayout>);
+pub struct TilesetTerrain(pub Handle<TextureAtlasLayout>, pub Handle<Image>);
 
 pub fn initialize_tileset_actor_resource(
     handle: &UntypedHandle,
@@ -24,8 +24,10 @@ pub fn initialize_tileset_actor_resource(
         None,
         None,
     );
+
     let atlas_handle = texture_atlases.add(texture_atlas);
-    commands.insert_resource(TilesetActor(atlas_handle));
+    let img_handle: Handle<Image> = handle.clone().typed();
+    commands.insert_resource(TilesetActor(atlas_handle, img_handle));
 }
 
 pub fn initialize_tileset_terrain_resource(
@@ -41,5 +43,6 @@ pub fn initialize_tileset_terrain_resource(
         None,
     );
     let atlas_handle = texture_atlases.add(texture_atlas);
-    commands.insert_resource(TilesetTerrain(atlas_handle));
+    let img_handle: Handle<Image> = handle.clone().typed();
+    commands.insert_resource(TilesetTerrain(atlas_handle, img_handle));
 }
