@@ -10,16 +10,21 @@ pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            Update,
-            (check_camera_zoom, update_camera_position)
-                .run_if(in_state(GameState::PlayerTurn)),
-        );
+        app.add_systems(OnEnter(AppState::InGame), setup_main_camera)
+            .add_systems(
+                Update,
+                (check_camera_zoom, update_camera_position)
+                    .run_if(in_state(GameState::PlayerTurn)),
+            );
     }
 }
 
 #[derive(Component)]
 pub struct MainCamera;
+
+fn setup_main_camera(mut commands: Commands) {
+    commands.spawn((Camera2dBundle::default(), MainCamera));
+}
 
 pub fn check_camera_zoom(
     mut scroll_evr: EventReader<MouseWheel>,
