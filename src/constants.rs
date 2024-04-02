@@ -7,9 +7,6 @@ pub const WINDOW_TITLE: &str = "roguelike";
 pub const SPRITE_TILE_WIDTH: f32 = 64.0;
 pub const SPRITE_TILE_HEIGHT: f32 = 64.0;
 
-pub const MAP_WIDTH: usize = 50;
-pub const MAP_HEIGHT: usize = 50;
-
 pub const Z_INDEX_TILE: f32 = 0.0;
 
 pub const UI_TEXT_TURN_COLOR: Color = Color::BLACK;

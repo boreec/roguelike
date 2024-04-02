@@ -1,3 +1,7 @@
+mod constants;
+
+use constants::*;
+
 use crate::prelude::*;
 use bevy::prelude::*;
 
