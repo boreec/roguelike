@@ -63,7 +63,7 @@ fn main() {
             Update,
             check_assets.run_if(in_state(AppState::LoadingAssets)),
         )
-        .add_systems(OnEnter(AppState::InGame), setup_game)
+        .add_systems(OnEnter(AppState::InGame), setup_main_camera)
         .add_systems(OnEnter(GameState::InitializingMap), initialize_map)
         .add_systems(
             Update,
@@ -93,7 +93,7 @@ fn check_assets(
     }
 }
 
-fn setup_game(mut commands: Commands) {
+fn setup_main_camera(mut commands: Commands) {
     commands.spawn((Camera2dBundle::default(), MainCamera));
 }
 
