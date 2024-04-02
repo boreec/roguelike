@@ -66,6 +66,8 @@ fn initialize_map(
 }
 
 impl Map {
+    /// Returns a randown position where an actor can spawn, i.e. there's no
+    /// obstacle such as a rock or a tree on that position.
     pub fn generate_random_spawning_position(&self) -> MapPosition {
         let spawnable_positions: Vec<_> = self
             .tiles
