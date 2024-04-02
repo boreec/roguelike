@@ -1,11 +1,64 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
+pub struct MapPlugin;
+
+impl Plugin for MapPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(OnEnter(GameState::InitializingMap), initialize_map);
+    }
+}
+
 #[derive(Component)]
 pub struct Map {
     pub width: usize,
     pub height: usize,
     pub tiles: Vec<TileType>,
+}
+
+fn initialize_map(
+    mut commands: Commands,
+    mut game_next_state: ResMut<NextState<GameState>>,
+    tileset: Res<TilesetTerrain>,
+) {
+    // let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, 0.5);
+    // for _ in 0..50 {
+    //     ca.transition();
+    // }
+    // ca.smooth();
+    // let m = Map::from(ca);
+    let m = Map::from((PerlinNoise::new(), MAP_WIDTH, MAP_HEIGHT));
+
+    for (i, tile) in m.tiles.iter().enumerate() {
+        let tile_position = MapPosition {
+            x: i % m.width,
+            y: i / m.width,
+        };
+        let (sprite_x, sprite_y) = calculate_sprite_position(&tile_position);
+        commands.spawn(TileBundle {
+            tile: Tile,
+            r#type: tile.clone(),
+            position: tile_position,
+            sprite: SpriteSheetBundle {
+                transform: Transform::from_xyz(
+                    sprite_x,
+                    sprite_y,
+                    Z_INDEX_TILE,
+                ),
+                sprite: Sprite::default(),
+                texture: tileset.1.clone(),
+                atlas: TextureAtlas {
+                    layout: tileset.0.clone(),
+                    index: TileType::to_sprite_idx(tile),
+                },
+                ..Default::default()
+            },
+        });
+    }
+
+    commands.spawn(m);
+
+    game_next_state.set(GameState::InitializingActors);
 }
 
 impl Map {
