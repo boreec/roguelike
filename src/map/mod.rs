@@ -20,8 +20,9 @@ pub struct Map {
     pub tiles: Vec<TileType>,
 }
 
-/// initialize a map by spawning tile entities depending on the map dimensions,
+/// Initialize a map by spawning tile entities depending on the map dimensions,
 /// the tile placement algorithm, etc.
+/// Lastly, the map entity is spawned.
 fn initialize_map(
     mut commands: Commands,
     mut game_next_state: ResMut<NextState<GameState>>,
