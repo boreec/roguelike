@@ -96,6 +96,8 @@ fn check_assets(
     }
 }
 
+/// Calculates where a sprite should be displayed in the window depending on
+/// its map position.
 pub fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
     (
         map_position.x as f32 * SPRITE_TILE_WIDTH + SPRITE_TILE_WIDTH / 2.0,
