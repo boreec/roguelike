@@ -20,6 +20,7 @@ impl Plugin for ActorsPlugin {
     }
 }
 
+/// Initializes all actors for a given map.
 pub fn initialize_actors(
     mut commands: Commands,
     query_map: Query<&Map>,
