@@ -82,6 +82,8 @@ fn load_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 
+/// Checks if all assets are properly loaded. The application state is switched
+/// only after everything is loaded.
 fn check_assets(
     mut app_next_state: ResMut<NextState<AppState>>,
     mut events: EventReader<AssetEvent<LoadedFolder>>,
