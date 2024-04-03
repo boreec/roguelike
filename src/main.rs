@@ -73,6 +73,8 @@ fn main() {
         .run();
 }
 
+/// Loads assets from the assets folder and creates the appropriate
+/// resources.
 fn load_assets(mut commands: Commands, asset_server: Res<AssetServer>) {
     println!("asset loading...");
     commands.insert_resource(TilesetFolder(
