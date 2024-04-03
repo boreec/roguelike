@@ -13,6 +13,8 @@ impl Plugin for MapPlugin {
     }
 }
 
+/// Represents the environment where the actors interact together. A map is
+/// made of tiles which has different properties for the actors.
 #[derive(Component)]
 pub struct Map {
     pub width: usize,
