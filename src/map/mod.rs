@@ -92,6 +92,7 @@ impl Map {
         MapPosition::new(index % self.width, index / self.height)
     }
 
+    /// Returns a position for the level exit.
     pub fn generate_level_exit_position(&self) -> MapPosition {
         let spawnable_positions: Vec<_> = self
             .tiles
