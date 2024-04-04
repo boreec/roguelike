@@ -1,7 +1,12 @@
 use bevy::prelude::Color;
 
+/// The window's width in pixels.
 pub const WINDOW_WITDH: f32 = 1280.0;
+
+/// The window's height in pixels.
 pub const WINDOW_HEIGHT: f32 = 800.0;
+
+/// The window's title.
 pub const WINDOW_TITLE: &str = "roguelike";
 
 pub const SPRITE_TILE_WIDTH: f32 = 64.0;
