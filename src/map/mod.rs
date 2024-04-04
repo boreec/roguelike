@@ -93,12 +93,14 @@ impl Map {
     }
 
     /// Returns a position for the level exit.
-    pub fn generate_level_exit_position(&self) -> MapPosition {
+    pub fn generate_random_level_exit_position(&self) -> MapPosition {
         let spawnable_positions: Vec<_> = self
             .tiles
             .iter()
             .enumerate()
-            .filter(|(_, tile)| tile.is_walkable())
+            .filter(|(index, tile)| {
+                tile.is_walkable() && *index % self.width == self.width - 1
+            })
             .map(|(index, _)| index)
             .collect();
 
@@ -106,16 +108,10 @@ impl Map {
             panic!("There are no spawnable positions");
         }
 
-        let mut leftest_position = MapPosition::new(0, 0);
-        for p in spawnable_positions {
-            let tile_x = p % self.width;
-            let tile_y = p / self.height;
-            if tile_x > leftest_position.x {
-                leftest_position = MapPosition::new(tile_x, tile_y);
-            }
-        }
+        let mut rng = rand::thread_rng();
+        let index = *spawnable_positions.choose(&mut rng).unwrap();
 
-        leftest_position
+        MapPosition::new(self.width - 1, index / self.height)
     }
 }
 
@@ -179,7 +175,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
             tiles: cells,
         };
 
-        let m_exit = m.generate_level_exit_position();
+        let m_exit = m.generate_random_level_exit_position();
         m.tiles[m_exit.y * tuple.2 + m_exit.x] = TileType::LevelExit;
         m
     }
