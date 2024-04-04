@@ -9,6 +9,7 @@ pub enum TileType {
     Grass,
     GrassWithFlower,
     GrassWithStone,
+    LevelExit,
 }
 
 impl TileType {
@@ -17,6 +18,7 @@ impl TileType {
             Self::Grass => TILESET_TERRAIN_IDX_GRASS,
             Self::GrassWithFlower => TILESET_TERRAIN_IDX_GRASS_WITH_FLOWER,
             Self::GrassWithStone => TILESET_TERRAIN_IDX_GRASS_WITH_STONE,
+            Self::LevelExit => TILESET_TERRAIN_IDX_SIGNPOST,
         }
     }
 
@@ -24,6 +26,7 @@ impl TileType {
         match self {
             Self::Grass | Self::GrassWithFlower => true,
             Self::GrassWithStone => false,
+            Self::LevelExit => true,
         }
     }
 }
