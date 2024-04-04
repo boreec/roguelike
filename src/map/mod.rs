@@ -171,11 +171,16 @@ impl From<(PerlinNoise, usize, usize)> for Map {
                 }
             }
         }
-        Self {
+
+        let mut m = Self {
             width: tuple.1,
             height: tuple.2,
             tiles: cells,
-        }
+        };
+
+        let m_exit = m.generate_level_exit_position();
+        m.tiles[m_exit.y * tuple.2 + m_exit.x] = TileType::LevelExit;
+        m
     }
 }
 
