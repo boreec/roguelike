@@ -91,6 +91,31 @@ impl Map {
 
         MapPosition::new(index % self.width, index / self.height)
     }
+
+    pub fn generate_level_exit_position(&self) -> MapPosition {
+        let spawnable_positions: Vec<_> = self
+            .tiles
+            .iter()
+            .enumerate()
+            .filter(|(_, tile)| tile.is_walkable())
+            .map(|(index, _)| index)
+            .collect();
+
+        if spawnable_positions.is_empty() {
+            panic!("There are no spawnable positions");
+        }
+
+        let mut leftest_position = MapPosition::new(0, 0);
+        for p in spawnable_positions {
+            let tile_x = p % self.width;
+            let tile_y = p / self.height;
+            if tile_x > leftest_position.x {
+                leftest_position = MapPosition::new(tile_x, tile_y);
+            }
+        }
+
+        leftest_position
+    }
 }
 
 impl From<CellularAutomaton> for Map {
