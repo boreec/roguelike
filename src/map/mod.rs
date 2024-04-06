@@ -130,7 +130,7 @@ impl From<CellularAutomaton> for Map {
     ///
     /// A `Map` where the tiles are determined by the cellular automaton state.    
     fn from(ca: CellularAutomaton) -> Self {
-        let mut m = Self {
+        let mut map = Self {
             width: ca.width,
             height: ca.height,
             tiles: ca
@@ -142,8 +142,8 @@ impl From<CellularAutomaton> for Map {
                 })
                 .collect(),
         };
-        m.add_exit_tile();
-        m
+        map.add_exit_tile();
+        map
     }
 }
 
@@ -175,14 +175,14 @@ impl From<(PerlinNoise, usize, usize)> for Map {
             }
         }
 
-        let mut m = Self {
+        let mut map = Self {
             width: tuple.1,
             height: tuple.2,
             tiles: cells,
         };
 
-        m.add_exit_tile();
-        m
+        map.add_exit_tile();
+        map
     }
 }
 
