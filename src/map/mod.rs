@@ -129,7 +129,7 @@ impl From<CellularAutomaton> for Map {
     ///
     /// A `Map` where the tiles are determined by the cellular automaton state.    
     fn from(ca: CellularAutomaton) -> Self {
-        Self {
+        let mut m = Self {
             width: ca.width,
             height: ca.height,
             tiles: ca
@@ -140,7 +140,10 @@ impl From<CellularAutomaton> for Map {
                     CellularState::Dead => TileType::Grass,
                 })
                 .collect(),
-        }
+        };
+        let m_exit = m.generate_random_level_exit_position();
+        m.tiles[m_exit.y * ca.width + m_exit.x] = TileType::LevelExit;
+        m
     }
 }
 
