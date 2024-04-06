@@ -30,13 +30,17 @@ fn initialize_map(
     mut game_next_state: ResMut<NextState<GameState>>,
     tileset: Res<TilesetTerrain>,
 ) {
-    // let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, 0.5);
-    // for _ in 0..50 {
-    //     ca.transition();
-    // }
-    // ca.smooth();
-    // let m = Map::from(ca);
-    let m = Map::from((PerlinNoise::new(), MAP_WIDTH, MAP_HEIGHT));
+    let mut rng = rand::thread_rng();
+    let m = if rng.gen_bool(0.5) {
+        Map::from((PerlinNoise::new(), MAP_WIDTH, MAP_HEIGHT))
+    } else {
+        let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, 0.5);
+        for _ in 0..50 {
+            ca.transition();
+        }
+        ca.smooth();
+        Map::from(ca)
+    };
 
     for (i, tile) in m.tiles.iter().enumerate() {
         let tile_position = MapPosition {
