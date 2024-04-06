@@ -96,7 +96,7 @@ impl Map {
     }
 
     /// Returns a position for the level exit.
-    pub fn generate_random_level_exit_position(&self) -> MapPosition {
+    pub fn add_level_exit(&mut self) {
         let spawnable_positions: Vec<_> = self
             .tiles
             .iter()
@@ -114,7 +114,7 @@ impl Map {
         let mut rng = rand::thread_rng();
         let index = *spawnable_positions.choose(&mut rng).unwrap();
 
-        MapPosition::new(self.width - 1, index / self.height)
+        self.tiles[index] = TileType::LevelExit;
     }
 }
 
@@ -141,8 +141,7 @@ impl From<CellularAutomaton> for Map {
                 })
                 .collect(),
         };
-        let m_exit = m.generate_random_level_exit_position();
-        m.tiles[m_exit.y * ca.width + m_exit.x] = TileType::LevelExit;
+        m.add_level_exit();
         m
     }
 }
@@ -181,8 +180,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
             tiles: cells,
         };
 
-        let m_exit = m.generate_random_level_exit_position();
-        m.tiles[m_exit.y * tuple.2 + m_exit.x] = TileType::LevelExit;
+        m.add_level_exit();
         m
     }
 }
