@@ -185,7 +185,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
     }
 }
 
-/// Represents a position in a map.
+/// Represents a position in a `Map`.
 #[derive(Component, Debug)]
 pub struct MapPosition {
     pub x: usize,
