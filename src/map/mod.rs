@@ -95,7 +95,8 @@ impl Map {
         MapPosition::new(index % self.width, index / self.height)
     }
 
-    /// Returns a position for the level exit.
+    /// Adds an exit tile on the right side of the map. The position is
+    /// selected randomly.
     pub fn add_exit_tile(&mut self) {
         let spawnable_positions: Vec<_> = self
             .tiles
