@@ -96,7 +96,7 @@ impl Map {
     }
 
     /// Returns a position for the level exit.
-    pub fn add_level_exit(&mut self) {
+    pub fn add_exit_tile(&mut self) {
         let spawnable_positions: Vec<_> = self
             .tiles
             .iter()
@@ -141,7 +141,7 @@ impl From<CellularAutomaton> for Map {
                 })
                 .collect(),
         };
-        m.add_level_exit();
+        m.add_exit_tile();
         m
     }
 }
@@ -180,7 +180,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
             tiles: cells,
         };
 
-        m.add_level_exit();
+        m.add_exit_tile();
         m
     }
 }
