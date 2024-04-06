@@ -18,7 +18,7 @@ pub fn spawn_tile_coordinate_labels(
                 TileCoordinateLabel,
                 Text2dBundle {
                     text: Text::from_section(
-                        format!("({},{})", j, i),
+                        format!("({j},{i})"),
                         TextStyle {
                             font: asset_server.load("fonts/GABOED.ttf"),
                             font_size: TILE_COORDINATE_LABEL_FONT_SIZE,
