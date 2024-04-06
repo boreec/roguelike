@@ -23,5 +23,5 @@ nursery = "warn"
 module_name_repetitions = "allow"
 
 [dependencies]
-bevy = {version = "0.13.1", features = ["dynamic_linking"]}
+bevy = {version = "0.13.2", features = ["dynamic_linking"]}
 rand = "0.8.5"
