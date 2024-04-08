@@ -16,8 +16,14 @@ impl Plugin for ActorsPlugin {
         app.add_systems(
             OnEnter(GameState::InitializingActors),
             initialize_actors.run_if(in_state(AppState::InGame)),
-        );
+        )
+        .add_systems(OnEnter(GameState::CleanupActors), cleanup_actors);
     }
+}
+
+pub fn cleanup_actors(mut next_game_state: ResMut<NextState<GameState>>) {
+    println!("cleanup actors");
+    next_game_state.set(GameState::InitializingMap);
 }
 
 /// Initializes all actors for a given map.
