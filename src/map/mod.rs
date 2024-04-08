@@ -20,6 +20,7 @@ pub struct Map {
     pub width: usize,
     pub height: usize,
     pub tiles: Vec<TileType>,
+    pub exits: Vec<MapPosition>,
 }
 
 /// Initialize a map by spawning tile entities depending on the map dimensions,
@@ -116,6 +117,13 @@ impl Map {
         let index = *spawnable_positions.choose(&mut rng).unwrap();
 
         self.tiles[index] = TileType::LevelExit;
+
+        let exit_position = MapPosition {
+            x: index % self.width,
+            y: index / self.width,
+        };
+
+        self.exits.push(exit_position);
     }
 }
 
@@ -141,6 +149,7 @@ impl From<CellularAutomaton> for Map {
                     CellularState::Dead => TileType::Grass,
                 })
                 .collect(),
+            exits: vec![],
         };
         map.add_exit_tile();
         map
@@ -179,6 +188,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
             width: tuple.1,
             height: tuple.2,
             tiles: cells,
+            exits: vec![],
         };
 
         map.add_exit_tile();
