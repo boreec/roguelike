@@ -14,8 +14,14 @@ impl Plugin for MapPlugin {
                 Update,
                 (check_if_player_exit_map)
                     .run_if(in_state(GameState::PlayerTurn)),
-            );
+            )
+            .add_systems(OnEnter(GameState::CleanupMap), cleanup_map);
     }
+}
+
+pub fn cleanup_map(mut next_game_state: ResMut<NextState<GameState>>) {
+    println!("cleanup map");
+    next_game_state.set(GameState::CleanupActors);
 }
 
 pub fn check_if_player_exit_map(
