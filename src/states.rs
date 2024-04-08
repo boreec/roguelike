@@ -4,9 +4,14 @@ use bevy::prelude::*;
 /// loading, game switching, etc.
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum AppState {
+    /// First state for the whole application, consisting of loading the
+    /// assets and creating the game resources.
     #[default]
     LoadingAssets,
+    /// Corresponds to the main game state.
     InGame,
+    /// This state is used to exit the application cleanly, performing
+    /// potential resources cleanup.
     Finished,
 }
 
