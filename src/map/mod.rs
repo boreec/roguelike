@@ -17,9 +17,14 @@ impl Plugin for MapPlugin {
 /// made of tiles which has different properties for the actors.
 #[derive(Component)]
 pub struct Map {
+    /// The map's width.
     pub width: usize,
+    /// The map's height.
     pub height: usize,
+    /// All tiles for the map, the vector index corresponds to the tile
+    /// coordinates.
     pub tiles: Vec<TileType>,
+    /// The exits positions for the map.
     pub exits: Vec<MapPosition>,
 }
 
