@@ -21,12 +21,13 @@ impl Plugin for MapPlugin {
 pub fn check_if_player_exit_map(
     query_map: Query<&Map>,
     query_player: Query<(&Player, &MapPosition)>,
+    mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     let map = query_map.single();
     let (_, player_position) = query_player.single();
     for exit_position in &map.exits {
         if player_position == exit_position {
-            println!("player reached map exit");
+            next_game_state.set(GameState::CleanupMap);
         }
     }
 }
