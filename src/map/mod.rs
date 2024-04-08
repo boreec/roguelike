@@ -9,7 +9,25 @@ pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::InitializingMap), initialize_map);
+        app.add_systems(OnEnter(GameState::InitializingMap), initialize_map)
+            .add_systems(
+                Update,
+                (check_if_player_exit_map)
+                    .run_if(in_state(GameState::PlayerTurn)),
+            );
+    }
+}
+
+pub fn check_if_player_exit_map(
+    query_map: Query<&Map>,
+    query_player: Query<(&Player, &MapPosition)>,
+) {
+    let map = query_map.single();
+    let (_, player_position) = query_player.single();
+    for exit_position in &map.exits {
+        if player_position == exit_position {
+            println!("player reached map exit");
+        }
     }
 }
 
@@ -202,7 +220,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
 }
 
 /// Represents a position in a `Map`.
-#[derive(Component, Debug)]
+#[derive(Component, Debug, Eq, PartialEq)]
 pub struct MapPosition {
     pub x: usize,
     pub y: usize,
