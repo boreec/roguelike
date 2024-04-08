@@ -8,6 +8,9 @@ pub enum AppState {
     Finished,
 }
 
+/// States used exclusively during the game. It involves not only the map and
+/// actors creation, but also the main game turn between the player and the
+/// enemies.
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum GameState {
     /// Corresponds to the default state, before the game is running.
