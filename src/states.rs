@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+/// States used for the whole executable application. It comprises resources
+/// loading, game switching, etc.
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum AppState {
     #[default]
