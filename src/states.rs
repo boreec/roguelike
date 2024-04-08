@@ -16,6 +16,8 @@ pub enum GameState {
     InitializingActors,
     PlayerTurn,
     EnemyTurn,
+    CleanupMap,
+    CleanupActors,
 }
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
