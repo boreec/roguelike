@@ -105,6 +105,7 @@ fn initialize_map(
                 },
                 ..Default::default()
             },
+            map_number: MapNumber(0),
         });
     }
 

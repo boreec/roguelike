@@ -37,4 +37,5 @@ pub struct TileBundle {
     pub r#type: TileType,
     pub position: MapPosition,
     pub sprite: SpriteSheetBundle,
+    pub map_number: MapNumber,
 }
