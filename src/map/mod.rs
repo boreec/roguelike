@@ -38,6 +38,9 @@ pub fn check_if_player_exit_map(
     }
 }
 
+#[derive(Component)]
+pub struct MapNumber(u64);
+
 /// Represents the environment where the actors interact together. A map is
 /// made of tiles which has different properties for the actors.
 #[derive(Component)]
