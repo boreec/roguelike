@@ -21,8 +21,15 @@ impl Plugin for ActorsPlugin {
     }
 }
 
-pub fn cleanup_actors(mut next_game_state: ResMut<NextState<GameState>>) {
-    println!("cleanup actors");
+pub fn cleanup_actors(
+    mut commands: Commands,
+    query_rabbit_entities: Query<Entity, With<Rabbit>>,
+    mut next_game_state: ResMut<NextState<GameState>>,
+) {
+    let rabbit_entities: Vec<Entity> = query_rabbit_entities.iter().collect();
+    for rabbit_entity in rabbit_entities {
+        commands.entity(rabbit_entity).despawn();
+    }
     next_game_state.set(GameState::InitializingMap);
 }
 
