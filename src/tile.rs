@@ -35,7 +35,7 @@ impl TileType {
 pub struct TileBundle {
     pub tile: Tile,
     pub r#type: TileType,
-    pub position: MapPosition,
     pub sprite: SpriteSheetBundle,
     pub map_number: MapNumber,
+    pub map_position: MapPosition,
 }

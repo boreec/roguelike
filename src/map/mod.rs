@@ -90,7 +90,6 @@ fn initialize_map(
         commands.spawn(TileBundle {
             tile: Tile,
             r#type: tile.clone(),
-            position: tile_position,
             sprite: SpriteSheetBundle {
                 transform: Transform::from_xyz(
                     sprite_x,
@@ -106,6 +105,7 @@ fn initialize_map(
                 ..Default::default()
             },
             map_number: MapNumber(0),
+            map_position: tile_position,
         });
     }
 
