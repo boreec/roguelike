@@ -9,6 +9,7 @@ pub struct PlayerBundle {
     pub player: Player,
     pub position: MapPosition,
     pub sprite: SpriteSheetBundle,
+    pub map_number: MapNumber,
 }
 
 pub fn initialize_player(
@@ -31,6 +32,7 @@ pub fn initialize_player(
             sprite: Sprite::default(),
             ..Default::default()
         },
+        map_number: MapNumber(0),
     });
 }
 
