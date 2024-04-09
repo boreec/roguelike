@@ -108,7 +108,10 @@ fn initialize_map(
         });
     }
 
-    commands.spawn(m);
+    commands.spawn(MapBundle {
+        map: m,
+        map_number: MapNumber(0),
+    });
 
     game_next_state.set(GameState::InitializingActors);
 }
