@@ -45,7 +45,7 @@ pub struct MapBundle {
 }
 
 #[derive(Component)]
-pub struct MapNumber(u64);
+pub struct MapNumber(pub u64);
 
 /// Represents the environment where the actors interact together. A map is
 /// made of tiles which has different properties for the actors.

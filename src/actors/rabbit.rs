@@ -9,6 +9,7 @@ pub struct RabbitBundle {
     pub rabbit: Rabbit,
     pub position: MapPosition,
     pub sprite: SpriteSheetBundle,
+    pub map_number: MapNumber,
 }
 
 pub fn initialize_rabbits(
@@ -36,6 +37,7 @@ pub fn initialize_rabbits(
                 sprite: Sprite::default(),
                 ..Default::default()
             },
+            map_number: MapNumber(0),
         });
     }
 }
