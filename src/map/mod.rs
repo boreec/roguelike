@@ -19,8 +19,13 @@ impl Plugin for MapPlugin {
     }
 }
 
-pub fn cleanup_map(mut next_game_state: ResMut<NextState<GameState>>) {
-    println!("cleanup map");
+pub fn cleanup_map(
+    mut commands: Commands,
+    query_map_entity: Query<Entity, With<Map>>,
+    mut next_game_state: ResMut<NextState<GameState>>,
+) {
+    let map_entity: Entity = query_map_entity.single();
+    commands.entity(map_entity).despawn();
     next_game_state.set(GameState::CleanupActors);
 }
 
