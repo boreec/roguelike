@@ -38,6 +38,12 @@ pub fn check_if_player_exit_map(
     }
 }
 
+#[derive(Bundle)]
+pub struct MapBundle {
+    map: Map,
+    map_number: MapNumber,
+}
+
 #[derive(Component)]
 pub struct MapNumber(u64);
 
