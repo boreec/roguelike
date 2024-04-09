@@ -37,11 +37,17 @@ pub fn cleanup_actors(
 pub fn initialize_actors(
     mut commands: Commands,
     query_map: Query<&Map>,
+    query_player: Query<&Player>,
     tileset: Res<TilesetActor>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     let map = query_map.single();
     initialize_rabbits(&mut commands, map, &tileset);
-    initialize_player(&mut commands, map, &tileset);
+
+    // initialize the player only if there's no player created
+    let player = query_player.get_single();
+    if player.is_err() {
+        initialize_player(&mut commands, map, &tileset);
+    }
     next_game_state.set(GameState::PlayerTurn);
 }
