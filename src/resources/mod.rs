@@ -15,6 +15,7 @@ impl Plugin for ResourcesPlugin {
     }
 }
 
+/// The current game turn.
 #[derive(Default, Resource)]
 pub struct GameTurn {
     pub current: usize,
