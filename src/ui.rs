@@ -24,7 +24,7 @@ pub fn setup_ui(
     commands.spawn((
         UiTurnText,
         TextBundle::from_section(
-            format!("Turn {}", game_turn.current),
+            format!("Turn {}", game_turn.0),
             TextStyle {
                 font: asset_server.load("fonts/GABOED.ttf"),
                 font_size: UI_TEXT_TURN_SIZE,
@@ -39,5 +39,5 @@ pub fn update_turn_counter_text(
     game_turn: Res<GameTurn>,
 ) {
     let mut text = query.single_mut();
-    text.sections[0].value = format!("TURN #{}", game_turn.current);
+    text.sections[0].value = format!("TURN #{}", game_turn.0);
 }
