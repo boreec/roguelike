@@ -13,10 +13,13 @@ impl Plugin for UiPlugin {
     }
 }
 
-/// Marker component to represent the ui element to display the current turn.
+/// Marker component to represent the ui element to display the current turn
+/// number.
 #[derive(Component)]
 pub struct UiCurrentTurnText;
 
+/// Marker component to represent the ui element to display the current map
+/// number.
 #[derive(Component)]
 pub struct UiCurrentMapText;
 
