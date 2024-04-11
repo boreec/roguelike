@@ -60,6 +60,7 @@ pub fn setup_ui(
     ));
 }
 
+/// Updates the ui element which represents the current turn.
 pub fn update_ui_current_turn_text(
     mut query: Query<&mut Text, With<UiCurrentTurnText>>,
     current_turn_number: Res<CurrentTurnNumber>,
