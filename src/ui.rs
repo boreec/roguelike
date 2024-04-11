@@ -17,15 +17,31 @@ impl Plugin for UiPlugin {
 #[derive(Component)]
 pub struct UiCurrentTurnText;
 
+#[derive(Component)]
+pub struct UiCurrentMapText;
+
 pub fn setup_ui(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     current_turn_number: Res<CurrentTurnNumber>,
+    current_map_number: Res<CurrentMapNumber>,
 ) {
     commands.spawn((
         UiCurrentTurnText,
         TextBundle::from_section(
             format!("Turn {}", current_turn_number.0),
+            TextStyle {
+                font: asset_server.load("fonts/GABOED.ttf"),
+                font_size: UI_TEXT_TURN_SIZE,
+                color: UI_TEXT_TURN_COLOR,
+            },
+        ),
+    ));
+
+    commands.spawn((
+        UiCurrentMapText,
+        TextBundle::from_section(
+            format!("Map {}", current_map_number.0),
             TextStyle {
                 font: asset_server.load("fonts/GABOED.ttf"),
                 font_size: UI_TEXT_TURN_SIZE,
