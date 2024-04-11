@@ -8,7 +8,7 @@ impl Plugin for UiPlugin {
         app.add_systems(OnEnter(AppState::InGame), setup_ui)
             .add_systems(
                 Update,
-                update_turn_counter_text.run_if(in_state(AppState::InGame)),
+                update_ui_current_turn_text.run_if(in_state(AppState::InGame)),
             );
     }
 }
@@ -35,10 +35,10 @@ pub fn setup_ui(
     ));
 }
 
-pub fn update_turn_counter_text(
+pub fn update_ui_current_turn_text(
     mut query: Query<&mut Text, With<UiCurrentTurnText>>,
-    game_turn: Res<CurrentTurnNumber>,
+    current_turn_number: Res<CurrentTurnNumber>,
 ) {
     let mut text = query.single_mut();
-    text.sections[0].value = format!("TURN #{}", game_turn.0);
+    text.sections[0].value = format!("TURN #{}", current_turn_number.0);
 }
