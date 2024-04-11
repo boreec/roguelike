@@ -15,6 +15,9 @@ impl Plugin for ResourcesPlugin {
     }
 }
 
+#[derive(Default, Resource)]
+pub struct CurrentMapNumber(pub usize);
+
 /// Represents the current game turn. A turn is passed each time all actors
 /// have performed an action or a move.
 #[derive(Default, Resource)]
