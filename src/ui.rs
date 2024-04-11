@@ -50,8 +50,8 @@ pub fn setup_ui(
         )
         .with_style(Style {
             position_type: PositionType::Absolute,
-            top: Val::Px(5.0),
-            right: Val::Px(15.0),
+            top: Val::Px(0.0),
+            right: Val::Px(0.0),
             ..default()
         }),
     ));
