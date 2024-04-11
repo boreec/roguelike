@@ -47,7 +47,13 @@ pub fn setup_ui(
                 font_size: UI_TEXT_TURN_SIZE,
                 color: UI_TEXT_TURN_COLOR,
             },
-        ),
+        )
+        .with_style(Style {
+            position_type: PositionType::Absolute,
+            top: Val::Px(5.0),
+            right: Val::Px(15.0),
+            ..default()
+        }),
     ));
 }
 
