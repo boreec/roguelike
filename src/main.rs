@@ -37,7 +37,7 @@ use prelude::*;
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::ANTIQUE_WHITE))
-        .insert_resource(GameTurn::default())
+        .insert_resource(CurrentTurnNumber::default())
         .insert_resource(Msaa::Off)
         .add_plugins((
             DefaultPlugins

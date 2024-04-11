@@ -19,7 +19,7 @@ pub struct UiTurnText;
 pub fn setup_ui(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    game_turn: Res<GameTurn>,
+    game_turn: Res<CurrentTurnNumber>,
 ) {
     commands.spawn((
         UiTurnText,
@@ -36,7 +36,7 @@ pub fn setup_ui(
 
 pub fn update_turn_counter_text(
     mut query: Query<&mut Text, With<UiTurnText>>,
-    game_turn: Res<GameTurn>,
+    game_turn: Res<CurrentTurnNumber>,
 ) {
     let mut text = query.single_mut();
     text.sections[0].value = format!("TURN #{}", game_turn.0);

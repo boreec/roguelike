@@ -17,11 +17,11 @@ impl Plugin for ResourcesPlugin {
 
 /// The current game turn.
 #[derive(Default, Resource)]
-pub struct GameTurn(pub usize);
+pub struct CurrentTurnNumber(pub usize);
 
 pub fn increase_game_turn(
     mut next_state: ResMut<NextState<GameState>>,
-    mut game_turn: ResMut<GameTurn>,
+    mut game_turn: ResMut<CurrentTurnNumber>,
 ) {
     game_turn.0 += 1;
     next_state.set(GameState::PlayerTurn);
