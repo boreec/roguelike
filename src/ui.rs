@@ -14,7 +14,7 @@ impl Plugin for UiPlugin {
 }
 
 #[derive(Component)]
-pub struct UiTurnText;
+pub struct UiCurrentTurnText;
 
 pub fn setup_ui(
     mut commands: Commands,
@@ -22,7 +22,7 @@ pub fn setup_ui(
     current_turn_number: Res<CurrentTurnNumber>,
 ) {
     commands.spawn((
-        UiTurnText,
+        UiCurrentTurnText,
         TextBundle::from_section(
             format!("Turn {}", current_turn_number.0),
             TextStyle {
@@ -35,7 +35,7 @@ pub fn setup_ui(
 }
 
 pub fn update_turn_counter_text(
-    mut query: Query<&mut Text, With<UiTurnText>>,
+    mut query: Query<&mut Text, With<UiCurrentTurnText>>,
     game_turn: Res<CurrentTurnNumber>,
 ) {
     let mut text = query.single_mut();
