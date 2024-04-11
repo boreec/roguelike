@@ -15,6 +15,8 @@ impl Plugin for ResourcesPlugin {
     }
 }
 
+/// Represents the current map number. The map number is increased every time
+/// the player exits to another map.
 #[derive(Default, Resource)]
 pub struct CurrentMapNumber(pub usize);
 
