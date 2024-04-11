@@ -19,12 +19,12 @@ pub struct UiTurnText;
 pub fn setup_ui(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    game_turn: Res<CurrentTurnNumber>,
+    current_turn_number: Res<CurrentTurnNumber>,
 ) {
     commands.spawn((
         UiTurnText,
         TextBundle::from_section(
-            format!("Turn {}", game_turn.0),
+            format!("Turn {}", current_turn_number.0),
             TextStyle {
                 font: asset_server.load("fonts/GABOED.ttf"),
                 font_size: UI_TEXT_TURN_SIZE,
