@@ -15,7 +15,8 @@ impl Plugin for ResourcesPlugin {
     }
 }
 
-/// The current game turn.
+/// Represents the current game turn. A turn is passed each time all actors
+/// have performed an action or a move.
 #[derive(Default, Resource)]
 pub struct CurrentTurnNumber(pub usize);
 
