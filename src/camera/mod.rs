@@ -47,6 +47,7 @@ pub fn check_camera_zoom(
     projection.scale = log_scale.exp();
 }
 
+/// Sets the camera position centered on the player.
 pub fn update_camera_position(
     query_player: Query<&MapPosition, With<Player>>,
     mut query_main_camera: Query<
