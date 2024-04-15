@@ -15,7 +15,7 @@ entries:
 1. 29/12/2023: [devlog #0 - A Roguelike for 2024 ?](https://boreec.github.io/posts/devlog-0000/)
 2. 31/01/2024: [devlog #1 - Procedural Map Generation](https://boreec.github.io/posts/devlog-0001/)
 3. 28/02/2024: [devlog #2 - Palette and Tileset update](https://boreec.github.io/posts/devlog-0002/)
-4. ??/??/????
+4. 30/04/2024: WIP
 
 # Running the game
 
