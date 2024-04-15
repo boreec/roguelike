@@ -26,6 +26,7 @@ fn setup_main_camera(mut commands: Commands) {
     commands.spawn((Camera2dBundle::default(), MainCamera));
 }
 
+/// Updates the camera zoom depending on the mouse wheel input.
 pub fn check_camera_zoom(
     mut scroll_evr: EventReader<MouseWheel>,
     mut query_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
