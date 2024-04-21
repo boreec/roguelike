@@ -62,6 +62,7 @@ pub struct MapBundle {
     map_number: MapNumber,
 }
 
+/// Represents a number to identity a map.
 #[derive(Component)]
 pub struct MapNumber(pub usize);
 
