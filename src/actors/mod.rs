@@ -21,6 +21,7 @@ impl Plugin for ActorsPlugin {
     }
 }
 
+/// Removes actors for a given map.
 pub fn cleanup_actors(
     mut commands: Commands,
     query_rabbit_entities: Query<Entity, With<Rabbit>>,
