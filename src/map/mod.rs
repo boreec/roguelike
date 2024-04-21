@@ -22,17 +22,11 @@ impl Plugin for MapPlugin {
 /// Removes all entities (`Map`, `Tile`, etc) related to the current map.
 pub fn cleanup_map(
     mut commands: Commands,
-    query_map: Query<(Entity, &MapNumber), With<Map>>,
-    query_tile: Query<(Entity, &MapNumber), With<Tile>>,
+    query: Query<(Entity, &MapNumber), Or<(With<Map>, With<Tile>)>>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    for (entity, map_number) in &query_map {
-        if map_number.0 == current_map_number.0 {
-            commands.entity(entity).despawn();
-        }
-    }
-    for (entity, map_number) in &query_tile {
+    for (entity, map_number) in &query {
         if map_number.0 == current_map_number.0 {
             commands.entity(entity).despawn();
         }
