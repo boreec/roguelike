@@ -44,11 +44,11 @@ pub fn cleanup_map(
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
     query_map: Query<&Map>,
-    query_player: Query<(&Player, &MapPosition)>,
+    query_player: Query<&MapPosition, With<Player>>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     let map = query_map.single();
-    let (_, player_position) = query_player.single();
+    let player_position = query_player.single();
     for exit_position in &map.exits {
         if player_position == exit_position {
             next_game_state.set(GameState::CleanupMap);
