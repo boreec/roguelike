@@ -19,6 +19,7 @@ impl Plugin for MapPlugin {
     }
 }
 
+/// Removes all entities (`Map`, `Tile`, etc) related to the current map.
 pub fn cleanup_map(
     mut commands: Commands,
     query_map: Query<(Entity, &MapNumber), With<Map>>,
