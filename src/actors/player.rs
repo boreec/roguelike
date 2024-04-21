@@ -12,6 +12,7 @@ pub struct PlayerBundle {
     pub map_number: MapNumber,
 }
 
+/// Creates an entity for the player.
 pub fn initialize_player(
     commands: &mut Commands,
     map: &Map,
