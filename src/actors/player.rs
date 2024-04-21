@@ -36,6 +36,7 @@ pub fn initialize_player(
     });
 }
 
+/// Updates the player's sprite position based on its `MapPosition`.
 pub fn update_player_sprite(
     mut query_player: Query<(&mut Transform, &MapPosition), With<Player>>,
 ) {
