@@ -19,6 +19,7 @@ impl Plugin for CameraPlugin {
     }
 }
 
+/// Represents the camera displaying the `Player`, the `Map`, etc.
 #[derive(Component)]
 pub struct MainCamera;
 
