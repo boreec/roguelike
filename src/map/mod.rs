@@ -40,6 +40,8 @@ pub fn cleanup_map(
     next_game_state.set(GameState::CleanupActors);
 }
 
+/// Checks if a player is on an exit tile. In that case, the game state is
+/// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
     query_map: Query<&Map>,
     query_player: Query<(&Player, &MapPosition)>,
