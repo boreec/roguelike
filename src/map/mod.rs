@@ -21,15 +21,20 @@ impl Plugin for MapPlugin {
 
 pub fn cleanup_map(
     mut commands: Commands,
-    query_map_entity: Query<Entity, With<Map>>,
-    query_tile_entities: Query<Entity, With<Tile>>,
+    query_map: Query<(Entity, &MapNumber), With<Map>>,
+    query_tile: Query<(Entity, &MapNumber), With<Tile>>,
     mut next_game_state: ResMut<NextState<GameState>>,
+    current_map_number: Res<CurrentMapNumber>,
 ) {
-    let map_entity: Entity = query_map_entity.single();
-    let tile_entities: Vec<Entity> = query_tile_entities.iter().collect();
-    commands.entity(map_entity).despawn();
-    for tile_entity in tile_entities {
-        commands.entity(tile_entity).despawn();
+    for (entity, map_number) in &query_map {
+        if map_number.0 == current_map_number.0 {
+            commands.entity(entity).despawn();
+        }
+    }
+    for (entity, map_number) in &query_tile {
+        if map_number.0 == current_map_number.0 {
+            commands.entity(entity).despawn();
+        }
     }
     next_game_state.set(GameState::CleanupActors);
 }
