@@ -24,12 +24,14 @@ impl Plugin for ActorsPlugin {
 /// Removes actors for a given map.
 pub fn cleanup_actors(
     mut commands: Commands,
-    query_rabbit_entities: Query<Entity, With<Rabbit>>,
+    query: Query<(Entity, &MapNumber)>,
     mut next_game_state: ResMut<NextState<GameState>>,
+    current_map_number: Res<CurrentMapNumber>,
 ) {
-    let rabbit_entities: Vec<Entity> = query_rabbit_entities.iter().collect();
-    for rabbit_entity in rabbit_entities {
-        commands.entity(rabbit_entity).despawn();
+    for (entity, map_number) in &query {
+        if map_number.0 == current_map_number.0 {
+            commands.entity(entity).despawn();
+        }
     }
     next_game_state.set(GameState::InitializingMap);
 }
