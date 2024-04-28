@@ -65,6 +65,9 @@ pub enum ExecutionMode {
 }
 
 impl ExecutionMode {
+    /// Flips the current mode.
+    /// `Debug` -> `Release`
+    /// `Release` -> `Debug`
     pub fn flip(&mut self) {
         *self = match *self {
             Self::Release => Self::Debug,
