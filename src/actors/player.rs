@@ -17,6 +17,7 @@ pub fn initialize_player(
     commands: &mut Commands,
     map: &Map,
     tileset: &TilesetActor,
+    current_map_number: usize,
 ) {
     let map_position = map.generate_random_spawning_position();
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
@@ -33,7 +34,7 @@ pub fn initialize_player(
             sprite: Sprite::default(),
             ..Default::default()
         },
-        map_number: MapNumber(0),
+        map_number: MapNumber(current_map_number),
     });
 }
 

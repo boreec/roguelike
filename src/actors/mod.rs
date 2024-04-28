@@ -42,15 +42,16 @@ pub fn initialize_actors(
     query_map: Query<&Map>,
     mut query_player_map_position: Query<&mut MapPosition, With<Player>>,
     tileset: Res<TilesetActor>,
+    current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     let map = query_map.single();
-    initialize_rabbits(&mut commands, map, &tileset);
+    initialize_rabbits(&mut commands, map, &tileset, current_map_number.0);
 
     // initialize the player only if there's no player created
     let player_map_position = query_player_map_position.get_single_mut();
     if player_map_position.is_err() {
-        initialize_player(&mut commands, map, &tileset);
+        initialize_player(&mut commands, map, &tileset, current_map_number.0);
     } else {
         let new_spawn = map.generate_random_spawning_position();
         *player_map_position.unwrap() = new_spawn;

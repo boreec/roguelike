@@ -16,6 +16,7 @@ pub fn initialize_rabbits(
     commands: &mut Commands,
     map: &Map,
     tileset: &TilesetActor,
+    current_map_number: usize,
 ) {
     for _ in 0..3 {
         let map_position = map.generate_random_spawning_position();
@@ -37,7 +38,7 @@ pub fn initialize_rabbits(
                 sprite: Sprite::default(),
                 ..Default::default()
             },
-            map_number: MapNumber(0),
+            map_number: MapNumber(current_map_number),
         });
     }
 }
