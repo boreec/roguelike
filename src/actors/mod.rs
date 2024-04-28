@@ -21,7 +21,7 @@ impl Plugin for ActorsPlugin {
     }
 }
 
-/// Removes actors for a given map.
+/// Removes actors for the current map.
 pub fn cleanup_actors(
     mut commands: Commands,
     query: Query<(Entity, &MapNumber)>,
@@ -36,7 +36,7 @@ pub fn cleanup_actors(
     next_game_state.set(GameState::InitializingMap);
 }
 
-/// Initializes all actors for a given map.
+/// Initializes all actors for the current map.
 pub fn initialize_actors(
     mut commands: Commands,
     query_map: Query<(&Map, &MapNumber)>,
@@ -70,6 +70,7 @@ pub fn initialize_actors(
             current_map_number.0,
         );
     } else {
+        // if the player already exists, set a new spawn on the map
         let new_spawn = current_map.generate_random_spawning_position();
         *player_map_position.unwrap() = new_spawn;
     }
