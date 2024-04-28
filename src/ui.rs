@@ -71,7 +71,7 @@ pub fn update_ui_current_turn_text(
     current_turn_number: Res<CurrentTurnNumber>,
 ) {
     let mut text = query.single_mut();
-    text.sections[0].value = format!("TURN {}", current_turn_number.0);
+    text.sections[0].value = format!("Turn {}", current_turn_number.0);
 }
 
 /// Updates the ui element which represents the current map.
@@ -80,5 +80,5 @@ pub fn update_ui_current_map_text(
     current_map_number: Res<CurrentMapNumber>,
 ) {
     let mut text = query.single_mut();
-    text.sections[0].value = format!("MAP {}", current_map_number.0);
+    text.sections[0].value = format!("Map {}", current_map_number.0);
 }
