@@ -59,8 +59,8 @@ pub enum ExecutionMode {
     /// Corresponds to the mode intended to be played.
     #[default]
     Release,
-    /// Corresponds to the mode used by developper, containing extra bypass and
-    /// information useful for developping and debugging the game.
+    /// Corresponds to the mode used by developer, containing extra bypass and
+    /// information useful for developing and debugging the game.
     Debug,
 }
 

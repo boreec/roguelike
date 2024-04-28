@@ -44,7 +44,7 @@ fn main() {
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
-                        resolution: (WINDOW_WITDH, WINDOW_HEIGHT).into(),
+                        resolution: (WINDOW_WIDTH, WINDOW_HEIGHT).into(),
                         title: WINDOW_TITLE.to_string(),
                         ..Default::default()
                     }),

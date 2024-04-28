@@ -194,7 +194,7 @@ impl From<CellularAutomaton> for Map {
     ///
     /// # Returns
     ///
-    /// A `Map` where the tiles are determined by the cellular automaton state.    
+    /// A `Map` where the tiles are determined by the cellular automaton state.
     fn from(ca: CellularAutomaton) -> Self {
         let mut map = Self {
             width: ca.width,
