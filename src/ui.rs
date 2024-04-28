@@ -9,6 +9,10 @@ impl Plugin for UiPlugin {
             .add_systems(
                 Update,
                 update_ui_current_turn_text.run_if(in_state(AppState::InGame)),
+            )
+            .add_systems(
+                OnEnter(GameState::InitializingMap),
+                update_ui_current_map_text,
             );
     }
 }
@@ -67,4 +71,13 @@ pub fn update_ui_current_turn_text(
 ) {
     let mut text = query.single_mut();
     text.sections[0].value = format!("TURN {}", current_turn_number.0);
+}
+
+/// Updates the ui element which represents the current map.
+pub fn update_ui_current_map_text(
+    mut query: Query<&mut Text, With<UiCurrentMapText>>,
+    current_map_number: Res<CurrentMapNumber>,
+) {
+    let mut text = query.single_mut();
+    text.sections[0].value = format!("MAP {}", current_map_number.0);
 }
