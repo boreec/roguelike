@@ -66,5 +66,5 @@ pub fn update_ui_current_turn_text(
     current_turn_number: Res<CurrentTurnNumber>,
 ) {
     let mut text = query.single_mut();
-    text.sections[0].value = format!("TURN #{}", current_turn_number.0);
+    text.sections[0].value = format!("TURN {}", current_turn_number.0);
 }
