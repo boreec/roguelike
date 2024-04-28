@@ -7,12 +7,12 @@ impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(AppState::InGame), setup_ui)
             .add_systems(
-                Update,
+                OnEnter(GameState::PlayerTurn),
                 update_ui_current_turn_text.run_if(in_state(AppState::InGame)),
             )
             .add_systems(
                 OnEnter(GameState::InitializingMap),
-                update_ui_current_map_text,
+                update_ui_current_map_text.run_if(in_state(AppState::InGame)),
             );
     }
 }
