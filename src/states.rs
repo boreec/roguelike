@@ -2,6 +2,10 @@ use bevy::prelude::*;
 
 /// States used for the whole executable application. It comprises resources
 /// loading, game switching, etc.
+///
+/// The lifecycle of the game is:
+/// 1. `LoadingAssets` -> `InGame`
+/// 2. `InGame` -> `Finished`
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum AppState {
     /// First state for the whole application, consisting of loading the
