@@ -31,7 +31,7 @@ pub fn cleanup_map(
             commands.entity(entity).despawn();
         }
     }
-    next_game_state.set(GameState::CleanupActors);
+    next_game_state.set(GameState::InitializingMap);
 }
 
 /// Checks if a player is on an exit tile. In that case, the game state is

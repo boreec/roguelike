@@ -33,7 +33,7 @@ pub fn cleanup_actors(
             commands.entity(entity).despawn();
         }
     }
-    next_game_state.set(GameState::InitializingMap);
+    next_game_state.set(GameState::CleanupMap);
 }
 
 /// Initializes all actors for the current map.
