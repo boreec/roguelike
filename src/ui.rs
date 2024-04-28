@@ -27,6 +27,7 @@ pub struct UiCurrentTurnText;
 #[derive(Component)]
 pub struct UiCurrentMapText;
 
+/// Creates components for the ui elements.
 pub fn setup_ui(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
