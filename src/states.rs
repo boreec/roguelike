@@ -18,6 +18,18 @@ pub enum AppState {
 /// States used exclusively during the game. It involves not only the map and
 /// actors creation, but also the main game turn between the player and the
 /// enemies.
+///
+/// The lifecycle of the game is:
+/// 1. `Unitialized` -> `InitializingMap`
+/// 2. `InitializingMap` -> `InitializingActors`
+/// 3. `InitializingActors` -> `PlayerTurn`
+/// 4.
+///   1. `PlayerTurn` -> `EnemyTurn`
+///   2. `PlayerTurn` -> `CleanupActors`
+/// 5.
+///   1. `EnemyTurn` -> `PlayerTurn` (back to step 4.1)
+///   2. `CleanupActors` -> `CleanupMap`
+/// 6. `CleanupMap` -> `InitializingMap` (back to step 2)
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum GameState {
     /// Corresponds to the default state, before the game is running.
