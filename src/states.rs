@@ -53,10 +53,14 @@ pub enum GameState {
     CleanupActors,
 }
 
+/// States used for switching between release and debugging modes.
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum ExecutionMode {
+    /// Corresponds to the mode intended to be played.
     #[default]
     Release,
+    /// Corresponds to the mode used by developper, containing extra bypass and
+    /// information useful for developping and debugging the game.
     Debug,
 }
 
