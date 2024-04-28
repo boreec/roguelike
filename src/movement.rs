@@ -66,6 +66,7 @@ mod tests {
             width: 3,
             height: 3,
             tiles: vec![TileType::Grass; 3 * 3],
+            exits: vec![],
         }
     }
 
@@ -84,6 +85,7 @@ mod tests {
                 TileType::GrassWithStone,
                 TileType::Grass,
             ],
+            exits: vec![],
         }
     }
 
