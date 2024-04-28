@@ -24,7 +24,7 @@ pub enum AppState {
 /// enemies.
 ///
 /// The lifecycle of the game is:
-/// 1. `Unitialized` -> `InitializingMap`
+/// 1. `Uninitialized` -> `InitializingMap`
 /// 2. `InitializingMap` -> `InitializingActors`
 /// 3. `InitializingActors` -> `PlayerTurn`
 /// 4.
