@@ -24,7 +24,7 @@ pub fn cleanup_map(
     mut commands: Commands,
     query: Query<(Entity, &MapNumber), Or<(With<Map>, With<Tile>)>>,
     mut next_game_state: ResMut<NextState<GameState>>,
-    current_map_number: Res<CurrentMapNumber>,
+    mut current_map_number: ResMut<CurrentMapNumber>,
 ) {
     for (entity, map_number) in &query {
         if map_number.0 == current_map_number.0 {
@@ -32,6 +32,7 @@ pub fn cleanup_map(
         }
     }
     next_game_state.set(GameState::InitializingMap);
+    current_map_number.0 += 1;
 }
 
 /// Checks if a player is on an exit tile. In that case, the game state is
@@ -82,6 +83,7 @@ fn initialize_map(
     mut commands: Commands,
     mut game_next_state: ResMut<NextState<GameState>>,
     tileset: Res<TilesetTerrain>,
+    current_map_number: Res<CurrentMapNumber>,
 ) {
     let m = if rand::thread_rng().gen_bool(0.5) {
         Map::from((PerlinNoise::new(), MAP_WIDTH, MAP_HEIGHT))
@@ -117,14 +119,14 @@ fn initialize_map(
                 },
                 ..Default::default()
             },
-            map_number: MapNumber(0),
+            map_number: MapNumber(current_map_number.0),
             map_position: tile_position,
         });
     }
 
     commands.spawn(MapBundle {
         map: m,
-        map_number: MapNumber(0),
+        map_number: MapNumber(current_map_number.0),
     });
 
     game_next_state.set(GameState::InitializingActors);
