@@ -7,6 +7,7 @@ pub enum CellularState {
     Dead,
 }
 
+/// Represents a cellular automaton state at a given time.
 pub struct CellularAutomaton {
     pub width: usize,
     pub height: usize,
