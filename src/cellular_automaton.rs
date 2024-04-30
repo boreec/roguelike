@@ -11,6 +11,7 @@ pub enum CellularState {
 pub struct CellularAutomaton {
     /// The width of the cellular automaton.
     pub width: usize,
+    /// The height of the cellular automaton.
     pub height: usize,
     pub cells: Vec<CellularState>,
 }
