@@ -1,6 +1,7 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
+/// Key used for flipping the `ExecutionMode` state.
 pub const EXECUTION_MODE_FLIP_KEY: KeyCode = KeyCode::KeyG;
 
 pub const GRID_COLOR: Color = Color::BLACK;
