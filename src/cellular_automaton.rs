@@ -225,5 +225,45 @@ mod tests {
                 assert_eq!(CellularState::Alive, ca2x2.cells[i]);
             }
         }
+
+        // blinker pattern oscillates
+        let expected_blinker_even_position = vec![
+            CellularState::Dead,
+            CellularState::Alive,
+            CellularState::Dead,
+            CellularState::Dead,
+            CellularState::Alive,
+            CellularState::Dead,
+            CellularState::Dead,
+            CellularState::Alive,
+            CellularState::Dead,
+        ];
+
+        let expected_blinker_odd_position = vec![
+            CellularState::Dead,
+            CellularState::Dead,
+            CellularState::Dead,
+            CellularState::Alive,
+            CellularState::Alive,
+            CellularState::Alive,
+            CellularState::Dead,
+            CellularState::Dead,
+            CellularState::Dead,
+        ];
+
+        let mut ca3x3 = CellularAutomaton {
+            width: 3,
+            height: 3,
+            cells: expected_blinker_even_position.clone(),
+        };
+
+        for i in 1..10 {
+            ca3x3.transition();
+            if i % 2 == 1 {
+                assert_eq!(expected_blinker_odd_position.clone(), ca3x3.cells);
+            } else {
+                assert_eq!(expected_blinker_even_position.clone(), ca3x3.cells);
+            }
+        }
     }
 }
