@@ -1,7 +1,7 @@
 use rand::Rng;
 
 /// Represents the different state for a cellular automaton cell.
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum CellularState {
     Alive,
     Dead,
@@ -206,5 +206,15 @@ mod tests {
         assert_eq!(enumerate_neighbors(&ca1x2, 1).len(), 1);
 
         assert_eq!(enumerate_neighbors(&ca1x1, 0).len(), 0);
+    }
+
+    #[test]
+    fn test_transition() {
+        let mut ca1x1 = CellularAutomaton::new(1, 1, 1.0);
+        assert_eq!(CellularState::Alive, ca1x1.cells[0]);
+        for _ in 0..10 {
+            ca1x1.transition();
+            assert_eq!(CellularState::Dead, ca1x1.cells[0]);
+        }
     }
 }
