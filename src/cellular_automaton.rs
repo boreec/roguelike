@@ -216,5 +216,14 @@ mod tests {
             ca1x1.transition();
             assert_eq!(CellularState::Dead, ca1x1.cells[0]);
         }
+
+        // block pattern remains the same
+        let mut ca2x2 = CellularAutomaton::new(2, 2, 1.0);
+        for _ in 0..10 {
+            ca2x2.transition();
+            for i in 0..ca2x2.cells.len() {
+                assert_eq!(CellularState::Alive, ca2x2.cells[i]);
+            }
+        }
     }
 }
