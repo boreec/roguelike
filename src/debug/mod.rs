@@ -29,6 +29,7 @@ impl Plugin for DebugPlugin {
     }
 }
 
+/// Updates the `ExecutionMode` when the `DEBUG_MODE_KEY` is pressed.
 pub fn update_execution_mode(
     mut keys: ResMut<ButtonInput<KeyCode>>,
     current_execution_mode: Res<State<ExecutionMode>>,
