@@ -2,6 +2,7 @@ use crate::debug::constants::*;
 use crate::prelude::*;
 use bevy::prelude::*;
 
+/// Marker component for the debug grid.
 #[derive(Component)]
 pub struct DebugGrid;
 
