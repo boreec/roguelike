@@ -19,6 +19,8 @@ pub struct CellularAutomaton {
 }
 
 impl CellularAutomaton {
+    /// Initializes a `CellularAutomaton` of dimensions `width`x`height`, with
+    /// the cells' state assigned with a given probability.
     pub fn new(width: usize, height: usize, alive_probability: f64) -> Self {
         let cells = (0..width * height)
             .map(|_| {
