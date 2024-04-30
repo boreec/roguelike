@@ -3,7 +3,7 @@ use crate::prelude::*;
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct Grid;
+pub struct DebugGrid;
 
 fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
     let line_length = map.height as f32 * SPRITE_TILE_HEIGHT;
@@ -11,7 +11,7 @@ fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
         let position_anchor = MapPosition { x: i, y: 0 };
         let (line_x, _) = calculate_sprite_position(&position_anchor);
         commands.spawn((
-            Grid,
+            DebugGrid,
             SpriteBundle {
                 sprite: Sprite {
                     color: GRID_COLOR,
@@ -35,7 +35,7 @@ fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
         let position_anchor = MapPosition { x: 0, y: j };
         let (_, line_y) = calculate_sprite_position(&position_anchor);
         commands.spawn((
-            Grid,
+            DebugGrid,
             SpriteBundle {
                 sprite: Sprite {
                     color: GRID_COLOR,
@@ -67,7 +67,7 @@ pub fn show_grid(mut commands: Commands, query_map: Query<&Map>) {
 
 pub fn hide_grid(
     mut commands: Commands,
-    query_grid_entities: Query<Entity, With<Grid>>,
+    query_grid_entities: Query<Entity, With<DebugGrid>>,
 ) {
     despawn_grid_lines(&mut commands, query_grid_entities.iter().collect());
 }
