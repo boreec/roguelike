@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
-pub const DEBUG_MODE_KEY: KeyCode = KeyCode::KeyG;
+pub const EXECUTION_MODE_FLIP_KEY: KeyCode = KeyCode::KeyG;
 
 pub const GRID_COLOR: Color = Color::BLACK;
 pub const GRID_LINE_WIDTH: f32 = 2.0;

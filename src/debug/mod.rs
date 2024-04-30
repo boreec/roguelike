@@ -29,16 +29,16 @@ impl Plugin for DebugPlugin {
     }
 }
 
-/// Updates the `ExecutionMode` when the `DEBUG_MODE_KEY` is pressed.
+/// Updates the `ExecutionMode` when the `EXECUTION_MODE_FLIP_KEY` is pressed.
 pub fn update_execution_mode(
     mut keys: ResMut<ButtonInput<KeyCode>>,
     current_execution_mode: Res<State<ExecutionMode>>,
     mut next_execution_mode: ResMut<NextState<ExecutionMode>>,
 ) {
-    if keys.just_pressed(DEBUG_MODE_KEY) {
+    if keys.just_pressed(EXECUTION_MODE_FLIP_KEY) {
         let mut next_state = current_execution_mode.get().clone();
         next_state.flip();
         next_execution_mode.set(next_state);
-        keys.reset(DEBUG_MODE_KEY);
+        keys.reset(EXECUTION_MODE_FLIP_KEY);
     }
 }
