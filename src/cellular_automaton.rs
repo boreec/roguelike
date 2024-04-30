@@ -9,6 +9,7 @@ pub enum CellularState {
 
 /// Represents a cellular automaton state at a given time.
 pub struct CellularAutomaton {
+    /// The width of the cellular automaton.
     pub width: usize,
     pub height: usize,
     pub cells: Vec<CellularState>,
