@@ -16,7 +16,7 @@ impl Plugin for DebugPlugin {
         app.init_state::<ExecutionMode>()
             .add_systems(
                 Update,
-                check_execution_mode.run_if(in_state(GameState::PlayerTurn)),
+                update_execution_mode.run_if(in_state(GameState::PlayerTurn)),
             )
             .add_systems(
                 OnEnter(ExecutionMode::Debug),
@@ -29,7 +29,7 @@ impl Plugin for DebugPlugin {
     }
 }
 
-pub fn check_execution_mode(
+pub fn update_execution_mode(
     mut keys: ResMut<ButtonInput<KeyCode>>,
     current_execution_mode: Res<State<ExecutionMode>>,
     mut next_execution_mode: ResMut<NextState<ExecutionMode>>,
