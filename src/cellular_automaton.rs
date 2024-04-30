@@ -13,6 +13,8 @@ pub struct CellularAutomaton {
     pub width: usize,
     /// The height of the cellular automaton.
     pub height: usize,
+    /// The cells' states of the cellular automaton, the cells' coordinates are
+    /// given by their index in the vector.
     pub cells: Vec<CellularState>,
 }
 
