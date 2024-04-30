@@ -1,5 +1,6 @@
 use rand::Rng;
 
+/// Represents the different state for a cellular automaton cell.
 #[derive(Clone, PartialEq, Eq)]
 pub enum CellularState {
     Alive,
