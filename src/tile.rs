@@ -4,7 +4,7 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct Tile;
 
-#[derive(Clone, Component)]
+#[derive(Clone, Component, Copy)]
 pub enum TileType {
     Grass,
     GrassWithFlower,
@@ -38,4 +38,35 @@ pub struct TileBundle {
     pub sprite: SpriteSheetBundle,
     pub map_number: MapNumber,
     pub map_position: MapPosition,
+}
+
+impl TileBundle {
+    pub fn new(
+        map_position: MapPosition,
+        map_number: usize,
+        tileset: &TilesetTerrain,
+        tile_type: TileType,
+    ) -> Self {
+        let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
+        Self {
+            tile: Tile,
+            r#type: tile_type.clone(),
+            map_position,
+            map_number: MapNumber(map_number),
+            sprite: SpriteSheetBundle {
+                transform: Transform::from_xyz(
+                    sprite_x,
+                    sprite_y,
+                    Z_INDEX_TILE,
+                ),
+                sprite: Sprite::default(),
+                texture: tileset.1.clone(),
+                atlas: TextureAtlas {
+                    layout: tileset.0.clone(),
+                    index: TileType::to_sprite_idx(&tile_type),
+                },
+                ..Default::default()
+            },
+        }
+    }
 }

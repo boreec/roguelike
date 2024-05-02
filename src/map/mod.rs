@@ -101,27 +101,12 @@ fn initialize_map(
             x: i % m.width,
             y: i / m.width,
         };
-        let (sprite_x, sprite_y) = calculate_sprite_position(&tile_position);
-        commands.spawn(TileBundle {
-            tile: Tile,
-            r#type: tile.clone(),
-            sprite: SpriteSheetBundle {
-                transform: Transform::from_xyz(
-                    sprite_x,
-                    sprite_y,
-                    Z_INDEX_TILE,
-                ),
-                sprite: Sprite::default(),
-                texture: tileset.1.clone(),
-                atlas: TextureAtlas {
-                    layout: tileset.0.clone(),
-                    index: TileType::to_sprite_idx(tile),
-                },
-                ..Default::default()
-            },
-            map_number: MapNumber(current_map_number.0),
-            map_position: tile_position,
-        });
+        commands.spawn(TileBundle::new(
+            tile_position,
+            current_map_number.0,
+            &tileset,
+            *tile,
+        ));
     }
 
     commands.spawn(MapBundle {
