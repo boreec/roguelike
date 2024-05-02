@@ -28,11 +28,16 @@ impl Plugin for ActorsPlugin {
 #[derive(Component)]
 pub struct Actor;
 
+/// Bundle for spawning actor entities.
 #[derive(Bundle)]
 pub struct ActorBundle {
+    /// Marker component for actor entities.
     pub actor: Actor,
+    /// The map where the actor is at.
     pub map_number: MapNumber,
+    /// The map's position where the actor is at.
     pub map_position: MapPosition,
+    /// The sprite representing the actor.
     pub sprite: SpriteSheetBundle,
 }
 
