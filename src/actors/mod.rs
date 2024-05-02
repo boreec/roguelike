@@ -54,9 +54,22 @@ pub fn initialize_actors(
     }
 
     let current_map = current_map.unwrap();
+    let mut rabbit_spawn_positions = vec![];
+    for _ in 0..3 {
+        let rabbit_spawn_position = current_map
+            .generate_random_spawning_position(&rabbit_spawn_positions);
+        match rabbit_spawn_position {
+            Ok(position) => {
+                rabbit_spawn_positions.push(position);
+            }
+            Err(_) => {
+                break;
+            }
+        }
+    }
     initialize_rabbits(
         &mut commands,
-        current_map,
+        &rabbit_spawn_positions,
         &tileset,
         current_map_number.0,
     );
@@ -73,7 +86,7 @@ pub fn initialize_actors(
     } else {
         // if the player already exists, set a new spawn on the map
         let new_spawn = current_map
-            .generate_random_spawning_position(vec![])
+            .generate_random_spawning_position(&vec![])
             .unwrap();
         *player_map_position.unwrap() = new_spawn;
     }

@@ -137,7 +137,7 @@ impl Map {
     /// obstacle such as a rock or a tree on that position.
     pub fn generate_random_spawning_position(
         &self,
-        occupied_positions: Vec<MapPosition>,
+        occupied_positions: &Vec<MapPosition>,
     ) -> Result<MapPosition, Box<dyn std::error::Error>> {
         let spawnable_positions: Vec<_> = self
             .tiles
@@ -264,7 +264,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
 }
 
 /// Represents a position in a `Map`.
-#[derive(Component, Debug, Eq, PartialEq)]
+#[derive(Clone, Component, Copy, Debug, Eq, PartialEq)]
 pub struct MapPosition {
     pub x: usize,
     pub y: usize,
@@ -289,7 +289,7 @@ mod tests {
             exits: vec![],
         };
 
-        let spawn = map1x1.generate_random_spawning_position(vec![]);
+        let spawn = map1x1.generate_random_spawning_position(&vec![]);
 
         assert!(spawn.is_ok());
         assert_eq!(MapPosition::new(0, 0), spawn.unwrap());
@@ -304,16 +304,16 @@ mod tests {
             exits: vec![],
         };
 
-        let spawn = map1x1.generate_random_spawning_position(vec![]);
+        let spawn = map1x1.generate_random_spawning_position(&vec![]);
         assert!(spawn.is_err());
 
         map1x1.tiles = vec![TileType::Grass];
 
-        let spawn = map1x1.generate_random_spawning_position(vec![]);
+        let spawn = map1x1.generate_random_spawning_position(&vec![]);
         assert!(spawn.is_ok());
 
         let spawn =
-            map1x1.generate_random_spawning_position(vec![MapPosition {
+            map1x1.generate_random_spawning_position(&vec![MapPosition {
                 x: 0,
                 y: 0,
             }]);

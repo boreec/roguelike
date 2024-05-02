@@ -19,7 +19,7 @@ pub fn initialize_player(
     tileset: &TilesetActor,
     current_map_number: usize,
 ) {
-    let map_position = map.generate_random_spawning_position(vec![]).unwrap();
+    let map_position = map.generate_random_spawning_position(&vec![]).unwrap();
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn(PlayerBundle {
         player: Player,

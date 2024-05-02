@@ -14,17 +14,15 @@ pub struct RabbitBundle {
 
 pub fn initialize_rabbits(
     commands: &mut Commands,
-    map: &Map,
+    rabbit_spawn_positions: &Vec<MapPosition>,
     tileset: &TilesetActor,
     current_map_number: usize,
 ) {
-    for _ in 0..3 {
-        let map_position =
-            map.generate_random_spawning_position(vec![]).unwrap();
+    for map_position in rabbit_spawn_positions {
         let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
         commands.spawn(RabbitBundle {
             rabbit: Rabbit,
-            position: map_position,
+            position: *map_position,
             sprite: SpriteSheetBundle {
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),
