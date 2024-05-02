@@ -275,3 +275,23 @@ impl MapPosition {
         Self { x, y }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_generate_random_spawning_position() {
+        let map1x1 = Map {
+            width: 1,
+            height: 1,
+            tiles: vec![TileType::Grass],
+            exits: vec![],
+        };
+
+        let spawn = map1x1.generate_random_spawning_position(vec![]);
+
+        assert!(spawn.is_ok());
+        assert_eq!(MapPosition::new(0, 0), spawn.unwrap());
+    }
+}
