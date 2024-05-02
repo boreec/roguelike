@@ -46,7 +46,7 @@ pub fn check_if_player_exit_map(
     let player_position = query_player.single();
     for exit_position in &map.exits {
         if player_position == exit_position {
-            next_game_state.set(GameState::CleanupMap);
+            next_game_state.set(GameState::CleanupActors);
         }
     }
 }
