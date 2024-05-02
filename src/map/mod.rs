@@ -297,7 +297,7 @@ mod tests {
 
     #[test]
     fn test_generate_random_spawning_position_failure() {
-        let map1x1 = Map {
+        let mut map1x1 = Map {
             width: 1,
             height: 1,
             tiles: vec![TileType::GrassWithStone],
@@ -305,7 +305,18 @@ mod tests {
         };
 
         let spawn = map1x1.generate_random_spawning_position(vec![]);
+        assert!(spawn.is_err());
 
+        map1x1.tiles = vec![TileType::Grass];
+
+        let spawn = map1x1.generate_random_spawning_position(vec![]);
+        assert!(spawn.is_ok());
+
+        let spawn =
+            map1x1.generate_random_spawning_position(vec![MapPosition {
+                x: 0,
+                y: 0,
+            }]);
         assert!(spawn.is_err());
     }
 }
