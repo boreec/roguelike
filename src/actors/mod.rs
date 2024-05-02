@@ -24,6 +24,7 @@ impl Plugin for ActorsPlugin {
     }
 }
 
+/// Marker component for the actor entities.
 #[derive(Component)]
 pub struct Actor;
 
