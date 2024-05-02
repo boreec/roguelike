@@ -29,7 +29,10 @@ pub struct Actor;
 
 #[derive(Bundle)]
 pub struct ActorBundle {
-    actor: Actor,
+    pub actor: Actor,
+    pub position: MapPosition,
+    pub sprite: SpriteSheetBundle,
+    pub map_number: MapNumber,
 }
 
 /// Removes actors for the current map.

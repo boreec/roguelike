@@ -7,9 +7,6 @@ pub struct Player;
 #[derive(Bundle)]
 pub struct PlayerBundle {
     pub player: Player,
-    pub position: MapPosition,
-    pub sprite: SpriteSheetBundle,
-    pub map_number: MapNumber,
 }
 
 /// Creates an entity for the player.
@@ -21,9 +18,8 @@ pub fn initialize_player(
 ) {
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn((
-        ActorBundle { actor: Actor },
-        PlayerBundle {
-            player: Player,
+        ActorBundle {
+            actor: Actor,
             position: map_position,
             sprite: SpriteSheetBundle {
                 atlas: TextureAtlas {
@@ -41,6 +37,7 @@ pub fn initialize_player(
             },
             map_number: MapNumber(current_map_number),
         },
+        PlayerBundle { player: Player },
     ));
 }
 

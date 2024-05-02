@@ -7,9 +7,6 @@ pub struct Rabbit;
 #[derive(Bundle)]
 pub struct RabbitBundle {
     pub rabbit: Rabbit,
-    pub position: MapPosition,
-    pub sprite: SpriteSheetBundle,
-    pub map_number: MapNumber,
 }
 
 pub fn initialize_rabbits(
@@ -21,9 +18,8 @@ pub fn initialize_rabbits(
     for map_position in rabbit_spawn_positions {
         let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
         commands.spawn((
-            ActorBundle { actor: Actor },
-            RabbitBundle {
-                rabbit: Rabbit,
+            ActorBundle {
+                actor: Actor,
                 position: *map_position,
                 sprite: SpriteSheetBundle {
                     atlas: TextureAtlas {
@@ -41,6 +37,7 @@ pub fn initialize_rabbits(
                 },
                 map_number: MapNumber(current_map_number),
             },
+            RabbitBundle { rabbit: Rabbit },
         ));
     }
 }
