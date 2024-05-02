@@ -100,9 +100,14 @@ pub fn initialize_actors(
     } else {
         // if the player already exists, set a new spawn on the map
         let new_spawn = current_map
-            .generate_random_spawning_position(&vec![])
-            .unwrap();
-        *player_map_position.unwrap() = new_spawn;
+            .generate_random_spawning_position(&rabbit_spawn_positions);
+
+        *player_map_position.unwrap() = match new_spawn {
+            Ok(position) => position,
+            Err(_) => {
+                panic!("failed to initalize player for the first time");
+            }
+        };
     }
     next_game_state.set(GameState::PlayerTurn);
 }
