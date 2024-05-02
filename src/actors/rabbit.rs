@@ -9,6 +9,12 @@ pub struct RabbitBundle {
     pub rabbit: Rabbit,
 }
 
+impl RabbitBundle {
+    pub fn new() -> Self {
+        Self { rabbit: Rabbit }
+    }
+}
+
 pub fn initialize_rabbits(
     commands: &mut Commands,
     rabbit_spawn_positions: &Vec<MapPosition>,
@@ -23,7 +29,7 @@ pub fn initialize_rabbits(
                 tileset,
                 TILESET_ACTOR_IDX_RABBIT,
             ),
-            RabbitBundle { rabbit: Rabbit },
+            RabbitBundle::new(),
         ));
     }
 }
