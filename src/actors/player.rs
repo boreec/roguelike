@@ -16,27 +16,13 @@ pub fn initialize_player(
     tileset: &TilesetActor,
     current_map_number: usize,
 ) {
-    let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn((
-        ActorBundle {
-            actor: Actor,
-            map_position: map_position,
-            sprite: SpriteSheetBundle {
-                atlas: TextureAtlas {
-                    layout: tileset.0.clone(),
-                    index: TILESET_ACTOR_IDX_PLAYER,
-                },
-                texture: tileset.1.clone(),
-                transform: Transform::from_xyz(
-                    sprite_x,
-                    sprite_y,
-                    Z_INDEX_ACTOR,
-                ),
-                sprite: Sprite::default(),
-                ..Default::default()
-            },
-            map_number: MapNumber(current_map_number),
-        },
+        ActorBundle::new(
+            map_position,
+            current_map_number,
+            tileset,
+            TILESET_ACTOR_IDX_PLAYER,
+        ),
         PlayerBundle { player: Player },
     ));
 }
