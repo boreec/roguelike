@@ -17,14 +17,17 @@ impl Plugin for ActorsPlugin {
             OnEnter(GameState::InitializingActors),
             initialize_actors.run_if(in_state(AppState::InGame)),
         )
-        .add_systems(OnEnter(GameState::CleanupActors), cleanup_actors);
+        .add_systems(
+            OnEnter(GameState::CleanupActors),
+            cleanup_actors.run_if(in_state(AppState::InGame)),
+        );
     }
 }
 
 /// Removes actors for the current map.
 pub fn cleanup_actors(
     mut commands: Commands,
-    query: Query<(Entity, &MapNumber)>,
+    query: Query<(Entity, &MapNumber), With<Rabbit>>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
