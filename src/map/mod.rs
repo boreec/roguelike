@@ -135,7 +135,9 @@ fn initialize_map(
 impl Map {
     /// Returns a randown position where an actor can spawn, i.e. there's no
     /// obstacle such as a rock or a tree on that position.
-    pub fn generate_random_spawning_position(&self) -> MapPosition {
+    pub fn generate_random_spawning_position(
+        &self,
+    ) -> Result<MapPosition, Box<dyn std::error::Error>> {
         let spawnable_positions: Vec<_> = self
             .tiles
             .iter()
@@ -145,13 +147,13 @@ impl Map {
             .collect();
 
         if spawnable_positions.is_empty() {
-            panic!("There are no spawnable positions");
+            return Err("no spawnable positions".into());
         }
 
         let mut rng = rand::thread_rng();
         let index = *spawnable_positions.choose(&mut rng).unwrap();
 
-        MapPosition::new(index % self.width, index / self.height)
+        Ok(MapPosition::new(index % self.width, index / self.height))
     }
 
     /// Adds an exit tile on the right side of the map. The position is

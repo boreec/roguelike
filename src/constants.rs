@@ -1,7 +1,7 @@
 use bevy::prelude::Color;
 
 /// The window's width in pixels.
-pub const WINDOW_WIDTH: f32 = 1280.0;
+pub const WINDOW_WIDTH: f32 = 600.0;
 
 /// The window's height in pixels.
 pub const WINDOW_HEIGHT: f32 = 800.0;
