@@ -53,7 +53,12 @@ pub fn initialize_actors(
         }
     }
 
+    if current_map.is_none() {
+        panic!("no current map found with number {}", current_map_number.0);
+    }
+
     let current_map = current_map.unwrap();
+
     let mut rabbit_spawn_positions = vec![];
     for _ in 0..3 {
         let rabbit_spawn_position = current_map
