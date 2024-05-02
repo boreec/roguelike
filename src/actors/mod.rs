@@ -49,6 +49,7 @@ pub fn initialize_actors(
     for (map, map_number) in &query_map {
         if map_number.0 == current_map_number.0 {
             current_map = Some(map);
+            break;
         }
     }
 
