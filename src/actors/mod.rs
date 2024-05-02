@@ -24,10 +24,18 @@ impl Plugin for ActorsPlugin {
     }
 }
 
+#[derive(Component)]
+pub struct Actor;
+
+#[derive(Bundle)]
+pub struct ActorBundle {
+    actor: Actor,
+}
+
 /// Removes actors for the current map.
 pub fn cleanup_actors(
     mut commands: Commands,
-    query: Query<(Entity, &MapNumber), With<Rabbit>>,
+    query: Query<(Entity, &MapNumber), (With<Actor>, Without<Player>)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {

@@ -20,24 +20,27 @@ pub fn initialize_rabbits(
 ) {
     for map_position in rabbit_spawn_positions {
         let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
-        commands.spawn(RabbitBundle {
-            rabbit: Rabbit,
-            position: *map_position,
-            sprite: SpriteSheetBundle {
-                atlas: TextureAtlas {
-                    layout: tileset.0.clone(),
-                    index: TILESET_ACTOR_IDX_RABBIT,
+        commands.spawn((
+            ActorBundle { actor: Actor },
+            RabbitBundle {
+                rabbit: Rabbit,
+                position: *map_position,
+                sprite: SpriteSheetBundle {
+                    atlas: TextureAtlas {
+                        layout: tileset.0.clone(),
+                        index: TILESET_ACTOR_IDX_RABBIT,
+                    },
+                    transform: Transform::from_xyz(
+                        sprite_x,
+                        sprite_y,
+                        Z_INDEX_ACTOR,
+                    ),
+                    texture: tileset.1.clone(),
+                    sprite: Sprite::default(),
+                    ..Default::default()
                 },
-                transform: Transform::from_xyz(
-                    sprite_x,
-                    sprite_y,
-                    Z_INDEX_ACTOR,
-                ),
-                texture: tileset.1.clone(),
-                sprite: Sprite::default(),
-                ..Default::default()
+                map_number: MapNumber(current_map_number),
             },
-            map_number: MapNumber(current_map_number),
-        });
+        ));
     }
 }
