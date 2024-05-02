@@ -20,7 +20,7 @@ pub fn initialize_player(
     commands.spawn((
         ActorBundle {
             actor: Actor,
-            position: map_position,
+            map_position: map_position,
             sprite: SpriteSheetBundle {
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),

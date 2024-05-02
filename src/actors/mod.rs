@@ -30,11 +30,40 @@ pub struct Actor;
 #[derive(Bundle)]
 pub struct ActorBundle {
     pub actor: Actor,
-    pub position: MapPosition,
-    pub sprite: SpriteSheetBundle,
     pub map_number: MapNumber,
+    pub map_position: MapPosition,
+    pub sprite: SpriteSheetBundle,
 }
 
+impl ActorBundle {
+    pub fn new(
+        map_position: MapPosition,
+        map_number: usize,
+        tileset: &TilesetActor,
+        tileset_index: usize,
+    ) -> Self {
+        let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
+        Self {
+            actor: Actor,
+            map_position,
+            map_number: MapNumber { 0: map_number },
+            sprite: SpriteSheetBundle {
+                atlas: TextureAtlas {
+                    layout: tileset.0.clone(),
+                    index: tileset_index,
+                },
+                transform: Transform::from_xyz(
+                    sprite_x,
+                    sprite_y,
+                    Z_INDEX_ACTOR,
+                ),
+                texture: tileset.1.clone(),
+                sprite: Sprite::default(),
+                ..Default::default()
+            },
+        }
+    }
+}
 /// Removes actors for the current map.
 pub fn cleanup_actors(
     mut commands: Commands,
