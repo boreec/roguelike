@@ -77,9 +77,18 @@ pub fn initialize_actors(
     // initialize the player only if there's no player created
     let player_map_position = query_player_map_position.get_single_mut();
     if player_map_position.is_err() {
+        let player_spawn_position = match current_map
+            .generate_random_spawning_position(&rabbit_spawn_positions)
+        {
+            Ok(position) => position,
+            Err(_) => {
+                panic!("player could not spawn");
+            }
+        };
+
         initialize_player(
             &mut commands,
-            current_map,
+            player_spawn_position,
             &tileset,
             current_map_number.0,
         );

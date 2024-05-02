@@ -15,11 +15,10 @@ pub struct PlayerBundle {
 /// Creates an entity for the player.
 pub fn initialize_player(
     commands: &mut Commands,
-    map: &Map,
+    map_position: MapPosition,
     tileset: &TilesetActor,
     current_map_number: usize,
 ) {
-    let map_position = map.generate_random_spawning_position(&vec![]).unwrap();
     let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
     commands.spawn(PlayerBundle {
         player: Player,
