@@ -9,6 +9,12 @@ pub struct PlayerBundle {
     pub player: Player,
 }
 
+impl PlayerBundle {
+    pub fn new() -> Self {
+        Self { player: Player }
+    }
+}
+
 /// Creates an entity for the player.
 pub fn initialize_player(
     commands: &mut Commands,
@@ -23,7 +29,7 @@ pub fn initialize_player(
             tileset,
             TILESET_ACTOR_IDX_PLAYER,
         ),
-        PlayerBundle { player: Player },
+        PlayerBundle::new(),
     ));
 }
 
