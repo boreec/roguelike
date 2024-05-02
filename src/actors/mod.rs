@@ -71,8 +71,9 @@ pub fn initialize_actors(
         );
     } else {
         // if the player already exists, set a new spawn on the map
-        let new_spawn =
-            current_map.generate_random_spawning_position().unwrap();
+        let new_spawn = current_map
+            .generate_random_spawning_position(vec![])
+            .unwrap();
         *player_map_position.unwrap() = new_spawn;
     }
     next_game_state.set(GameState::PlayerTurn);

@@ -137,12 +137,19 @@ impl Map {
     /// obstacle such as a rock or a tree on that position.
     pub fn generate_random_spawning_position(
         &self,
+        occupied_positions: Vec<MapPosition>,
     ) -> Result<MapPosition, Box<dyn std::error::Error>> {
         let spawnable_positions: Vec<_> = self
             .tiles
             .iter()
             .enumerate()
-            .filter(|(_, tile)| tile.is_walkable())
+            .filter(|(index, tile)| {
+                tile.is_walkable()
+                    && !occupied_positions.contains(&MapPosition {
+                        x: index % self.width,
+                        y: index / self.width,
+                    })
+            })
             .map(|(index, _)| index)
             .collect();
 

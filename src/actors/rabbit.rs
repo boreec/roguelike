@@ -19,7 +19,8 @@ pub fn initialize_rabbits(
     current_map_number: usize,
 ) {
     for _ in 0..3 {
-        let map_position = map.generate_random_spawning_position().unwrap();
+        let map_position =
+            map.generate_random_spawning_position(vec![]).unwrap();
         let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
         commands.spawn(RabbitBundle {
             rabbit: Rabbit,
