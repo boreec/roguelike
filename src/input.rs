@@ -30,10 +30,8 @@ pub fn check_player_directional_input(
         }
     };
 
-    let mut occupied_positions: Vec<MapPosition> = vec![];
-    for other_actor_position in &query_other_actors {
-        occupied_positions.push(*other_actor_position);
-    }
+    let occupied_positions: Vec<MapPosition> =
+        query_other_actors.iter().cloned().collect();
 
     if input.any_just_pressed([KeyCode::ArrowRight, KeyCode::KeyD])
         && can_move_right(&player_position, map, &occupied_positions)
