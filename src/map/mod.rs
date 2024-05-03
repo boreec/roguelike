@@ -1,9 +1,11 @@
 mod cellular_automaton;
 mod constants;
+mod noise;
 mod tile;
 
 use cellular_automaton::*;
 use constants::*;
+use noise::*;
 use tile::*;
 
 use crate::prelude::*;
