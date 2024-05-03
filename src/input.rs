@@ -6,7 +6,10 @@ use bevy::prelude::*;
 pub fn check_player_directional_input(
     mut next_state: ResMut<NextState<GameState>>,
     mut query_player: Query<&mut MapPosition, With<Player>>,
-    query_actors: Query<&MapPosition, (With<Actor>, Without<Player>)>,
+    query_actors: Query<
+        (&MapPosition, &MapNumber),
+        (With<Actor>, Without<Player>),
+    >,
     query_map: Query<(&Map, &MapNumber)>,
     input: Res<ButtonInput<KeyCode>>,
     current_map_number: Res<CurrentMapNumber>,
@@ -30,7 +33,12 @@ pub fn check_player_directional_input(
         }
     };
 
-    let occupied_pos: Vec<MapPosition> = query_actors.iter().cloned().collect();
+    let occupied_pos: Vec<MapPosition> = query_actors
+        .iter()
+        .filter(|(_, m_n)| m_n.0 == current_map_number.0)
+        .map(|(p, _)| p)
+        .cloned()
+        .collect();
 
     if input.any_just_pressed([KeyCode::ArrowRight, KeyCode::KeyD])
         && can_move_right(&player_pos, map, &occupied_pos)
