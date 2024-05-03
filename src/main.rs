@@ -59,7 +59,11 @@ fn main() {
         )
         .add_systems(
             Update,
-            (check_player_input, check_exit_events, update_player_sprite)
+            (
+                check_player_directional_input,
+                check_exit_events,
+                update_player_sprite,
+            )
                 .run_if(in_state(GameState::PlayerTurn)),
         )
         .add_systems(OnEnter(GameState::EnemyTurn), increase_game_turn)

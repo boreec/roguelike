@@ -2,7 +2,7 @@ use crate::prelude::*;
 use bevy::prelude::*;
 
 /// Checks for the player inputs and moves the character accordingly.
-pub fn check_player_input(
+pub fn check_player_directional_input(
     mut next_state: ResMut<NextState<GameState>>,
     mut query_player: Query<&mut MapPosition, With<Player>>,
     query_other_actors: Query<&MapPosition, (With<Actor>, Without<Player>)>,
