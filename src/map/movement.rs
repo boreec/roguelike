@@ -264,4 +264,26 @@ mod tests {
         assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map_stone, &vec![]));
         assert!(!can_move_down(&POSITION_MIDDLE, &map_stone, &vec![]));
     }
+
+    #[test]
+    fn test_can_move_down_with_actors() {
+        let map_plain = create_plain_map();
+        let actor_positions = vec![POSITION_MIDDLE];
+
+        assert!(can_move_down(
+            &POSITION_TOP_RIGHT,
+            &map_plain,
+            &actor_positions,
+        ));
+        assert!(can_move_down(
+            &POSITION_TOP_LEFT,
+            &map_plain,
+            &actor_positions,
+        ));
+        assert!(!can_move_down(
+            &POSITION_TOP_MIDDLE,
+            &map_plain,
+            &actor_positions,
+        ));
+    }
 }
