@@ -128,7 +128,7 @@ mod tests {
     const POSITION_TOP_MIDDLE: MapPosition = MapPosition { x: 1, y: 0 };
     const POSITION_TOP_RIGHT: MapPosition = MapPosition { x: 2, y: 0 };
     const POSITION_BOTTOM_LEFT: MapPosition = MapPosition { x: 0, y: 2 };
-    const POSITION_BOTTOM_MIDDLE: MapPosition = MapPosition { x: 0, y: 1 };
+    const POSITION_BOTTOM_MIDDLE: MapPosition = MapPosition { x: 1, y: 2 };
     const POSITION_BOTTOM_RIGHT: MapPosition = MapPosition { x: 2, y: 2 };
 
     #[test]
@@ -224,6 +224,28 @@ mod tests {
         assert!(!can_move_up(&POSITION_BOTTOM_LEFT, &map_stone, &vec![]));
         assert!(!can_move_up(&POSITION_BOTTOM_RIGHT, &map_stone, &vec![]));
         assert!(!can_move_up(&POSITION_MIDDLE, &map_stone, &vec![]));
+    }
+
+    #[test]
+    fn test_can_move_up_with_actors() {
+        let map_plain = create_plain_map();
+        let actor_positions = vec![POSITION_MIDDLE];
+
+        assert!(can_move_up(
+            &POSITION_BOTTOM_RIGHT,
+            &map_plain,
+            &actor_positions,
+        ));
+        assert!(can_move_up(
+            &POSITION_BOTTOM_LEFT,
+            &map_plain,
+            &actor_positions,
+        ));
+        assert!(!can_move_up(
+            &POSITION_BOTTOM_MIDDLE,
+            &map_plain,
+            &actor_positions,
+        ));
     }
 
     #[test]
