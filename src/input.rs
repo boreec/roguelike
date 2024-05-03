@@ -7,11 +7,25 @@ pub fn check_player_directional_input(
     mut next_state: ResMut<NextState<GameState>>,
     mut query_player: Query<&mut MapPosition, With<Player>>,
     query_other_actors: Query<&MapPosition, (With<Actor>, Without<Player>)>,
-    query_map: Query<&Map>,
+    query_map: Query<(&Map, &MapNumber)>,
     input: Res<ButtonInput<KeyCode>>,
+    current_map_number: Res<CurrentMapNumber>,
 ) {
     let mut player_position = query_player.single_mut();
-    let map = query_map.single();
+
+    let mut map = None;
+    for (m, m_number) in &query_map {
+        if m_number.0 == current_map_number.0 {
+            map = Some(m);
+        }
+    }
+
+    let map = match map {
+        Some(m) => m,
+        None => {
+            panic!("no map found to check for the directional player input");
+        }
+    };
 
     let mut occupied_positions: Vec<MapPosition> = vec![];
     for other_actor_position in &query_other_actors {
