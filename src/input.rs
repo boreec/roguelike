@@ -69,6 +69,8 @@ pub fn check_player_directional_input(
     }
 }
 
+/// Checks if an application exit event (i.e. Escape key pressed), and moves
+/// the app state to finished.
 pub fn check_app_exit_events(
     input: Res<ButtonInput<KeyCode>>,
     mut app_next_state: ResMut<NextState<AppState>>,
