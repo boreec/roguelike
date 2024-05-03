@@ -188,6 +188,28 @@ mod tests {
     }
 
     #[test]
+    fn test_can_move_right_with_actors() {
+        let map_plain = create_plain_map();
+        let actor_positions = vec![POSITION_MIDDLE];
+
+        assert!(!can_move_right(
+            &POSITION_MIDDLE_LEFT,
+            &map_plain,
+            &actor_positions,
+        ));
+        assert!(can_move_right(
+            &POSITION_TOP_LEFT,
+            &map_plain,
+            &actor_positions,
+        ));
+        assert!(can_move_right(
+            &POSITION_BOTTOM_LEFT,
+            &map_plain,
+            &actor_positions,
+        ));
+    }
+
+    #[test]
     fn test_can_move_up_without_actors() {
         let map_plain = create_plain_map();
         assert!(!can_move_up(&POSITION_TOP_LEFT, &map_plain, &vec![]));
