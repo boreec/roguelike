@@ -1,7 +1,8 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
-/// Checks for the player inputs and moves the character accordingly.
+/// Checks if the player receives a directional input (i.e. an arrow key or a
+/// WSQD key pressed), and moves the `Player` position accordingly.
 pub fn check_player_directional_input(
     mut next_state: ResMut<NextState<GameState>>,
     mut query_player: Query<&mut MapPosition, With<Player>>,
