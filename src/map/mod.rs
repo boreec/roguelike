@@ -1,10 +1,12 @@
 mod cellular_automaton;
 mod constants;
+mod movement;
 mod noise;
 mod tile;
 
 use cellular_automaton::*;
 use constants::*;
+pub use movement::*;
 use noise::*;
 use tile::*;
 

@@ -4,7 +4,6 @@ mod constants;
 mod debug;
 mod input;
 mod map;
-mod movement;
 mod resources;
 mod states;
 mod ui;
@@ -17,7 +16,6 @@ mod prelude {
     pub use crate::debug::*;
     pub use crate::input::*;
     pub use crate::map::*;
-    pub use crate::movement::*;
     pub use crate::resources::*;
     pub use crate::states::*;
     pub use crate::ui::*;
