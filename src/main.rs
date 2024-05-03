@@ -1,6 +1,5 @@
 mod actors;
 mod camera;
-mod cellular_automaton;
 mod constants;
 mod debug;
 mod input;
@@ -15,7 +14,6 @@ mod prelude {
     pub use crate::actors::*;
     pub use crate::calculate_sprite_position;
     pub use crate::camera::*;
-    pub use crate::cellular_automaton::*;
     pub use crate::constants::*;
     pub use crate::debug::*;
     pub use crate::input::*;

@@ -1,6 +1,8 @@
+mod cellular_automaton;
 mod constants;
 mod tile;
 
+use cellular_automaton::*;
 use constants::*;
 use tile::*;
 
