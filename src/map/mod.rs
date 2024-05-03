@@ -17,9 +17,8 @@ impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::InitializingMap), initialize_map)
             .add_systems(
-                Update,
-                (check_if_player_exit_map)
-                    .run_if(in_state(GameState::PlayerTurn)),
+                OnEnter(GameState::PlayerTurn),
+                (check_if_player_exit_map).run_if(in_state(AppState::InGame)),
             )
             .add_systems(OnEnter(GameState::CleanupMap), cleanup_map);
     }
