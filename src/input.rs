@@ -69,7 +69,7 @@ pub fn check_player_directional_input(
     }
 }
 
-pub fn check_exit_events(
+pub fn check_app_exit_events(
     input: Res<ButtonInput<KeyCode>>,
     mut app_next_state: ResMut<NextState<AppState>>,
     mut exit_events: ResMut<Events<bevy::app::AppExit>>,

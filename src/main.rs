@@ -61,7 +61,7 @@ fn main() {
             Update,
             (
                 check_player_directional_input,
-                check_exit_events,
+                check_app_exit_events,
                 update_player_sprite,
             )
                 .run_if(in_state(GameState::PlayerTurn)),
