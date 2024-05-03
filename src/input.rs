@@ -13,17 +13,20 @@ pub fn check_player_directional_input(
 ) {
     let mut player_position = query_player.single_mut();
 
-    let mut map = None;
-    for (m, m_number) in &query_map {
-        if m_number.0 == current_map_number.0 {
-            map = Some(m);
+    let map = {
+        let mut map_found = None;
+        for (m, m_number) in &query_map {
+            if m_number.0 == current_map_number.0 {
+                map_found = Some(m);
+            }
         }
-    }
-
-    let map = match map {
-        Some(m) => m,
-        None => {
-            panic!("no map found to check for the directional player input");
+        match map_found {
+            Some(m) => m,
+            None => {
+                panic!(
+                    "no map found to check for the directional player input"
+                );
+            }
         }
     };
 
