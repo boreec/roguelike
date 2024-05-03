@@ -9,7 +9,6 @@ mod movement;
 mod noise;
 mod resources;
 mod states;
-mod tile;
 mod ui;
 
 mod prelude {
@@ -25,7 +24,6 @@ mod prelude {
     pub use crate::noise::*;
     pub use crate::resources::*;
     pub use crate::states::*;
-    pub use crate::tile::*;
     pub use crate::ui::*;
     pub use bevy::asset::LoadedFolder;
     pub use bevy::prelude::*;

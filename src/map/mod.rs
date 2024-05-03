@@ -1,6 +1,8 @@
 mod constants;
+mod tile;
 
 use constants::*;
+use tile::*;
 
 use crate::prelude::*;
 use bevy::prelude::*;
