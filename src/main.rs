@@ -10,7 +10,6 @@ mod ui;
 
 mod prelude {
     pub use crate::actors::*;
-    pub use crate::calculate_sprite_position;
     pub use crate::camera::*;
     pub use crate::constants::*;
     pub use crate::debug::*;
@@ -91,14 +90,4 @@ fn check_assets(
             app_next_state.set(AppState::InGame);
         }
     }
-}
-
-/// Calculates where a sprite should be displayed in the window depending on
-/// its map position.
-pub fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
-    (
-        map_position.x as f32 * SPRITE_TILE_WIDTH + SPRITE_TILE_WIDTH / 2.0,
-        -1f32 * map_position.y as f32 * SPRITE_TILE_HEIGHT
-            - SPRITE_TILE_HEIGHT / 2.0,
-    )
 }

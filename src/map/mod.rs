@@ -313,3 +313,13 @@ mod tests {
         assert!(spawn.is_err());
     }
 }
+
+/// Calculates where a sprite should be displayed in the window depending on
+/// its map position.
+pub fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
+    (
+        map_position.x as f32 * SPRITE_TILE_WIDTH + SPRITE_TILE_WIDTH / 2.0,
+        -1f32 * map_position.y as f32 * SPRITE_TILE_HEIGHT
+            - SPRITE_TILE_HEIGHT / 2.0,
+    )
+}
