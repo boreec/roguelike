@@ -1,6 +1,7 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
+/// Marker component to represent a tile.
 #[derive(Component)]
 pub struct Tile;
 
