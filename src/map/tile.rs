@@ -50,7 +50,7 @@ impl TileBundle {
         let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
         Self {
             tile: Tile,
-            r#type: tile_type.clone(),
+            r#type: tile_type,
             map_position,
             map_number: MapNumber(map_number),
             sprite: SpriteSheetBundle {
