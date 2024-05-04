@@ -4,6 +4,7 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct Tile;
 
+/// Enumeration to represent all types of tiles.
 #[derive(Clone, Component, Copy)]
 pub enum TileType {
     Grass,
