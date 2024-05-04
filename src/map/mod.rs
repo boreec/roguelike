@@ -264,7 +264,7 @@ pub struct MapPosition {
 }
 
 impl MapPosition {
-    pub fn new(x: usize, y: usize) -> Self {
+    pub const fn new(x: usize, y: usize) -> Self {
         Self { x, y }
     }
 }
