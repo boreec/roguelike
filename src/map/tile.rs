@@ -22,6 +22,7 @@ impl TileType {
         }
     }
 
+    /// Returns whether or not a tile can be walked on by an actor.
     pub const fn is_walkable(&self) -> bool {
         match self {
             Self::Grass | Self::GrassWithFlower => true,
