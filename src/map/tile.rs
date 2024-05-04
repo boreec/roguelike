@@ -13,6 +13,8 @@ pub enum TileType {
 }
 
 impl TileType {
+    /// Returns the sprite index for a given `TileType`. The index corresponds
+    /// to the location in the tilesheet where the corresponding tile is.
     pub const fn to_sprite_idx(tile_type: &Self) -> usize {
         match tile_type {
             Self::Grass => TILESET_TERRAIN_IDX_GRASS,
