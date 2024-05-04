@@ -59,7 +59,7 @@ impl PerlinNoise {
 }
 
 fn fade(t: f64) -> f64 {
-    t * t * t * (t * (t * 6.0 - 15.0) + 10.0)
+    t * t * t * (t * t.mul_add(6.0, -15.0) + 10.0)
 }
 
 fn grad(hash: u8, x: f64, _y: f64) -> f64 {
