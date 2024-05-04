@@ -168,9 +168,10 @@ impl Map {
             .map(|(index, _)| index)
             .collect();
 
-        if spawnable_positions.is_empty() {
-            panic!("There are no spawnable positions");
-        }
+        assert!(
+            !spawnable_positions.is_empty(),
+            "there are no available positions for the exit tile",
+        );
 
         let mut rng = rand::thread_rng();
         let index = *spawnable_positions.choose(&mut rng).unwrap();
