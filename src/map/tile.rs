@@ -31,12 +31,18 @@ impl TileType {
     }
 }
 
+/// Bundle for creating an entity representing a tile.
 #[derive(Bundle)]
 pub struct TileBundle {
+    /// Marker component for the tile.
     pub tile: Tile,
+    /// Type of the tile.
     pub r#type: TileType,
+    /// Sprite bundle for rendering the tile.
     pub sprite: SpriteSheetBundle,
+    /// The number of the map where the tile is.
     pub map_number: MapNumber,
+    /// The position on the map where the tile is.
     pub map_position: MapPosition,
 }
 
