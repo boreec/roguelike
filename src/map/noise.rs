@@ -73,7 +73,7 @@ fn grad(hash: u8, x: f64, _y: f64) -> f64 {
 }
 
 fn lerp(a: f64, b: f64, t: f64) -> f64 {
-    a + t * (b - a)
+    t.mul_add(b - a, a)
 }
 
 #[cfg(test)]
