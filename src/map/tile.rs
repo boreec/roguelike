@@ -41,7 +41,7 @@ pub struct TileBundle {
 }
 
 impl TileBundle {
-    /// Creates a new entiy using the `TileBundle` struct components.
+    /// Creates a new entity using the `TileBundle` struct components.
     pub fn new(
         map_position: MapPosition,
         map_number: usize,
