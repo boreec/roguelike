@@ -64,7 +64,7 @@ fn fade(t: f64) -> f64 {
 
 fn grad(hash: u8, x: f64, _y: f64) -> f64 {
     let h = hash & 15;
-    let grad = 1.0 + (h & 7) as f64; // Gradient value 1-8
+    let grad = 1.0 + f64::from(h & 7); // Gradient value 1-8
     if (h & 8) != 0 {
         -grad * x
     } else {
