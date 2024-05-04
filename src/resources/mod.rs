@@ -11,7 +11,9 @@ pub struct ResourcesPlugin;
 
 impl Plugin for ResourcesPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(AppState::InGame), initialize_resources);
+        app.insert_resource(CurrentTurnNumber::default())
+            .insert_resource(CurrentMapNumber::default())
+            .add_systems(OnEnter(AppState::InGame), initialize_resources);
     }
 }
 

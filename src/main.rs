@@ -28,8 +28,6 @@ use prelude::*;
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::BLACK))
-        .insert_resource(CurrentTurnNumber::default())
-        .insert_resource(CurrentMapNumber::default())
         .insert_resource(Msaa::Off)
         .add_plugins((
             DefaultPlugins
