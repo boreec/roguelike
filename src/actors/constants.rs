@@ -9,4 +9,6 @@ pub const TILESET_ACTOR_COLUMNS: usize = 2;
 
 /// The index in the tileset image where the player sprite is located.
 pub const TILESET_ACTOR_IDX_PLAYER: usize = 0;
+
+/// The index in the tileset image where the rabbit sprite is located.
 pub const TILESET_ACTOR_IDX_RABBIT: usize = 1;
