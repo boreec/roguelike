@@ -34,6 +34,7 @@ pub fn increase_game_turn(
     next_state.set(GameState::PlayerTurn);
 }
 
+/// Initializes image resources.
 fn initialize_resources(
     mut commands: Commands,
     tileset_folder: Res<TilesetFolder>,
