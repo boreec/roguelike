@@ -25,6 +25,7 @@ pub struct CurrentMapNumber(pub usize);
 #[derive(Default, Resource)]
 pub struct CurrentTurnNumber(pub usize);
 
+/// Increases the `CurrentTurnNumber` value by 1.
 pub fn increase_game_turn(
     mut next_state: ResMut<NextState<GameState>>,
     mut game_turn: ResMut<CurrentTurnNumber>,
