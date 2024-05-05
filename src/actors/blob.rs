@@ -2,34 +2,34 @@ use crate::prelude::*;
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct Rabbit;
+pub struct Blob;
 
 #[derive(Bundle)]
-pub struct RabbitBundle {
-    pub rabbit: Rabbit,
+pub struct BlobBundle {
+    pub blob: Blob,
 }
 
-impl RabbitBundle {
+impl BlobBundle {
     pub fn new() -> Self {
-        Self { rabbit: Rabbit }
+        Self { blob: Blob }
     }
 }
 
-pub fn initialize_rabbits(
+pub fn initialize_blobs(
     commands: &mut Commands,
-    rabbit_spawn_positions: &[MapPosition],
+    spawn_positions: &[MapPosition],
     tileset: &TilesetActor,
     current_map_number: usize,
 ) {
-    for map_position in rabbit_spawn_positions {
+    for map_position in spawn_positions {
         commands.spawn((
             ActorBundle::new(
                 *map_position,
                 current_map_number,
                 tileset,
-                TILESET_ACTOR_IDX_RABBIT,
+                TILESET_ACTOR_IDX_BLOB,
             ),
-            RabbitBundle::new(),
+            BlobBundle::new(),
         ));
     }
 }

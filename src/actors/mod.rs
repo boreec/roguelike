@@ -1,7 +1,9 @@
+mod blob;
 mod constants;
 mod player;
 mod rabbit;
 
+pub use blob::*;
 pub use constants::*;
 pub use player::*;
 pub use rabbit::*;
@@ -108,11 +110,15 @@ pub fn initialize_actors(
 
     let current_map = current_map.unwrap();
 
-    let mut actor_positions = vec![];
-    for _ in 0..3 {
-        let rabbit_spawn_position =
+    const RABBITS_QUANTITY: usize = 3;
+    const BLOB_QUANTITY: usize = 3;
+    const ACTOR_QUANTIY: usize = RABBITS_QUANTITY + BLOB_QUANTITY;
+
+    let mut actor_positions = Vec::with_capacity(ACTOR_QUANTIY);
+    for _ in 0..ACTOR_QUANTIY {
+        let spawn_position =
             current_map.generate_random_spawning_position(&actor_positions);
-        match rabbit_spawn_position {
+        match spawn_position {
             Ok(position) => {
                 actor_positions.push(position);
             }
@@ -121,9 +127,17 @@ pub fn initialize_actors(
             }
         }
     }
+
     initialize_rabbits(
         &mut commands,
-        &actor_positions,
+        &actor_positions[0..RABBITS_QUANTITY],
+        &tileset,
+        current_map_number.0,
+    );
+
+    initialize_blobs(
+        &mut commands,
+        &actor_positions[RABBITS_QUANTITY..],
         &tileset,
         current_map_number.0,
     );
