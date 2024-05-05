@@ -1,7 +1,5 @@
-mod constants;
 mod tileset;
 
-pub use constants::*;
 pub use tileset::*;
 
 use crate::prelude::*;

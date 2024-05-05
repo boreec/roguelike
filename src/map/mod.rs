@@ -5,7 +5,7 @@ mod noise;
 mod tile;
 
 use cellular_automaton::*;
-use constants::*;
+pub use constants::*;
 pub use movement::*;
 use noise::*;
 use tile::*;
