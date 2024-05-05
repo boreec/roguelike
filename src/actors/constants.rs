@@ -6,5 +6,7 @@ pub const TILESET_ACTOR_ROWS: usize = 1;
 
 /// The number of columns in the actors tileset image.
 pub const TILESET_ACTOR_COLUMNS: usize = 2;
+
+/// The index in the tileset image where the player sprite is located.
 pub const TILESET_ACTOR_IDX_PLAYER: usize = 0;
 pub const TILESET_ACTOR_IDX_RABBIT: usize = 1;
