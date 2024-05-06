@@ -183,6 +183,7 @@ pub trait Creature {
     fn get_tileset_index() -> usize;
 }
 
+/// Spawn creatures at specific map positions.
 pub fn spawn_creature<C: Creature>(
     positions: &[MapPosition],
     commands: &mut Commands,
