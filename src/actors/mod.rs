@@ -175,6 +175,7 @@ pub fn initialize_actors(
     next_game_state.set(GameState::PlayerTurn);
 }
 
+/// Represents a living creature (enemy, NPC, etc).
 pub trait Creature {
     fn new_bundle() -> impl Bundle;
     fn get_tileset_index() -> usize;
