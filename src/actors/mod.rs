@@ -154,11 +154,11 @@ pub fn initialize_actors(
             }
         };
 
-        initialize_player(
+        spawn_creature::<PlayerBundle>(
+            &[player_spawn_position],
             &mut commands,
-            player_spawn_position,
-            &tileset,
             current_map_number.0,
+            &tileset,
         );
     } else {
         // if the player already exists, set a new spawn on the map

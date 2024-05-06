@@ -15,22 +15,14 @@ impl PlayerBundle {
     }
 }
 
-/// Creates an entity for the player.
-pub fn initialize_player(
-    commands: &mut Commands,
-    map_position: MapPosition,
-    tileset: &TilesetActor,
-    current_map_number: usize,
-) {
-    commands.spawn((
-        ActorBundle::new(
-            map_position,
-            current_map_number,
-            tileset,
-            TILESET_ACTOR_IDX_PLAYER,
-        ),
-        PlayerBundle::new(),
-    ));
+impl Creature for PlayerBundle {
+    fn new_bundle() -> impl Bundle {
+        PlayerBundle::new()
+    }
+
+    fn get_tileset_index() -> usize {
+        TILESET_ACTOR_IDX_PLAYER
+    }
 }
 
 /// Updates the player's sprite position based on its `MapPosition`.
