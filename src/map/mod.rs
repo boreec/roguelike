@@ -61,7 +61,9 @@ pub fn check_if_player_exit_map(
 /// Bundle for creating an entity representing a map.
 #[derive(Bundle)]
 pub struct MapBundle {
+    /// Marker component a map entity.
     map: Map,
+    /// The number to be associated with the map.
     map_number: MapNumber,
 }
 
