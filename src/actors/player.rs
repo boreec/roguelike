@@ -5,6 +5,7 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct Player;
 
+/// Bundle used for creating a `Player` entity.
 #[derive(Bundle)]
 pub struct PlayerBundle {
     pub player: Player,
