@@ -58,6 +58,7 @@ pub fn check_if_player_exit_map(
     }
 }
 
+/// Bundle for creating an entity representing a map.
 #[derive(Bundle)]
 pub struct MapBundle {
     map: Map,
