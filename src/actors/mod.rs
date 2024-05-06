@@ -179,6 +179,7 @@ pub fn initialize_actors(
 pub trait Creature {
     /// Retrieves the bundle for invoking the creature entity.
     fn new_bundle() -> impl Bundle;
+    /// Retrieves the index on the actor tileset where the creature image is.
     fn get_tileset_index() -> usize;
 }
 
