@@ -177,6 +177,7 @@ pub fn initialize_actors(
 
 /// Represents a living creature (enemy, NPC, etc).
 pub trait Creature {
+    /// Retrieves the bundle for invoking the creature entity.
     fn new_bundle() -> impl Bundle;
     fn get_tileset_index() -> usize;
 }
