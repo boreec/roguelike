@@ -128,18 +128,18 @@ pub fn initialize_actors(
         }
     }
 
-    initialize_rabbits(
-        &mut commands,
+    spawn_creature::<RabbitBundle>(
         &actor_positions[0..RABBITS_QUANTITY],
-        &tileset,
+        &mut commands,
         current_map_number.0,
+        &tileset,
     );
 
-    initialize_blobs(
-        &mut commands,
+    spawn_creature::<BlobBundle>(
         &actor_positions[RABBITS_QUANTITY..],
-        &tileset,
+        &mut commands,
         current_map_number.0,
+        &tileset,
     );
 
     // initialize the player only if there's no player created
@@ -173,4 +173,28 @@ pub fn initialize_actors(
         };
     }
     next_game_state.set(GameState::PlayerTurn);
+}
+
+pub trait Creature {
+    fn new_bundle() -> impl Bundle;
+    fn get_tileset_index() -> usize;
+}
+
+pub fn spawn_creature<C: Creature>(
+    positions: &[MapPosition],
+    commands: &mut Commands,
+    current_map_number: usize,
+    tileset: &TilesetActor,
+) {
+    for position in positions {
+        commands.spawn((
+            ActorBundle::new(
+                *position,
+                current_map_number,
+                tileset,
+                C::get_tileset_index(),
+            ),
+            C::new_bundle(),
+        ));
+    }
 }

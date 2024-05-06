@@ -15,21 +15,12 @@ impl RabbitBundle {
     }
 }
 
-pub fn initialize_rabbits(
-    commands: &mut Commands,
-    rabbit_spawn_positions: &[MapPosition],
-    tileset: &TilesetActor,
-    current_map_number: usize,
-) {
-    for map_position in rabbit_spawn_positions {
-        commands.spawn((
-            ActorBundle::new(
-                *map_position,
-                current_map_number,
-                tileset,
-                TILESET_ACTOR_IDX_RABBIT,
-            ),
-            RabbitBundle::new(),
-        ));
+impl Creature for RabbitBundle {
+    fn new_bundle() -> impl Bundle {
+        RabbitBundle::new()
+    }
+
+    fn get_tileset_index() -> usize {
+        TILESET_ACTOR_IDX_RABBIT
     }
 }
