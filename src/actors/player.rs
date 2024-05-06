@@ -1,6 +1,7 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
+/// Marker component to represent a `Player` entity.
 #[derive(Component)]
 pub struct Player;
 
