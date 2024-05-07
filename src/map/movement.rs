@@ -17,17 +17,17 @@ pub fn move_down(position: &mut MapPosition) {
 }
 
 pub fn can_move_left(
-    player_position: &MapPosition,
+    position: &MapPosition,
     map: &Map,
     occupied_positions: &Vec<MapPosition>,
 ) -> bool {
-    if player_position.x > 0 {
-        map.tiles[player_position.x + player_position.y * map.width - 1]
+    if position.x > 0 {
+        map.tiles[position.x + position.y * map.width - 1]
             .clone()
             .is_walkable()
             && !occupied_positions.contains(&MapPosition {
-                x: player_position.x - 1,
-                y: player_position.y,
+                x: position.x - 1,
+                y: position.y,
             })
     } else {
         false
@@ -35,17 +35,17 @@ pub fn can_move_left(
 }
 
 pub fn can_move_right(
-    player_position: &MapPosition,
+    position: &MapPosition,
     map: &Map,
     occupied_positions: &Vec<MapPosition>,
 ) -> bool {
-    if player_position.x < map.width - 1 {
-        map.tiles[player_position.x + player_position.y * map.width + 1]
+    if position.x < map.width - 1 {
+        map.tiles[position.x + position.y * map.width + 1]
             .clone()
             .is_walkable()
             && !occupied_positions.contains(&MapPosition {
-                x: player_position.x + 1,
-                y: player_position.y,
+                x: position.x + 1,
+                y: position.y,
             })
     } else {
         false
@@ -53,17 +53,17 @@ pub fn can_move_right(
 }
 
 pub fn can_move_up(
-    player_position: &MapPosition,
+    position: &MapPosition,
     map: &Map,
     occupied_positions: &Vec<MapPosition>,
 ) -> bool {
-    if player_position.y > 0 {
-        map.tiles[player_position.x + (player_position.y - 1) * map.width]
+    if position.y > 0 {
+        map.tiles[position.x + (position.y - 1) * map.width]
             .clone()
             .is_walkable()
             && !occupied_positions.contains(&MapPosition {
-                x: player_position.x,
-                y: player_position.y - 1,
+                x: position.x,
+                y: position.y - 1,
             })
     } else {
         false
@@ -71,17 +71,17 @@ pub fn can_move_up(
 }
 
 pub fn can_move_down(
-    player_position: &MapPosition,
+    position: &MapPosition,
     map: &Map,
     occupied_positions: &Vec<MapPosition>,
 ) -> bool {
-    if player_position.y < map.height - 1 {
-        map.tiles[player_position.x + (player_position.y + 1) * map.width]
+    if position.y < map.height - 1 {
+        map.tiles[position.x + (position.y + 1) * map.width]
             .clone()
             .is_walkable()
             && !occupied_positions.contains(&MapPosition {
-                x: player_position.x,
-                y: player_position.y + 1,
+                x: position.x,
+                y: position.y + 1,
             })
     } else {
         false
