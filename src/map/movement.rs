@@ -16,6 +16,40 @@ pub fn move_down(position: &mut MapPosition) {
     position.y += 1;
 }
 
+pub fn enumerate_reachable_positions(
+    position: &MapPosition,
+    map: &Map,
+    occupied_positions: &Vec<MapPosition>,
+) -> Vec<MapPosition> {
+    let mut reachable_positions: Vec<MapPosition> = vec![];
+
+    if can_move_left(position, map, occupied_positions) {
+        reachable_positions.push(MapPosition {
+            x: position.x - 1,
+            y: position.y,
+        });
+    }
+    if can_move_right(position, map, occupied_positions) {
+        reachable_positions.push(MapPosition {
+            x: position.x + 1,
+            y: position.y,
+        });
+    }
+    if can_move_up(position, map, occupied_positions) {
+        reachable_positions.push(MapPosition {
+            x: position.x,
+            y: position.y - 1,
+        });
+    }
+    if can_move_down(position, map, occupied_positions) {
+        reachable_positions.push(MapPosition {
+            x: position.x,
+            y: position.y + 1,
+        });
+    }
+    return reachable_positions;
+}
+
 pub fn can_move_left(
     position: &MapPosition,
     map: &Map,
