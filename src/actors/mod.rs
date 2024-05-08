@@ -17,7 +17,7 @@ impl Plugin for ActorsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             OnEnter(GameState::InitializingActors),
-            initialize_actors.run_if(in_state(AppState::InGame)),
+            spawn_mobs_on_current_map.run_if(in_state(AppState::InGame)),
         )
         .add_systems(
             OnEnter(GameState::CleanupActors),
@@ -89,8 +89,8 @@ pub fn despawn_mobs_on_current_map(
     next_game_state.set(GameState::CleanupMap);
 }
 
-/// Initializes all actors for the current map.
-pub fn initialize_actors(
+/// Spawn mob entities (enemies, NPC...) on the current map.
+pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
     query_map: Query<(&Map, &MapNumber)>,
     mut query_player_map_position: Query<&mut MapPosition, With<Player>>,
