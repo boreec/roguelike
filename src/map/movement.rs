@@ -321,4 +321,18 @@ mod tests {
             &actor_positions,
         ));
     }
+
+    #[test]
+    fn test_enumerate_reachable_positions() {
+        let map_plain = create_plain_map();
+        let actor_positions = vec![];
+
+        let reachable_positions = enumerate_reachable_positions(
+            &POSITION_MIDDLE,
+            &map_plain,
+            &actor_positions,
+        );
+
+        assert_eq!(4, reachable_positions.len())
+    }
 }
