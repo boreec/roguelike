@@ -39,7 +39,7 @@ pub fn move_randomly(
     let mob_positions: Vec<MapPosition> = query_mobs
         .iter()
         .filter(|(_, m_n)| m_n.0 == current_map_number.0)
-        .map(|(p, _)| p.clone())
+        .map(|(p, _)| *p)
         .collect();
 
     let map: &Map = query_map
