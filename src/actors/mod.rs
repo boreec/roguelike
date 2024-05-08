@@ -204,6 +204,8 @@ pub fn spawn_creature<C: Creature>(
     }
 }
 
+/// Update the sprite position of all actors of the current map according to
+/// their map position.
 pub fn update_actors_sprite(
     mut query_actors: Query<
         (&mut Transform, &MapPosition, &MapNumber),
