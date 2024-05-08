@@ -21,7 +21,7 @@ impl Plugin for ActorsPlugin {
         )
         .add_systems(
             OnEnter(GameState::CleanupActors),
-            cleanup_actors.run_if(in_state(AppState::InGame)),
+            despawn_current_mobs.run_if(in_state(AppState::InGame)),
         )
         .add_systems(OnEnter(GameState::PlayerTurn), update_player_sprite)
         .add_systems(OnEnter(GameState::EnemyTurn), update_actors_sprite);
@@ -74,14 +74,14 @@ impl ActorBundle {
         }
     }
 }
-/// Removes actors for the current map.
-pub fn cleanup_actors(
+/// Despawn mob entities on the current map.
+pub fn despawn_current_mobs(
     mut commands: Commands,
-    query: Query<(Entity, &MapNumber), (With<Actor>, Without<Player>)>,
+    query_mobs: Query<(Entity, &MapNumber), (With<Actor>, Without<Player>)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    for (entity, map_number) in &query {
+    for (entity, map_number) in &query_mobs {
         if map_number.0 == current_map_number.0 {
             commands.entity(entity).despawn();
         }
