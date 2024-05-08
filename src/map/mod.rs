@@ -27,6 +27,7 @@ impl Plugin for MapPlugin {
     }
 }
 
+/// Move mob actors to a random reachable position.
 pub fn move_randomly(
     mut query_mobs: Query<
         (&mut MapPosition, &MapNumber),
