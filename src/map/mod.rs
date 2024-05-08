@@ -20,29 +20,16 @@ impl Plugin for MapPlugin {
         app.add_systems(OnEnter(GameState::InitializingMap), initialize_map)
             .add_systems(
                 OnEnter(GameState::PlayerTurn),
-                (update_player_sprite, check_if_player_exit_map)
-                    .run_if(in_state(AppState::InGame)),
+                check_if_player_exit_map.run_if(in_state(AppState::InGame)),
             )
             .add_systems(OnEnter(GameState::CleanupMap), cleanup_map)
             .add_systems(OnEnter(GameState::EnemyTurn), move_randomly);
     }
 }
 
-// pub fn update_enemy_sprites(
-//     mut query_enemy: Query<
-//         (&mut Transform, &MapPosition, &MapNumber),
-//         (Without<Player>, With<Actor>),
-//     >,
-//     current_map_number: Res<CurrentMapNumber>,
-// ) {
-//     let (mut sprite_transform, position_player) = query_player.single_mut();
-//     let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
-//     sprite_transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
-// }
-
 pub fn move_randomly(
     mut query_mobs: Query<
-        (&mut Transform, &mut MapPosition, &MapNumber),
+        (&mut MapPosition, &MapNumber),
         (With<Actor>, Without<Player>),
     >,
     query_map: Query<(&Map, &MapNumber)>,
@@ -50,8 +37,8 @@ pub fn move_randomly(
 ) {
     let mob_positions: Vec<MapPosition> = query_mobs
         .iter()
-        .filter(|(_, _, m_n)| m_n.0 == current_map_number.0)
-        .map(|(_, p, _)| p.clone())
+        .filter(|(_, m_n)| m_n.0 == current_map_number.0)
+        .map(|(p, _)| p.clone())
         .collect();
 
     let map: &Map = query_map
@@ -62,9 +49,7 @@ pub fn move_randomly(
         .last()
         .expect("no map found");
 
-    for (mut mob_transform, mut mob_position, mob_map_number) in
-        query_mobs.iter_mut()
-    {
+    for (mut mob_position, mob_map_number) in query_mobs.iter_mut() {
         if mob_map_number.0 == current_map_number.0 {
             let reachable_positions = enumerate_reachable_positions(
                 &mob_position.clone(),
@@ -77,10 +62,6 @@ pub fn move_randomly(
                 let random_pos = reachable_positions[r];
                 mob_position.x = random_pos.x;
                 mob_position.y = random_pos.y;
-                let (sprite_x, sprite_y) =
-                    calculate_sprite_position(&mob_position);
-                mob_transform.translation =
-                    Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
             }
         }
     }

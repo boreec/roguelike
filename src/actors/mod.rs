@@ -22,7 +22,8 @@ impl Plugin for ActorsPlugin {
         .add_systems(
             OnEnter(GameState::CleanupActors),
             cleanup_actors.run_if(in_state(AppState::InGame)),
-        );
+        )
+        .add_systems(OnExit(GameState::PlayerTurn), update_actors_sprite);
     }
 }
 
@@ -200,5 +201,21 @@ pub fn spawn_creature<C: Creature>(
             ),
             C::new_bundle(),
         ));
+    }
+}
+
+pub fn update_actors_sprite(
+    mut query_actors: Query<
+        (&mut Transform, &MapPosition, &MapNumber),
+        With<Actor>,
+    >,
+    current_map_number: Res<CurrentMapNumber>,
+) {
+    for (mut transform, map_position, map_number) in query_actors.iter_mut() {
+        if map_number.0 == current_map_number.0 {
+            let (sprite_x, sprite_y) = calculate_sprite_position(map_position);
+            transform.translation =
+                Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
+        }
     }
 }
