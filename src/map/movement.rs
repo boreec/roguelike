@@ -16,6 +16,7 @@ pub fn move_down(position: &mut MapPosition) {
     position.y += 1;
 }
 
+/// Returns a vector of reachable positions from a specific map position.
 pub fn enumerate_reachable_positions(
     position: &MapPosition,
     map: &Map,
