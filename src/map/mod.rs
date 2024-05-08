@@ -56,10 +56,10 @@ pub fn move_randomly(
                 map,
                 &mob_positions,
             );
-            if reachable_positions.len() > 0 {
-                let r =
-                    rand::thread_rng().gen_range(0..reachable_positions.len());
-                let random_pos = reachable_positions[r];
+
+            if !reachable_positions.is_empty() {
+                let random_pos = reachable_positions[rand::thread_rng()
+                    .gen_range(0..reachable_positions.len())];
                 mob_position.x = random_pos.x;
                 mob_position.y = random_pos.y;
             }
