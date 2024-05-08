@@ -23,7 +23,7 @@ impl Plugin for ActorsPlugin {
             OnEnter(GameState::CleanupActors),
             cleanup_actors.run_if(in_state(AppState::InGame)),
         )
-        .add_systems(OnExit(GameState::PlayerTurn), update_actors_sprite)
+        .add_systems(OnExit(GameState::PlayerTurn), update_player_sprite)
         .add_systems(OnExit(GameState::EnemyTurn), update_actors_sprite);
     }
 }
@@ -207,10 +207,22 @@ pub fn spawn_creature<C: Creature>(
 
 /// Update the sprite position of all actors of the current map according to
 /// their map position.
+pub fn update_player_sprite(
+    mut query_player: Query<(&mut Transform, &MapPosition), With<Player>>,
+) {
+    let (mut transform, position) = query_player
+        .get_single_mut()
+        .expect("multiple player found");
+    let (sprite_x, sprite_y) = calculate_sprite_position(position);
+    transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
+}
+
+/// Update the sprite position of all actors of the current map according to
+/// their map position.
 pub fn update_actors_sprite(
     mut query_actors: Query<
         (&mut Transform, &MapPosition, &MapNumber),
-        With<Actor>,
+        (With<Actor>, Without<Player>),
     >,
     current_map_number: Res<CurrentMapNumber>,
 ) {
