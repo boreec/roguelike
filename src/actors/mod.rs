@@ -23,8 +23,8 @@ impl Plugin for ActorsPlugin {
             OnEnter(GameState::CleanupActors),
             cleanup_actors.run_if(in_state(AppState::InGame)),
         )
-        .add_systems(OnExit(GameState::PlayerTurn), update_player_sprite)
-        .add_systems(OnExit(GameState::EnemyTurn), update_actors_sprite);
+        .add_systems(OnEnter(GameState::PlayerTurn), update_player_sprite)
+        .add_systems(OnEnter(GameState::EnemyTurn), update_actors_sprite);
     }
 }
 
