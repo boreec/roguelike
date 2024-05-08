@@ -93,7 +93,7 @@ pub fn despawn_mobs_on_current_map(
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
     query_map: Query<(&Map, &MapNumber)>,
-    mut query_player_map_position: Query<&mut MapPosition, With<Player>>,
+    mut pos_player: Query<&mut MapPosition, With<Player>>,
     tileset: Res<TilesetActor>,
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
@@ -116,13 +116,13 @@ pub fn spawn_mobs_on_current_map(
     const BLOB_QUANTITY: usize = 3;
     const ACTOR_QUANTIY: usize = RABBITS_QUANTITY + BLOB_QUANTITY;
 
-    let mut actor_positions = Vec::with_capacity(ACTOR_QUANTIY);
+    let mut pos_actors = Vec::with_capacity(ACTOR_QUANTIY);
     for _ in 0..ACTOR_QUANTIY {
-        let spawn_position =
-            current_map.generate_random_spawning_position(&actor_positions);
-        match spawn_position {
-            Ok(position) => {
-                actor_positions.push(position);
+        let pos_spawn =
+            current_map.generate_random_spawning_position(&pos_actors);
+        match pos_spawn {
+            Ok(pos) => {
+                pos_actors.push(pos);
             }
             Err(_) => {
                 break;
@@ -131,33 +131,32 @@ pub fn spawn_mobs_on_current_map(
     }
 
     spawn_creature::<RabbitBundle>(
-        &actor_positions[0..RABBITS_QUANTITY],
+        &pos_actors[0..RABBITS_QUANTITY],
         &mut commands,
         current_map_number.0,
         &tileset,
     );
 
     spawn_creature::<BlobBundle>(
-        &actor_positions[RABBITS_QUANTITY..],
+        &pos_actors[RABBITS_QUANTITY..],
         &mut commands,
         current_map_number.0,
         &tileset,
     );
 
     // initialize the player only if there's no player created
-    let player_map_position = query_player_map_position.get_single_mut();
-    if player_map_position.is_err() {
-        let player_spawn_position = match current_map
-            .generate_random_spawning_position(&actor_positions)
-        {
-            Ok(position) => position,
-            Err(_) => {
-                panic!("player could not spawn");
-            }
-        };
+    let pos_player = pos_player.get_single_mut();
+    if pos_player.is_err() {
+        let pos_player_spawn =
+            match current_map.generate_random_spawning_position(&pos_actors) {
+                Ok(pos) => pos,
+                Err(_) => {
+                    panic!("player could not spawn");
+                }
+            };
 
         spawn_creature::<PlayerBundle>(
-            &[player_spawn_position],
+            &[pos_player_spawn],
             &mut commands,
             current_map_number.0,
             &tileset,
@@ -165,10 +164,10 @@ pub fn spawn_mobs_on_current_map(
     } else {
         // if the player already exists, set a new spawn on the map
         let new_spawn =
-            current_map.generate_random_spawning_position(&actor_positions);
+            current_map.generate_random_spawning_position(&pos_actors);
 
-        *player_map_position.unwrap() = match new_spawn {
-            Ok(position) => position,
+        *pos_player.unwrap() = match new_spawn {
+            Ok(pos) => pos,
             Err(_) => {
                 panic!("failed to initalize player for the first time");
             }
