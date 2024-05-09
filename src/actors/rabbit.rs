@@ -4,20 +4,9 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct Rabbit;
 
-#[derive(Bundle)]
-pub struct RabbitBundle {
-    pub rabbit: Rabbit,
-}
-
-impl RabbitBundle {
-    pub fn new() -> Self {
-        Self { rabbit: Rabbit }
-    }
-}
-
-impl Creature for RabbitBundle {
-    fn new_bundle() -> impl Bundle {
-        RabbitBundle::new()
+impl Creature for Rabbit {
+    fn new() -> Self {
+        Self
     }
 
     fn get_tileset_index() -> usize {

@@ -129,14 +129,14 @@ pub fn spawn_mobs_on_current_map(
         }
     }
 
-    spawn_creature::<RabbitBundle>(
+    spawn_creature::<Rabbit>(
         &pos_actors[0..RABBITS_QUANTITY],
         &mut commands,
         current_map_number.0,
         &tileset,
     );
 
-    spawn_creature::<BlobBundle>(
+    spawn_creature::<Blob>(
         &pos_actors[RABBITS_QUANTITY..],
         &mut commands,
         current_map_number.0,
@@ -154,7 +154,7 @@ pub fn spawn_mobs_on_current_map(
                 }
             };
 
-        spawn_creature::<PlayerBundle>(
+        spawn_creature::<Player>(
             &[pos_player_spawn],
             &mut commands,
             current_map_number.0,
@@ -176,9 +176,9 @@ pub fn spawn_mobs_on_current_map(
 }
 
 /// Represents a living creature (enemy, NPC, etc).
-pub trait Creature {
+pub trait Creature: Component {
     /// Retrieves the bundle for invoking the creature entity.
-    fn new_bundle() -> impl Bundle;
+    fn new() -> Self;
     /// Retrieves the index on the actor tileset where the creature image is.
     fn get_tileset_index() -> usize;
 }
@@ -198,7 +198,7 @@ pub fn spawn_creature<C: Creature>(
                 tileset,
                 C::get_tileset_index(),
             ),
-            C::new_bundle(),
+            C::new(),
         ));
     }
 }
