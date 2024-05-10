@@ -84,12 +84,12 @@ impl ActorBundle {
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
-    query_actors: Query<(Entity, &MapNumber, &Actor)>,
+    query_actors: Query<(Entity, &MapNumber), With<Actor>>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    for (entity, map_number, actor) in &query_actors {
-        if map_number.0 == current_map_number.0 && *actor != Actor::Player {
+    for (entity, map_number) in &query_actors {
+        if map_number.0 == current_map_number.0 {
             commands.entity(entity).despawn();
         }
     }
