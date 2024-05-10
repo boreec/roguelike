@@ -87,21 +87,19 @@ pub fn check_if_player_exit_map(
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let map = query_map
+    let (map, _) = query_map
         .iter()
         .filter(|(_, m_n)| m_n.0 == current_map_number.0)
         .last()
-        .expect("no map found")
-        .0;
+        .expect("no map found");
 
-    let player_position = query_actors
+    let (player_position, _, _) = query_actors
         .iter()
         .filter(|(_, m_n, actor)| {
             m_n.0 == current_map_number.0 && **actor == Actor::Player
         })
         .last()
-        .expect("player position not found")
-        .0;
+        .expect("player position not found");
 
     if map.exits.contains(player_position) {
         next_game_state.set(GameState::CleanupActors);
