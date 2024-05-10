@@ -51,15 +51,19 @@ pub fn check_camera_zoom(
 
 /// Sets the camera position centered on the player.
 pub fn update_camera_position(
-    query_player: Query<&MapPosition, With<Player>>,
-    mut query_main_camera: Query<
-        &mut Transform,
-        (With<MainCamera>, Without<Player>),
-    >,
+    query_actors: Query<(&MapPosition, &MapNumber, &Actor)>,
+    mut query_main_camera: Query<&mut Transform, With<MainCamera>>,
+    current_map_number: Res<CurrentMapNumber>,
 ) {
-    let position_player = query_player.single();
-    let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
+    let (position_player, _, _) = query_actors
+        .iter()
+        .filter(|(_, m_n, a)| {
+            m_n.0 == current_map_number.0 && **a == Actor::Player
+        })
+        .last()
+        .expect("no player found");
 
+    let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
     let mut camera_transform = query_main_camera.single_mut();
     camera_transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
 }

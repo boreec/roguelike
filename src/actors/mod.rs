@@ -1,12 +1,6 @@
-mod blob;
 mod constants;
-mod player;
-mod rabbit;
 
-pub use blob::*;
 pub use constants::*;
-pub use player::*;
-pub use rabbit::*;
 
 use crate::prelude::*;
 use bevy::prelude::*;
@@ -23,14 +17,27 @@ impl Plugin for ActorsPlugin {
             OnEnter(GameState::CleanupActors),
             despawn_mobs_on_current_map.run_if(in_state(AppState::InGame)),
         )
-        .add_systems(OnEnter(GameState::PlayerTurn), update_player_sprite)
-        .add_systems(OnEnter(GameState::EnemyTurn), update_actors_sprite);
+        .add_systems(OnEnter(GameState::PlayerTurn), update_actor_sprites)
+        .add_systems(OnEnter(GameState::EnemyTurn), update_actor_sprites);
     }
 }
 
-/// Marker component for the actor entities.
-#[derive(Component)]
-pub struct Actor;
+#[derive(Clone, Component, Copy, Eq, PartialEq)]
+pub enum Actor {
+    Blob,
+    Rabbit,
+    Player,
+}
+
+impl Actor {
+    pub fn get_tileset_index(&self) -> usize {
+        match self {
+            Actor::Blob => TILESET_ACTOR_IDX_BLOB,
+            Actor::Player => TILESET_ACTOR_IDX_PLAYER,
+            Actor::Rabbit => TILESET_ACTOR_IDX_RABBIT,
+        }
+    }
+}
 
 /// Bundle for spawning actor entities.
 #[derive(Bundle)]
@@ -47,20 +54,20 @@ pub struct ActorBundle {
 
 impl ActorBundle {
     pub fn new(
+        actor: Actor,
         map_position: MapPosition,
         map_number: usize,
         tileset: &TilesetActor,
-        tileset_index: usize,
     ) -> Self {
         let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
         Self {
-            actor: Actor,
+            actor,
             map_position,
             map_number: MapNumber { 0: map_number },
             sprite: SpriteSheetBundle {
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),
-                    index: tileset_index,
+                    index: actor.get_tileset_index(),
                 },
                 transform: Transform::from_xyz(
                     sprite_x,
@@ -77,12 +84,12 @@ impl ActorBundle {
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
-    query_mobs: Query<(Entity, &MapNumber), (With<Actor>, Without<Player>)>,
+    query_actors: Query<(Entity, &MapNumber, &Actor)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    for (entity, map_number) in &query_mobs {
-        if map_number.0 == current_map_number.0 {
+    for (entity, map_number, actor) in &query_actors {
+        if map_number.0 == current_map_number.0 && *actor != Actor::Player {
             commands.entity(entity).despawn();
         }
     }
@@ -93,7 +100,7 @@ pub fn despawn_mobs_on_current_map(
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
     query_map: Query<(&Map, &MapNumber)>,
-    mut pos_player: Query<&mut MapPosition, With<Player>>,
+    mut query_actors: Query<(&mut MapPosition, &MapNumber, &Actor)>,
     tileset: Res<TilesetActor>,
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
@@ -129,14 +136,16 @@ pub fn spawn_mobs_on_current_map(
         }
     }
 
-    spawn_creature::<Rabbit>(
+    spawn_creature(
+        Actor::Rabbit,
         &pos_actors[0..RABBITS_QUANTITY],
         &mut commands,
         current_map_number.0,
         &tileset,
     );
 
-    spawn_creature::<Blob>(
+    spawn_creature(
+        Actor::Blob,
         &pos_actors[RABBITS_QUANTITY..],
         &mut commands,
         current_map_number.0,
@@ -144,8 +153,23 @@ pub fn spawn_mobs_on_current_map(
     );
 
     // initialize the player only if there's no player created
-    let pos_player = pos_player.get_single_mut();
-    if pos_player.is_err() {
+    let pos_player = query_actors
+        .iter_mut()
+        .filter(|(_, map_n, actor)| {
+            map_n.0 == current_map_number.0 && **actor == Actor::Player
+        })
+        .last();
+
+    // if the player already exists, set a new spawn on the map
+    if let Some(mut pos_player) = pos_player {
+        let new_spawn =
+            current_map.generate_random_spawning_position(&pos_actors);
+
+        let new_spawn_position =
+            new_spawn.expect("failed to initialize player spawn");
+        pos_player.0.x = new_spawn_position.x;
+        pos_player.0.y = new_spawn_position.y;
+    } else {
         let pos_player_spawn =
             match current_map.generate_random_spawning_position(&pos_actors) {
                 Ok(pos) => pos,
@@ -154,79 +178,47 @@ pub fn spawn_mobs_on_current_map(
                 }
             };
 
-        spawn_creature::<Player>(
+        spawn_creature(
+            Actor::Player,
             &[pos_player_spawn],
             &mut commands,
             current_map_number.0,
             &tileset,
         );
-    } else {
-        // if the player already exists, set a new spawn on the map
-        let new_spawn =
-            current_map.generate_random_spawning_position(&pos_actors);
-
-        *pos_player.unwrap() = match new_spawn {
-            Ok(pos) => pos,
-            Err(_) => {
-                panic!("failed to initalize player for the first time");
-            }
-        };
     }
     next_game_state.set(GameState::PlayerTurn);
 }
 
-/// Represents a living creature (enemy, NPC, etc).
-pub trait Creature: Component {
-    /// Retrieves the bundle for invoking the creature entity.
-    fn new() -> Self;
-    /// Retrieves the index on the actor tileset where the creature image is.
-    fn get_tileset_index() -> usize;
-}
-
 /// Spawn creatures at specific map positions.
-pub fn spawn_creature<C: Creature>(
+pub fn spawn_creature(
+    actor: Actor,
     positions: &[MapPosition],
     commands: &mut Commands,
     current_map_number: usize,
     tileset: &TilesetActor,
 ) {
     for position in positions {
-        commands.spawn((
-            ActorBundle::new(
-                *position,
-                current_map_number,
-                tileset,
-                C::get_tileset_index(),
-            ),
-            C::new(),
+        commands.spawn(ActorBundle::new(
+            actor,
+            *position,
+            current_map_number,
+            tileset,
         ));
     }
 }
 
 /// Update the sprite position of all actors of the current map according to
 /// their map position.
-pub fn update_player_sprite(
-    mut query_player: Query<(&mut Transform, &MapPosition), With<Player>>,
-) {
-    let (mut transform, position) = query_player
-        .get_single_mut()
-        .expect("multiple player found");
-    let (sprite_x, sprite_y) = calculate_sprite_position(position);
-    transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
-}
-
-/// Update the sprite position of all actors of the current map according to
-/// their map position.
-pub fn update_actors_sprite(
+pub fn update_actor_sprites(
     mut query_actors: Query<
         (&mut Transform, &MapPosition, &MapNumber),
-        (With<Actor>, Without<Player>),
+        With<Actor>,
     >,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    for (mut transform, map_position, map_number) in query_actors.iter_mut() {
+    for (mut transform, position, map_number) in &mut query_actors {
         if map_number.0 == current_map_number.0 {
-            let (sprite_x, sprite_y) = calculate_sprite_position(map_position);
+            let (sprite_x, sprite_y) = calculate_sprite_position(position);
             transform.translation =
                 Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
         }

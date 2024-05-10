@@ -29,33 +29,28 @@ impl Plugin for MapPlugin {
 
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
-    mut query_mobs: Query<
-        (&mut MapPosition, &MapNumber),
-        (With<Actor>, Without<Player>),
-    >,
+    mut query_actors: Query<(&mut MapPosition, &MapNumber, &Actor)>,
     query_map: Query<(&Map, &MapNumber)>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let mob_positions: Vec<MapPosition> = query_mobs
-        .iter()
-        .filter(|(_, m_n)| m_n.0 == current_map_number.0)
-        .map(|(p, _)| *p)
+    let occupied_positions: Vec<MapPosition> = query_actors
+        .iter_mut()
+        .filter(|(_, m_n, _)| m_n.0 == current_map_number.0)
+        .map(|(p, _, _)| *p)
         .collect();
 
-    let map: &Map = query_map
+    let (map, _) = query_map
         .iter()
         .filter(|(_, m_n)| m_n.0 == current_map_number.0)
-        .map(|(m, _)| m)
-        .collect::<Vec<&Map>>()
         .last()
         .expect("no map found");
 
-    for (mut mob_position, mob_map_number) in query_mobs.iter_mut() {
-        if mob_map_number.0 == current_map_number.0 {
+    for (mut mob_position, mob_map_number, actor) in query_actors.iter_mut() {
+        if mob_map_number.0 == current_map_number.0 && *actor != Actor::Player {
             let reachable_positions = enumerate_reachable_positions(
                 &mob_position.clone(),
                 map,
-                &mob_positions,
+                &occupied_positions,
             );
 
             if !reachable_positions.is_empty() {
@@ -87,16 +82,29 @@ pub fn cleanup_map(
 /// Checks if a player is on an exit tile. In that case, the game state is
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
-    query_map: Query<&Map>,
-    query_player: Query<&MapPosition, With<Player>>,
+    query_map: Query<(&Map, &MapNumber)>,
+    query_actors: Query<(&MapPosition, &MapNumber, &Actor)>,
     mut next_game_state: ResMut<NextState<GameState>>,
+    current_map_number: Res<CurrentMapNumber>,
 ) {
-    let map = query_map.single();
-    let player_position = query_player.single();
-    for exit_position in &map.exits {
-        if player_position == exit_position {
-            next_game_state.set(GameState::CleanupActors);
-        }
+    let map = query_map
+        .iter()
+        .filter(|(_, m_n)| m_n.0 == current_map_number.0)
+        .last()
+        .expect("no map found")
+        .0;
+
+    let player_position = query_actors
+        .iter()
+        .filter(|(_, m_n, actor)| {
+            m_n.0 == current_map_number.0 && **actor == Actor::Player
+        })
+        .last()
+        .expect("player position not found")
+        .0;
+
+    if map.exits.contains(player_position) {
+        next_game_state.set(GameState::CleanupActors);
     }
 }
 
