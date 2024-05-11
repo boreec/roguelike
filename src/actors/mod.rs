@@ -220,11 +220,10 @@ pub fn update_actor_sprites(
     >,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    for (mut transform, position, map_number) in &mut query_actors {
+    for (mut transform, pos, map_number) in &mut query_actors {
         if map_number.0 == current_map_number.0 {
-            let (sprite_x, sprite_y) = calculate_sprite_position(position);
-            transform.translation =
-                Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
+            let (x, y) = calculate_sprite_position(pos);
+            transform.translation = Vec3::new(x, y, Z_INDEX_ACTOR);
         }
     }
 }
