@@ -63,7 +63,7 @@ pub fn update_camera_position(
         .last()
         .expect("no player found");
 
-    let (sprite_x, sprite_y) = calculate_sprite_position(position_player);
+    let (sprite_x, sprite_y) = position_player.as_sprite_coordinates();
     let mut camera_transform = query_main_camera.single_mut();
     camera_transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
 }

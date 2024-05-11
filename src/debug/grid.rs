@@ -10,7 +10,7 @@ fn spawn_grid_vertical_lines(commands: &mut Commands, map: &Map) {
     let line_length = map.height as f32 * SPRITE_TILE_HEIGHT;
     for i in 0..=map.width {
         let position_anchor = MapPosition { x: i, y: 0 };
-        let (line_x, _) = calculate_sprite_position(&position_anchor);
+        let (line_x, _) = position_anchor.as_sprite_coordinates();
         commands.spawn((
             DebugGrid,
             SpriteBundle {
@@ -34,7 +34,7 @@ fn spawn_grid_horizontal_lines(commands: &mut Commands, map: &Map) {
     let line_length = map.width as f32 * SPRITE_TILE_WIDTH;
     for j in 0..=map.height {
         let position_anchor = MapPosition { x: 0, y: j };
-        let (_, line_y) = calculate_sprite_position(&position_anchor);
+        let (_, line_y) = position_anchor.as_sprite_coordinates();
         commands.spawn((
             DebugGrid,
             SpriteBundle {

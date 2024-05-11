@@ -63,7 +63,7 @@ impl ActorBundle {
         map_number: usize,
         tileset: &TilesetActor,
     ) -> Self {
-        let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
+        let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
         Self {
             actor,
             map_position,
@@ -222,7 +222,7 @@ pub fn update_actor_sprites(
 ) {
     for (mut transform, pos, map_number) in &mut query_actors {
         if map_number.0 == current_map_number.0 {
-            let (x, y) = calculate_sprite_position(pos);
+            let (x, y) = pos.as_sprite_coordinates();
             transform.translation = Vec3::new(x, y, Z_INDEX_ACTOR);
         }
     }

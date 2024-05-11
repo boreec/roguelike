@@ -13,7 +13,7 @@ pub fn spawn_tile_coordinate_labels(
     for i in 0..map.height {
         for j in 0..map.width {
             let tile_position = MapPosition { x: j, y: i };
-            let (text_x, text_y) = calculate_sprite_position(&tile_position);
+            let (text_x, text_y) = tile_position.as_sprite_coordinates();
             commands.spawn((
                 TileCoordinateLabel,
                 Text2dBundle {

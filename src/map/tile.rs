@@ -58,7 +58,7 @@ impl TileBundle {
         tileset: &TilesetTerrain,
         tile_type: TileType,
     ) -> Self {
-        let (sprite_x, sprite_y) = calculate_sprite_position(&map_position);
+        let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
         Self {
             tile: Tile,
             r#type: tile_type,

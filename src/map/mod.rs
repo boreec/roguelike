@@ -318,6 +318,14 @@ impl MapPosition {
     pub const fn new(x: usize, y: usize) -> Self {
         Self { x, y }
     }
+
+    pub fn as_sprite_coordinates(&self) -> (f32, f32) {
+        (
+            (self.x as f32).mul_add(SPRITE_TILE_WIDTH, SPRITE_TILE_WIDTH / 2.0),
+            (-1f32 * self.y as f32)
+                .mul_add(SPRITE_TILE_HEIGHT, -(SPRITE_TILE_HEIGHT / 2.0)),
+        )
+    }
 }
 
 #[cfg(test)]
@@ -363,15 +371,4 @@ mod tests {
             }]);
         assert!(spawn.is_err());
     }
-}
-
-/// Calculates where a sprite should be displayed in the window depending on
-/// its map position.
-pub fn calculate_sprite_position(map_position: &MapPosition) -> (f32, f32) {
-    (
-        (map_position.x as f32)
-            .mul_add(SPRITE_TILE_WIDTH, SPRITE_TILE_WIDTH / 2.0),
-        (-1f32 * map_position.y as f32)
-            .mul_add(SPRITE_TILE_HEIGHT, -(SPRITE_TILE_HEIGHT / 2.0)),
-    )
 }
