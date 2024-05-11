@@ -178,11 +178,12 @@ fn initialize_map(
 impl Map {
     /// Returns a randown position where an actor can spawn, i.e. there's no
     /// obstacle such as a rock or a tree on that position.
-    pub fn generate_random_spawning_position(
+    pub fn generate_random_positions(
         &self,
+        quantity: usize,
         occupied_positions: &[MapPosition],
-    ) -> Result<MapPosition, Box<dyn std::error::Error>> {
-        let spawnable_positions: Vec<_> = self
+    ) -> Result<Vec<MapPosition>, Box<dyn std::error::Error>> {
+        let mut spawnable_positions: Vec<_> = self
             .tiles
             .iter()
             .enumerate()
@@ -193,7 +194,10 @@ impl Map {
                         y: index / self.width,
                     })
             })
-            .map(|(index, _)| index)
+            .map(|(index, _)| MapPosition {
+                x: index % self.width,
+                y: index / self.width,
+            })
             .collect();
 
         if spawnable_positions.is_empty() {
@@ -201,9 +205,9 @@ impl Map {
         }
 
         let mut rng = rand::thread_rng();
-        let index = *spawnable_positions.choose(&mut rng).unwrap();
+        spawnable_positions.shuffle(&mut rng);
 
-        Ok(MapPosition::new(index % self.width, index / self.height))
+        Ok(spawnable_positions[0..quantity].to_vec())
     }
 
     /// Adds an exit tile on the right side of the map. The position is
@@ -341,10 +345,10 @@ mod tests {
             exits: vec![],
         };
 
-        let spawn = map1x1.generate_random_spawning_position(&vec![]);
+        let spawn = map1x1.generate_random_positions(1, &vec![]);
 
         assert!(spawn.is_ok());
-        assert_eq!(MapPosition::new(0, 0), spawn.unwrap());
+        assert_eq!(vec![MapPosition::new(0, 0)], spawn.unwrap());
     }
 
     #[test]
@@ -356,19 +360,16 @@ mod tests {
             exits: vec![],
         };
 
-        let spawn = map1x1.generate_random_spawning_position(&vec![]);
+        let spawn = map1x1.generate_random_positions(1, &vec![]);
         assert!(spawn.is_err());
 
         map1x1.tiles = vec![TileType::Grass];
 
-        let spawn = map1x1.generate_random_spawning_position(&vec![]);
+        let spawn = map1x1.generate_random_positions(1, &vec![]);
         assert!(spawn.is_ok());
 
-        let spawn =
-            map1x1.generate_random_spawning_position(&vec![MapPosition {
-                x: 0,
-                y: 0,
-            }]);
+        let spawn = map1x1
+            .generate_random_positions(1, &vec![MapPosition { x: 0, y: 0 }]);
         assert!(spawn.is_err());
     }
 }

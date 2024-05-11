@@ -128,20 +128,17 @@ pub fn spawn_mobs_on_current_map(
             .as_str(),
         );
 
+    let pos_occupied: Vec<MapPosition> = query_actors
+        .iter()
+        .filter(|(_, m_n, _)| m_n.0 == current_map_number.0)
+        .map(|(m_p, _, _)| *m_p)
+        .collect();
+
     let spawn_counts = generate_spawn_counts(map, map_number);
     let actor_quantity = spawn_counts.values().fold(0, |acc, &x| acc + x);
-    let mut pos_actors = Vec::with_capacity(actor_quantity);
-    for _ in 0..actor_quantity {
-        let pos_spawn = map.generate_random_spawning_position(&pos_actors);
-        match pos_spawn {
-            Ok(pos) => {
-                pos_actors.push(pos);
-            }
-            Err(_) => {
-                break;
-            }
-        }
-    }
+    let pos_actors = map
+        .generate_random_positions(actor_quantity, &pos_occupied)
+        .unwrap();
 
     let mut spawned_quantity = 0;
     for (actor, quantity) in spawn_counts.iter() {
@@ -166,19 +163,20 @@ pub fn spawn_mobs_on_current_map(
     // if the player already exists, set a new spawn on the map
     if let Some(mut pos_player) = pos_player {
         let pos_new_spawn = map
-            .generate_random_spawning_position(&pos_actors)
-            .expect("failed to initialize player spawn");
+            .generate_random_positions(1, &pos_actors)
+            .expect("failed to initialize player spawn")
+            .pop()
+            .unwrap();
 
         pos_player.0.x = pos_new_spawn.x;
         pos_player.0.y = pos_new_spawn.y;
     } else {
-        let pos_player_spawn =
-            match map.generate_random_spawning_position(&pos_actors) {
-                Ok(pos) => pos,
-                Err(_) => {
-                    panic!("player could not spawn");
-                }
-            };
+        let pos_player_spawn = map
+            .generate_random_positions(1, &pos_actors)
+            .unwrap()
+            .last()
+            .unwrap()
+            .clone();
 
         spawn_creature(
             Actor::Player,
