@@ -105,7 +105,7 @@ pub fn spawn_mobs_on_current_map(
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    let current_map = query_map
+    let (current_map, _) = query_map
         .iter()
         .filter(|(_, map_n)| map_n.0 == current_map_number.0)
         .last()
@@ -115,8 +115,7 @@ pub fn spawn_mobs_on_current_map(
                 current_map_number.0
             )
             .as_str(),
-        )
-        .0;
+        );
 
     const RABBITS_QUANTITY: usize = 3;
     const BLOB_QUANTITY: usize = 3;
