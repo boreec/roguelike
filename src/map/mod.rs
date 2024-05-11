@@ -33,7 +33,7 @@ pub fn move_randomly(
     query_map: Query<(&Map, &MapNumber)>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let occupied_positions: Vec<MapPosition> = query_actors
+    let pos_occupied: Vec<MapPosition> = query_actors
         .iter_mut()
         .filter(|(_, m_n, _)| m_n.0 == current_map_number.0)
         .map(|(p, _, _)| *p)
@@ -45,19 +45,19 @@ pub fn move_randomly(
         .last()
         .expect("no map found");
 
-    for (mut mob_position, mob_map_number, actor) in query_actors.iter_mut() {
+    for (mut pos_mob, mob_map_number, actor) in query_actors.iter_mut() {
         if mob_map_number.0 == current_map_number.0 && *actor != Actor::Player {
-            let reachable_positions = enumerate_reachable_positions(
-                &mob_position.clone(),
+            let pos_reachable = enumerate_reachable_positions(
+                &pos_mob.clone(),
                 map,
-                &occupied_positions,
+                &pos_occupied,
             );
 
-            if !reachable_positions.is_empty() {
-                let random_pos = reachable_positions[rand::thread_rng()
-                    .gen_range(0..reachable_positions.len())];
-                mob_position.x = random_pos.x;
-                mob_position.y = random_pos.y;
+            if !pos_reachable.is_empty() {
+                let pos_random = pos_reachable
+                    [rand::thread_rng().gen_range(0..pos_reachable.len())];
+                pos_mob.x = pos_random.x;
+                pos_mob.y = pos_random.y;
             }
         }
     }
