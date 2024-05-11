@@ -176,8 +176,8 @@ fn initialize_map(
 }
 
 impl Map {
-    /// Returns a randown position where an actor can spawn, i.e. there's no
-    /// obstacle such as a rock or a tree on that position.
+    /// Returns random positions where an actor can spawn, meaning a position
+    /// with no other actors and that can be walkable.
     pub fn generate_random_positions(
         &self,
         quantity: usize,
