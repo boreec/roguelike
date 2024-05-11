@@ -63,7 +63,7 @@ impl ActorBundle {
         map_number: usize,
         tileset: &TilesetActor,
     ) -> Self {
-        let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
+        let (x, y) = map_position.as_sprite_coordinates();
         Self {
             actor,
             map_position,
@@ -73,11 +73,7 @@ impl ActorBundle {
                     layout: tileset.0.clone(),
                     index: actor.get_tileset_index(),
                 },
-                transform: Transform::from_xyz(
-                    sprite_x,
-                    sprite_y,
-                    Z_INDEX_ACTOR,
-                ),
+                transform: Transform::from_xyz(x, y, Z_INDEX_ACTOR),
                 texture: tileset.1.clone(),
                 sprite: Sprite::default(),
                 ..Default::default()
