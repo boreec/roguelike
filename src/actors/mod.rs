@@ -4,6 +4,7 @@ pub use constants::*;
 
 use crate::prelude::*;
 use bevy::prelude::*;
+use std::collections::HashMap;
 
 pub struct ActorsPlugin;
 
@@ -22,7 +23,7 @@ impl Plugin for ActorsPlugin {
     }
 }
 
-#[derive(Clone, Component, Copy, Eq, PartialEq)]
+#[derive(Clone, Component, Copy, Eq, Hash, PartialEq)]
 pub enum Actor {
     Blob,
     Rabbit,
@@ -96,6 +97,16 @@ pub fn despawn_mobs_on_current_map(
     next_game_state.set(GameState::CleanupMap);
 }
 
+pub fn generate_spawn_counts(
+    _map: &Map,
+    _map_number: &MapNumber,
+) -> HashMap<Actor, usize> {
+    let mut result = HashMap::new();
+    result.insert(Actor::Blob, 3);
+    result.insert(Actor::Rabbit, 3);
+    return result;
+}
+
 /// Spawn mob entities (enemies, NPC...) on the current map.
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
@@ -105,7 +116,7 @@ pub fn spawn_mobs_on_current_map(
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    let (current_map, _) = query_map
+    let (map, map_number) = query_map
         .iter()
         .filter(|(_, map_n)| map_n.0 == current_map_number.0)
         .last()
@@ -117,14 +128,11 @@ pub fn spawn_mobs_on_current_map(
             .as_str(),
         );
 
-    const RABBITS_QUANTITY: usize = 3;
-    const BLOB_QUANTITY: usize = 3;
-    const ACTOR_QUANTIY: usize = RABBITS_QUANTITY + BLOB_QUANTITY;
-
-    let mut pos_actors = Vec::with_capacity(ACTOR_QUANTIY);
-    for _ in 0..ACTOR_QUANTIY {
-        let pos_spawn =
-            current_map.generate_random_spawning_position(&pos_actors);
+    let spawn_counts = generate_spawn_counts(map, map_number);
+    let actor_quantity = spawn_counts.values().fold(0, |acc, &x| acc + x);
+    let mut pos_actors = Vec::with_capacity(actor_quantity);
+    for _ in 0..actor_quantity {
+        let pos_spawn = map.generate_random_spawning_position(&pos_actors);
         match pos_spawn {
             Ok(pos) => {
                 pos_actors.push(pos);
@@ -135,21 +143,17 @@ pub fn spawn_mobs_on_current_map(
         }
     }
 
-    spawn_creature(
-        Actor::Rabbit,
-        &pos_actors[0..RABBITS_QUANTITY],
-        &mut commands,
-        current_map_number.0,
-        &tileset,
-    );
-
-    spawn_creature(
-        Actor::Blob,
-        &pos_actors[RABBITS_QUANTITY..],
-        &mut commands,
-        current_map_number.0,
-        &tileset,
-    );
+    let mut spawned_quantity = 0;
+    for (actor, quantity) in spawn_counts.iter() {
+        spawn_creature(
+            *actor,
+            &pos_actors[spawned_quantity..spawned_quantity + quantity],
+            &mut commands,
+            current_map_number.0,
+            &tileset,
+        );
+        spawned_quantity += quantity;
+    }
 
     // initialize the player only if there's no player created
     let pos_player = query_actors
@@ -161,7 +165,7 @@ pub fn spawn_mobs_on_current_map(
 
     // if the player already exists, set a new spawn on the map
     if let Some(mut pos_player) = pos_player {
-        let pos_new_spawn = current_map
+        let pos_new_spawn = map
             .generate_random_spawning_position(&pos_actors)
             .expect("failed to initialize player spawn");
 
@@ -169,7 +173,7 @@ pub fn spawn_mobs_on_current_map(
         pos_player.0.y = pos_new_spawn.y;
     } else {
         let pos_player_spawn =
-            match current_map.generate_random_spawning_position(&pos_actors) {
+            match map.generate_random_spawning_position(&pos_actors) {
                 Ok(pos) => pos,
                 Err(_) => {
                     panic!("player could not spawn");
