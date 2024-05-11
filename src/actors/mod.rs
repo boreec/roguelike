@@ -162,13 +162,12 @@ pub fn spawn_mobs_on_current_map(
 
     // if the player already exists, set a new spawn on the map
     if let Some(mut pos_player) = pos_player {
-        let new_spawn =
-            current_map.generate_random_spawning_position(&pos_actors);
+        let pos_new_spawn = current_map
+            .generate_random_spawning_position(&pos_actors)
+            .expect("failed to initialize player spawn");
 
-        let new_spawn_position =
-            new_spawn.expect("failed to initialize player spawn");
-        pos_player.0.x = new_spawn_position.x;
-        pos_player.0.y = new_spawn_position.y;
+        pos_player.0.x = pos_new_spawn.x;
+        pos_player.0.y = pos_new_spawn.y;
     } else {
         let pos_player_spawn =
             match current_map.generate_random_spawning_position(&pos_actors) {
