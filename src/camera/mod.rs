@@ -55,7 +55,7 @@ pub fn update_camera_position(
     mut query_main_camera: Query<&mut Transform, With<MainCamera>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let (position_player, _, _) = query_actors
+    let (pos_player, _, _) = query_actors
         .iter()
         .filter(|(_, m_n, a)| {
             m_n.0 == current_map_number.0 && a.kind.is_player()
@@ -63,7 +63,7 @@ pub fn update_camera_position(
         .last()
         .expect("no player found");
 
-    let (sprite_x, sprite_y) = position_player.as_sprite_coordinates();
+    let (x, y) = pos_player.as_sprite_coordinates();
     let mut camera_transform = query_main_camera.single_mut();
-    camera_transform.translation = Vec3::new(sprite_x, sprite_y, Z_INDEX_ACTOR);
+    camera_transform.translation = Vec3::new(x, y, Z_INDEX_ACTOR);
 }
