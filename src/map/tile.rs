@@ -56,11 +56,11 @@ impl TileBundle {
         map_position: MapPosition,
         map_number: usize,
         tileset: &TilesetTerrain,
-        tile_type: TileKind,
+        kind: TileKind,
     ) -> Self {
         let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
         Self {
-            tile: Tile { kind: tile_type },
+            tile: Tile { kind },
             map_position,
             map_number: MapNumber(map_number),
             sprite: SpriteSheetBundle {
@@ -73,7 +73,7 @@ impl TileBundle {
                 texture: tileset.1.clone(),
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),
-                    index: TileKind::to_sprite_idx(&tile_type),
+                    index: TileKind::to_sprite_idx(&kind),
                 },
                 ..Default::default()
             },
