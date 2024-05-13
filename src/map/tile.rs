@@ -20,8 +20,8 @@ pub enum TileKind {
 impl TileKind {
     /// Returns the sprite index for a given `TileType`. The index corresponds
     /// to the location in the tilesheet where the corresponding tile is.
-    pub const fn to_sprite_idx(tile_type: &Self) -> usize {
-        match tile_type {
+    pub const fn to_sprite_idx(kind: Self) -> usize {
+        match kind {
             Self::Grass => TILESET_TERRAIN_IDX_GRASS,
             Self::GrassWithFlower => TILESET_TERRAIN_IDX_GRASS_WITH_FLOWER,
             Self::GrassWithStone => TILESET_TERRAIN_IDX_GRASS_WITH_STONE,
@@ -71,7 +71,7 @@ impl TileBundle {
                 texture: tileset.1.clone(),
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),
-                    index: TileKind::to_sprite_idx(&kind),
+                    index: TileKind::to_sprite_idx(kind),
                 },
                 ..Default::default()
             },
