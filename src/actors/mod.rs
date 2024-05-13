@@ -117,7 +117,7 @@ pub fn spawn_mobs_on_current_map(
 ) {
     let map = query_map
         .iter()
-        .filter(|m| m.map_number == current_map_number.0)
+        .filter(|m| m.number == current_map_number.0)
         .last()
         .expect(
             format!(

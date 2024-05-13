@@ -12,7 +12,7 @@ pub fn check_player_directional_input(
 ) {
     let map = query_map
         .iter()
-        .filter(|m| m.map_number == current_map_number.0)
+        .filter(|m| m.number == current_map_number.0)
         .last()
         .expect("no map found");
 

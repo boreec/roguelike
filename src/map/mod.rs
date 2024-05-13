@@ -41,7 +41,7 @@ pub fn move_randomly(
 
     let map = query_map
         .iter()
-        .filter(|m| m.map_number == current_map_number.0)
+        .filter(|m| m.number == current_map_number.0)
         .last()
         .expect("no map found");
 
@@ -72,7 +72,7 @@ pub fn cleanup_map(
     mut current_map_number: ResMut<CurrentMapNumber>,
 ) {
     for (entity, map) in &query_map {
-        if map.map_number == current_map_number.0 {
+        if map.number == current_map_number.0 {
             commands.entity(entity).despawn();
         }
     }
@@ -95,7 +95,7 @@ pub fn check_if_player_exit_map(
 ) {
     let map = query_map
         .iter()
-        .filter(|m| m.map_number == current_map_number.0)
+        .filter(|m| m.number == current_map_number.0)
         .last()
         .expect("no map found");
 
@@ -126,7 +126,7 @@ pub struct Map {
     /// The exits positions for the map.
     pub exits: Vec<MapPosition>,
 
-    pub map_number: usize,
+    pub number: usize,
 }
 
 /// Initialize a map by spawning tile entities depending on the map dimensions,
@@ -162,7 +162,7 @@ fn initialize_map(
         ));
     }
 
-    m.map_number = current_map_number.0;
+    m.number = current_map_number.0;
     commands.spawn(m);
 
     game_next_state.set(GameState::InitializingActors);
@@ -258,7 +258,7 @@ impl From<CellularAutomaton> for Map {
                 })
                 .collect(),
             exits: vec![],
-            map_number: 0,
+            number: 0,
         };
         map.add_exit_tile();
         map
@@ -298,7 +298,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
             height: tuple.2,
             tiles: cells,
             exits: vec![],
-            map_number: 0,
+            number: 0,
         };
 
         map.add_exit_tile();
@@ -338,7 +338,7 @@ mod tests {
             height: 1,
             tiles: vec![TileKind::Grass],
             exits: vec![],
-            map_number: 0,
+            number: 0,
         };
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
@@ -354,7 +354,7 @@ mod tests {
             height: 1,
             tiles: vec![TileKind::GrassWithStone],
             exits: vec![],
-            map_number: 0,
+            number: 0,
         };
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
