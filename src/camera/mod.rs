@@ -51,14 +51,14 @@ pub fn check_camera_zoom(
 
 /// Sets the camera position centered on the player.
 pub fn update_camera_position(
-    query_actors: Query<(&MapPosition, &MapNumber, &ActorKind)>,
+    query_actors: Query<(&MapPosition, &MapNumber, &Actor)>,
     mut query_main_camera: Query<&mut Transform, With<MainCamera>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
     let (position_player, _, _) = query_actors
         .iter()
         .filter(|(_, m_n, a)| {
-            m_n.0 == current_map_number.0 && **a == ActorKind::Player
+            m_n.0 == current_map_number.0 && a.kind.is_player()
         })
         .last()
         .expect("no player found");

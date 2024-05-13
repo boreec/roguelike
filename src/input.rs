@@ -5,7 +5,7 @@ use bevy::prelude::*;
 /// WSQD key pressed), and moves the `Player` position accordingly.
 pub fn check_player_directional_input(
     mut next_state: ResMut<NextState<GameState>>,
-    mut query_actors: Query<(&mut MapPosition, &MapNumber, &ActorKind)>,
+    mut query_actors: Query<(&mut MapPosition, &MapNumber, &Actor)>,
     query_map: Query<(&Map, &MapNumber)>,
     input: Res<ButtonInput<KeyCode>>,
     current_map_number: Res<CurrentMapNumber>,
@@ -19,7 +19,7 @@ pub fn check_player_directional_input(
     let occupied_pos: Vec<MapPosition> = query_actors
         .iter()
         .filter(|(_, m_n, a)| {
-            m_n.0 == current_map_number.0 && **a != ActorKind::Player
+            m_n.0 == current_map_number.0 && !a.kind.is_player()
         })
         .map(|(p, _, _)| *p)
         .collect();
@@ -27,7 +27,7 @@ pub fn check_player_directional_input(
     let (mut player_pos, _, _) = query_actors
         .iter_mut()
         .filter(|(_, m_n, a)| {
-            m_n.0 == current_map_number.0 && **a == ActorKind::Player
+            m_n.0 == current_map_number.0 && a.kind.is_player()
         })
         .last()
         .expect("no player pos found");

@@ -23,7 +23,22 @@ impl Plugin for ActorsPlugin {
     }
 }
 
-#[derive(Clone, Component, Copy, Eq, Hash, PartialEq)]
+#[derive(Clone, Component, Copy)]
+pub struct Actor {
+    pub kind: ActorKind,
+}
+
+impl Actor {
+    pub fn get_tileset_index(&self) -> usize {
+        match self.kind {
+            ActorKind::Blob => TILESET_ACTOR_IDX_BLOB,
+            ActorKind::Player => TILESET_ACTOR_IDX_PLAYER,
+            ActorKind::Rabbit => TILESET_ACTOR_IDX_RABBIT,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub enum ActorKind {
     Blob,
     Rabbit,
@@ -31,14 +46,6 @@ pub enum ActorKind {
 }
 
 impl ActorKind {
-    pub fn get_tileset_index(&self) -> usize {
-        match self {
-            ActorKind::Blob => TILESET_ACTOR_IDX_BLOB,
-            ActorKind::Player => TILESET_ACTOR_IDX_PLAYER,
-            ActorKind::Rabbit => TILESET_ACTOR_IDX_RABBIT,
-        }
-    }
-
     pub fn is_player(&self) -> bool {
         self == &ActorKind::Player
     }
@@ -48,7 +55,7 @@ impl ActorKind {
 #[derive(Bundle)]
 pub struct ActorBundle {
     /// Marker component for actor entities.
-    pub actor: ActorKind,
+    pub actor: Actor,
     /// The map where the actor is at.
     pub map_number: MapNumber,
     /// The map's position where the actor is at.
@@ -59,14 +66,14 @@ pub struct ActorBundle {
 
 impl ActorBundle {
     pub fn new(
-        actor: ActorKind,
+        actor: Actor,
         map_position: MapPosition,
         map_number: usize,
         tileset: &TilesetActor,
     ) -> Self {
         let (x, y) = map_position.as_sprite_coordinates();
         Self {
-            actor,
+            actor: actor.clone(),
             map_position,
             map_number: MapNumber { 0: map_number },
             sprite: SpriteSheetBundle {
@@ -85,7 +92,7 @@ impl ActorBundle {
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
-    query_actors: Query<(Entity, &MapNumber), With<ActorKind>>,
+    query_actors: Query<(Entity, &MapNumber), With<Actor>>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
@@ -111,7 +118,7 @@ pub fn generate_spawn_counts(
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
     query_map: Query<(&Map, &MapNumber)>,
-    mut query_actors: Query<(&mut MapPosition, &MapNumber, &ActorKind)>,
+    mut query_actors: Query<(&mut MapPosition, &MapNumber, &Actor)>,
     tileset: Res<TilesetActor>,
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
@@ -141,9 +148,9 @@ pub fn spawn_mobs_on_current_map(
         .unwrap();
 
     let mut spawned_quantity = 0;
-    for (actor, quantity) in spawn_counts.iter() {
+    for (actor_kind, quantity) in spawn_counts.iter() {
         spawn_creature(
-            *actor,
+            *actor_kind,
             &pos_actors[spawned_quantity..spawned_quantity + quantity],
             &mut commands,
             current_map_number.0,
@@ -156,7 +163,7 @@ pub fn spawn_mobs_on_current_map(
     let pos_player = query_actors
         .iter_mut()
         .filter(|(_, map_n, actor)| {
-            map_n.0 == current_map_number.0 && actor.is_player()
+            map_n.0 == current_map_number.0 && actor.kind.is_player()
         })
         .last();
 
@@ -191,7 +198,7 @@ pub fn spawn_mobs_on_current_map(
 
 /// Spawn creatures at specific map positions.
 pub fn spawn_creature(
-    actor: ActorKind,
+    actor_kind: ActorKind,
     positions: &[MapPosition],
     commands: &mut Commands,
     current_map_number: usize,
@@ -199,7 +206,7 @@ pub fn spawn_creature(
 ) {
     for position in positions {
         commands.spawn(ActorBundle::new(
-            actor,
+            Actor { kind: actor_kind },
             *position,
             current_map_number,
             tileset,
@@ -212,7 +219,7 @@ pub fn spawn_creature(
 pub fn update_actor_sprites(
     mut query_actors: Query<
         (&mut Transform, &MapPosition, &MapNumber),
-        With<ActorKind>,
+        With<Actor>,
     >,
     current_map_number: Res<CurrentMapNumber>,
 ) {
