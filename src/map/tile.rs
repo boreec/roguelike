@@ -1,14 +1,14 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
-/// Marker component to represent a tile.
+/// Represents a tile.
 #[derive(Component)]
 pub struct Tile {
     pub kind: TileKind,
     pub map_number: usize,
 }
 
-/// Enumeration to represent all types of tiles.
+/// Represent all kind of tiles.
 #[derive(Clone, Copy)]
 pub enum TileKind {
     Grass,
