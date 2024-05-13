@@ -7,14 +7,14 @@ pub struct Tile;
 
 /// Enumeration to represent all types of tiles.
 #[derive(Clone, Component, Copy)]
-pub enum TileType {
+pub enum TileKind {
     Grass,
     GrassWithFlower,
     GrassWithStone,
     LevelExit,
 }
 
-impl TileType {
+impl TileKind {
     /// Returns the sprite index for a given `TileType`. The index corresponds
     /// to the location in the tilesheet where the corresponding tile is.
     pub const fn to_sprite_idx(tile_type: &Self) -> usize {
@@ -41,7 +41,7 @@ pub struct TileBundle {
     /// Marker component for the tile.
     pub tile: Tile,
     /// Type of the tile.
-    pub r#type: TileType,
+    pub r#type: TileKind,
     /// Sprite bundle for rendering the tile.
     pub sprite: SpriteSheetBundle,
     /// The number of the map where the tile is.
@@ -56,7 +56,7 @@ impl TileBundle {
         map_position: MapPosition,
         map_number: usize,
         tileset: &TilesetTerrain,
-        tile_type: TileType,
+        tile_type: TileKind,
     ) -> Self {
         let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
         Self {
@@ -74,7 +74,7 @@ impl TileBundle {
                 texture: tileset.1.clone(),
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),
-                    index: TileType::to_sprite_idx(&tile_type),
+                    index: TileKind::to_sprite_idx(&tile_type),
                 },
                 ..Default::default()
             },

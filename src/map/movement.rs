@@ -132,7 +132,7 @@ mod tests {
         Map {
             width: 3,
             height: 3,
-            tiles: vec![TileType::Grass; 3 * 3],
+            tiles: vec![TileKind::Grass; 3 * 3],
             exits: vec![],
         }
     }
@@ -142,15 +142,15 @@ mod tests {
             width: 3,
             height: 3,
             tiles: vec![
-                TileType::Grass,
-                TileType::GrassWithStone,
-                TileType::Grass,
-                TileType::GrassWithStone,
-                TileType::Grass,
-                TileType::GrassWithStone,
-                TileType::Grass,
-                TileType::GrassWithStone,
-                TileType::Grass,
+                TileKind::Grass,
+                TileKind::GrassWithStone,
+                TileKind::Grass,
+                TileKind::GrassWithStone,
+                TileKind::Grass,
+                TileKind::GrassWithStone,
+                TileKind::Grass,
+                TileKind::GrassWithStone,
+                TileKind::Grass,
             ],
             exits: vec![],
         }
