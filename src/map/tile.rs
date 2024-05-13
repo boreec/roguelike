@@ -3,10 +3,12 @@ use bevy::prelude::*;
 
 /// Marker component to represent a tile.
 #[derive(Component)]
-pub struct Tile;
+pub struct Tile {
+    pub kind: TileKind,
+}
 
 /// Enumeration to represent all types of tiles.
-#[derive(Clone, Component, Copy)]
+#[derive(Clone, Copy)]
 pub enum TileKind {
     Grass,
     GrassWithFlower,
@@ -40,8 +42,6 @@ impl TileKind {
 pub struct TileBundle {
     /// Marker component for the tile.
     pub tile: Tile,
-    /// Type of the tile.
-    pub r#type: TileKind,
     /// Sprite bundle for rendering the tile.
     pub sprite: SpriteSheetBundle,
     /// The number of the map where the tile is.
@@ -60,8 +60,7 @@ impl TileBundle {
     ) -> Self {
         let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
         Self {
-            tile: Tile,
-            r#type: tile_type,
+            tile: Tile { kind: tile_type },
             map_position,
             map_number: MapNumber(map_number),
             sprite: SpriteSheetBundle {
