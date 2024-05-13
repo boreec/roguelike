@@ -125,7 +125,7 @@ pub struct Map {
     pub tiles: Vec<TileKind>,
     /// The exits positions for the map.
     pub exits: Vec<MapPosition>,
-
+    /// The number corresponding to the map.
     pub number: usize,
 }
 
