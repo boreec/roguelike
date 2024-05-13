@@ -36,6 +36,10 @@ impl Actor {
             ActorKind::Rabbit => TILESET_ACTOR_IDX_RABBIT,
         }
     }
+
+    pub fn is_player(&self) -> bool {
+        self.kind == ActorKind::Player
+    }
 }
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
@@ -43,12 +47,6 @@ pub enum ActorKind {
     Blob,
     Rabbit,
     Player,
-}
-
-impl ActorKind {
-    pub fn is_player(&self) -> bool {
-        self == &ActorKind::Player
-    }
 }
 
 /// Bundle for spawning actor entities.
@@ -163,7 +161,7 @@ pub fn spawn_mobs_on_current_map(
     let pos_player = query_actors
         .iter_mut()
         .filter(|(_, map_n, actor)| {
-            map_n.0 == current_map_number.0 && actor.kind.is_player()
+            map_n.0 == current_map_number.0 && actor.is_player()
         })
         .last();
 

@@ -46,7 +46,7 @@ pub fn move_randomly(
         .expect("no map found");
 
     for (mut pos_mob, mob_map_number, actor) in query_actors.iter_mut() {
-        if mob_map_number.0 == current_map_number.0 && !actor.kind.is_player() {
+        if mob_map_number.0 == current_map_number.0 && !actor.is_player() {
             let pos_reachable = enumerate_reachable_positions(
                 &pos_mob.clone(),
                 map,
@@ -96,7 +96,7 @@ pub fn check_if_player_exit_map(
     let (player_position, _, _) = query_actors
         .iter()
         .filter(|(_, m_n, actor)| {
-            m_n.0 == current_map_number.0 && actor.kind.is_player()
+            m_n.0 == current_map_number.0 && actor.is_player()
         })
         .last()
         .expect("player position not found");

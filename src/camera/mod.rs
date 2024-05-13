@@ -57,9 +57,7 @@ pub fn update_camera_position(
 ) {
     let (pos_player, _, _) = query_actors
         .iter()
-        .filter(|(_, m_n, a)| {
-            m_n.0 == current_map_number.0 && a.kind.is_player()
-        })
+        .filter(|(_, m_n, a)| m_n.0 == current_map_number.0 && a.is_player())
         .last()
         .expect("no player found");
 
