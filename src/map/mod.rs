@@ -29,7 +29,7 @@ impl Plugin for MapPlugin {
 
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
-    mut query_actors: Query<(&mut MapPosition, &MapNumber, &ActorType)>,
+    mut query_actors: Query<(&mut MapPosition, &MapNumber, &ActorKind)>,
     query_map: Query<(&Map, &MapNumber)>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
@@ -83,7 +83,7 @@ pub fn cleanup_map(
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
     query_map: Query<(&Map, &MapNumber)>,
-    query_actors: Query<(&MapPosition, &MapNumber, &ActorType)>,
+    query_actors: Query<(&MapPosition, &MapNumber, &ActorKind)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {

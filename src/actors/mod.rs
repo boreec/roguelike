@@ -24,23 +24,23 @@ impl Plugin for ActorsPlugin {
 }
 
 #[derive(Clone, Component, Copy, Eq, Hash, PartialEq)]
-pub enum ActorType {
+pub enum ActorKind {
     Blob,
     Rabbit,
     Player,
 }
 
-impl ActorType {
+impl ActorKind {
     pub fn get_tileset_index(&self) -> usize {
         match self {
-            ActorType::Blob => TILESET_ACTOR_IDX_BLOB,
-            ActorType::Player => TILESET_ACTOR_IDX_PLAYER,
-            ActorType::Rabbit => TILESET_ACTOR_IDX_RABBIT,
+            ActorKind::Blob => TILESET_ACTOR_IDX_BLOB,
+            ActorKind::Player => TILESET_ACTOR_IDX_PLAYER,
+            ActorKind::Rabbit => TILESET_ACTOR_IDX_RABBIT,
         }
     }
 
     pub fn is_player(&self) -> bool {
-        self == &ActorType::Player
+        self == &ActorKind::Player
     }
 }
 
@@ -48,7 +48,7 @@ impl ActorType {
 #[derive(Bundle)]
 pub struct ActorBundle {
     /// Marker component for actor entities.
-    pub actor: ActorType,
+    pub actor: ActorKind,
     /// The map where the actor is at.
     pub map_number: MapNumber,
     /// The map's position where the actor is at.
@@ -59,7 +59,7 @@ pub struct ActorBundle {
 
 impl ActorBundle {
     pub fn new(
-        actor: ActorType,
+        actor: ActorKind,
         map_position: MapPosition,
         map_number: usize,
         tileset: &TilesetActor,
@@ -85,7 +85,7 @@ impl ActorBundle {
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
-    query_actors: Query<(Entity, &MapNumber), With<ActorType>>,
+    query_actors: Query<(Entity, &MapNumber), With<ActorKind>>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
@@ -100,10 +100,10 @@ pub fn despawn_mobs_on_current_map(
 pub fn generate_spawn_counts(
     _map: &Map,
     _map_number: &MapNumber,
-) -> HashMap<ActorType, usize> {
+) -> HashMap<ActorKind, usize> {
     let mut result = HashMap::new();
-    result.insert(ActorType::Blob, 3);
-    result.insert(ActorType::Rabbit, 3);
+    result.insert(ActorKind::Blob, 3);
+    result.insert(ActorKind::Rabbit, 3);
     return result;
 }
 
@@ -111,7 +111,7 @@ pub fn generate_spawn_counts(
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
     query_map: Query<(&Map, &MapNumber)>,
-    mut query_actors: Query<(&mut MapPosition, &MapNumber, &ActorType)>,
+    mut query_actors: Query<(&mut MapPosition, &MapNumber, &ActorKind)>,
     tileset: Res<TilesetActor>,
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
@@ -179,7 +179,7 @@ pub fn spawn_mobs_on_current_map(
             .clone();
 
         spawn_creature(
-            ActorType::Player,
+            ActorKind::Player,
             &[pos_player_spawn],
             &mut commands,
             current_map_number.0,
@@ -191,7 +191,7 @@ pub fn spawn_mobs_on_current_map(
 
 /// Spawn creatures at specific map positions.
 pub fn spawn_creature(
-    actor: ActorType,
+    actor: ActorKind,
     positions: &[MapPosition],
     commands: &mut Commands,
     current_map_number: usize,
@@ -212,7 +212,7 @@ pub fn spawn_creature(
 pub fn update_actor_sprites(
     mut query_actors: Query<
         (&mut Transform, &MapPosition, &MapNumber),
-        With<ActorType>,
+        With<ActorKind>,
     >,
     current_map_number: Res<CurrentMapNumber>,
 ) {

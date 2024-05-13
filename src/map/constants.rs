@@ -1,5 +1,5 @@
-pub const MAP_WIDTH: usize = 50;
-pub const MAP_HEIGHT: usize = 50;
+pub const MAP_WIDTH: usize = 20;
+pub const MAP_HEIGHT: usize = 20;
 
 pub const TILESET_TERRAIN_ROWS: usize = 1;
 pub const TILESET_TERRAIN_COLUMNS: usize = 4;
