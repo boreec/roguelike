@@ -29,14 +29,14 @@ impl Plugin for MapPlugin {
 
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
-    mut query_actors: Query<(&mut MapPosition, &MapNumber, &Actor)>,
+    mut query_actors: Query<(&mut MapPosition, &Actor)>,
     query_map: Query<(&Map, &MapNumber)>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
     let pos_occupied: Vec<MapPosition> = query_actors
         .iter_mut()
-        .filter(|(_, m_n, _)| m_n.0 == current_map_number.0)
-        .map(|(p, _, _)| *p)
+        .filter(|(_, a)| a.map_number == current_map_number.0)
+        .map(|(p, _)| *p)
         .collect();
 
     let (map, _) = query_map
@@ -45,8 +45,8 @@ pub fn move_randomly(
         .last()
         .expect("no map found");
 
-    for (mut pos_mob, mob_map_number, actor) in query_actors.iter_mut() {
-        if mob_map_number.0 == current_map_number.0 && !actor.is_player() {
+    for (mut pos_mob, actor) in query_actors.iter_mut() {
+        if actor.map_number == current_map_number.0 && !actor.is_player() {
             let pos_reachable = enumerate_reachable_positions(
                 &pos_mob.clone(),
                 map,
@@ -83,7 +83,7 @@ pub fn cleanup_map(
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
     query_map: Query<(&Map, &MapNumber)>,
-    query_actors: Query<(&MapPosition, &MapNumber, &Actor)>,
+    query_actors: Query<(&MapPosition, &Actor)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
@@ -93,10 +93,10 @@ pub fn check_if_player_exit_map(
         .last()
         .expect("no map found");
 
-    let (player_position, _, _) = query_actors
+    let (player_position, _) = query_actors
         .iter()
-        .filter(|(_, m_n, actor)| {
-            m_n.0 == current_map_number.0 && actor.is_player()
+        .filter(|(_, actor)| {
+            actor.map_number == current_map_number.0 && actor.is_player()
         })
         .last()
         .expect("player position not found");

@@ -26,6 +26,7 @@ impl Plugin for ActorsPlugin {
 #[derive(Clone, Component, Copy)]
 pub struct Actor {
     pub kind: ActorKind,
+    pub map_number: usize,
 }
 
 impl Actor {
@@ -54,8 +55,6 @@ pub enum ActorKind {
 pub struct ActorBundle {
     /// Marker component for actor entities.
     pub actor: Actor,
-    /// The map where the actor is at.
-    pub map_number: MapNumber,
     /// The map's position where the actor is at.
     pub map_position: MapPosition,
     /// The sprite representing the actor.
@@ -66,14 +65,12 @@ impl ActorBundle {
     pub fn new(
         actor: Actor,
         map_position: MapPosition,
-        map_number: usize,
         tileset: &TilesetActor,
     ) -> Self {
         let (x, y) = map_position.as_sprite_coordinates();
         Self {
             actor: actor.clone(),
             map_position,
-            map_number: MapNumber { 0: map_number },
             sprite: SpriteSheetBundle {
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),
@@ -90,12 +87,12 @@ impl ActorBundle {
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
-    query_actors: Query<(Entity, &MapNumber), With<Actor>>,
+    query_actors: Query<(Entity, &Actor)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    for (entity, map_number) in &query_actors {
-        if map_number.0 == current_map_number.0 {
+    for (entity, actor) in &query_actors {
+        if actor.map_number == current_map_number.0 {
             commands.entity(entity).despawn();
         }
     }
@@ -116,7 +113,7 @@ pub fn generate_spawn_counts(
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
     query_map: Query<(&Map, &MapNumber)>,
-    mut query_actors: Query<(&mut MapPosition, &MapNumber, &Actor)>,
+    mut query_actors: Query<(&mut MapPosition, &Actor)>,
     tileset: Res<TilesetActor>,
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
@@ -135,8 +132,8 @@ pub fn spawn_mobs_on_current_map(
 
     let pos_occupied: Vec<MapPosition> = query_actors
         .iter()
-        .filter(|(_, m_n, _)| m_n.0 == current_map_number.0)
-        .map(|(m_p, _, _)| *m_p)
+        .filter(|(_, a)| a.map_number == current_map_number.0)
+        .map(|(m_p, _)| *m_p)
         .collect();
 
     let spawn_counts = generate_spawn_counts(map, map_number);
@@ -160,9 +157,7 @@ pub fn spawn_mobs_on_current_map(
     // initialize the player only if there's no player created
     let pos_player = query_actors
         .iter_mut()
-        .filter(|(_, map_n, actor)| {
-            map_n.0 == current_map_number.0 && actor.is_player()
-        })
+        .filter(|(_, a)| a.map_number == current_map_number.0 && a.is_player())
         .last();
 
     // if the player already exists, set a new spawn on the map
@@ -204,9 +199,11 @@ pub fn spawn_creature(
 ) {
     for position in positions {
         commands.spawn(ActorBundle::new(
-            Actor { kind: actor_kind },
+            Actor {
+                kind: actor_kind,
+                map_number: current_map_number,
+            },
             *position,
-            current_map_number,
             tileset,
         ));
     }
@@ -215,14 +212,11 @@ pub fn spawn_creature(
 /// Update the sprite position of all actors of the current map according to
 /// their map position.
 pub fn update_actor_sprites(
-    mut query_actors: Query<
-        (&mut Transform, &MapPosition, &MapNumber),
-        With<Actor>,
-    >,
+    mut query_actors: Query<(&mut Transform, &MapPosition, &Actor)>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    for (mut transform, pos, map_number) in &mut query_actors {
-        if map_number.0 == current_map_number.0 {
+    for (mut transform, pos, actor) in &mut query_actors {
+        if actor.map_number == current_map_number.0 {
             let (x, y) = pos.as_sprite_coordinates();
             transform.translation = Vec3::new(x, y, Z_INDEX_ACTOR);
         }
