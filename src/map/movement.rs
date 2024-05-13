@@ -1,5 +1,41 @@
 use crate::prelude::*;
 
+/// Move mob actors to a random reachable position.
+pub fn move_randomly(
+    mut query_actors: Query<(&mut MapPosition, &Actor)>,
+    query_map: Query<&Map>,
+    current_map_number: Res<CurrentMapNumber>,
+) {
+    let pos_occupied: Vec<MapPosition> = query_actors
+        .iter_mut()
+        .filter(|(_, a)| a.map_number == current_map_number.0)
+        .map(|(p, _)| *p)
+        .collect();
+
+    let map = query_map
+        .iter()
+        .filter(|m| m.number == current_map_number.0)
+        .last()
+        .expect("no map found");
+
+    for (mut pos_mob, actor) in query_actors.iter_mut() {
+        if actor.map_number == current_map_number.0 && !actor.is_player() {
+            let pos_reachable = enumerate_reachable_positions(
+                &pos_mob.clone(),
+                map,
+                &pos_occupied,
+            );
+
+            if !pos_reachable.is_empty() {
+                let pos_random = pos_reachable
+                    [rand::thread_rng().gen_range(0..pos_reachable.len())];
+                pos_mob.x = pos_random.x;
+                pos_mob.y = pos_random.y;
+            }
+        }
+    }
+}
+
 pub fn move_left(position: &mut MapPosition) {
     position.x -= 1;
 }
@@ -134,6 +170,7 @@ mod tests {
             height: 3,
             tiles: vec![TileKind::Grass; 3 * 3],
             exits: vec![],
+            number: 0,
         }
     }
 
@@ -153,6 +190,7 @@ mod tests {
                 TileKind::Grass,
             ],
             exits: vec![],
+            number: 0,
         }
     }
 
