@@ -5,6 +5,7 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct Tile {
     pub kind: TileKind,
+    pub map_number: usize,
 }
 
 /// Enumeration to represent all types of tiles.
@@ -44,8 +45,6 @@ pub struct TileBundle {
     pub tile: Tile,
     /// Sprite bundle for rendering the tile.
     pub sprite: SpriteSheetBundle,
-    /// The number of the map where the tile is.
-    pub map_number: MapNumber,
     /// The position on the map where the tile is.
     pub map_position: MapPosition,
 }
@@ -60,9 +59,8 @@ impl TileBundle {
     ) -> Self {
         let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
         Self {
-            tile: Tile { kind },
+            tile: Tile { kind, map_number },
             map_position,
-            map_number: MapNumber(map_number),
             sprite: SpriteSheetBundle {
                 transform: Transform::from_xyz(
                     sprite_x,

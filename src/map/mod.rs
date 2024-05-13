@@ -30,7 +30,7 @@ impl Plugin for MapPlugin {
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
     mut query_actors: Query<(&mut MapPosition, &Actor)>,
-    query_map: Query<(&Map, &MapNumber)>,
+    query_map: Query<&Map>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
     let pos_occupied: Vec<MapPosition> = query_actors
@@ -39,9 +39,9 @@ pub fn move_randomly(
         .map(|(p, _)| *p)
         .collect();
 
-    let (map, _) = query_map
+    let map = query_map
         .iter()
-        .filter(|(_, m_n)| m_n.0 == current_map_number.0)
+        .filter(|m| m.map_number == current_map_number.0)
         .last()
         .expect("no map found");
 
@@ -66,12 +66,18 @@ pub fn move_randomly(
 /// Removes all entities (`Map`, `Tile`, etc) related to the current map.
 pub fn cleanup_map(
     mut commands: Commands,
-    query: Query<(Entity, &MapNumber), Or<(With<Map>, With<Tile>)>>,
+    query_map: Query<(Entity, &Map)>,
+    query_tiles: Query<(Entity, &Tile)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     mut current_map_number: ResMut<CurrentMapNumber>,
 ) {
-    for (entity, map_number) in &query {
-        if map_number.0 == current_map_number.0 {
+    for (entity, map) in &query_map {
+        if map.map_number == current_map_number.0 {
+            commands.entity(entity).despawn();
+        }
+    }
+    for (entity, tile) in &query_tiles {
+        if tile.map_number == current_map_number.0 {
             commands.entity(entity).despawn();
         }
     }
@@ -82,14 +88,14 @@ pub fn cleanup_map(
 /// Checks if a player is on an exit tile. In that case, the game state is
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
-    query_map: Query<(&Map, &MapNumber)>,
+    query_map: Query<&Map>,
     query_actors: Query<(&MapPosition, &Actor)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let (map, _) = query_map
+    let map = query_map
         .iter()
-        .filter(|(_, m_n)| m_n.0 == current_map_number.0)
+        .filter(|m| m.map_number == current_map_number.0)
         .last()
         .expect("no map found");
 
@@ -106,19 +112,6 @@ pub fn check_if_player_exit_map(
     }
 }
 
-/// Bundle for creating an entity representing a map.
-#[derive(Bundle)]
-pub struct MapBundle {
-    /// Marker component a map entity.
-    map: Map,
-    /// The number to be associated with the map.
-    map_number: MapNumber,
-}
-
-/// Represents a number to identify a map.
-#[derive(Component)]
-pub struct MapNumber(pub usize);
-
 /// Represents the environment where the actors interact together. A map is
 /// made of tiles which has different properties for the actors.
 #[derive(Component)]
@@ -132,6 +125,8 @@ pub struct Map {
     pub tiles: Vec<TileKind>,
     /// The exits positions for the map.
     pub exits: Vec<MapPosition>,
+
+    pub map_number: usize,
 }
 
 /// Initialize a map by spawning tile entities depending on the map dimensions,
@@ -143,7 +138,7 @@ fn initialize_map(
     tileset: Res<TilesetTerrain>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let m = if rand::thread_rng().gen_bool(0.5) {
+    let mut m = if rand::thread_rng().gen_bool(0.5) {
         Map::from((PerlinNoise::new(), MAP_WIDTH, MAP_HEIGHT))
     } else {
         let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, 0.5);
@@ -167,10 +162,8 @@ fn initialize_map(
         ));
     }
 
-    commands.spawn(MapBundle {
-        map: m,
-        map_number: MapNumber(current_map_number.0),
-    });
+    m.map_number = current_map_number.0;
+    commands.spawn(m);
 
     game_next_state.set(GameState::InitializingActors);
 }
@@ -265,6 +258,7 @@ impl From<CellularAutomaton> for Map {
                 })
                 .collect(),
             exits: vec![],
+            map_number: 0,
         };
         map.add_exit_tile();
         map
@@ -304,6 +298,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
             height: tuple.2,
             tiles: cells,
             exits: vec![],
+            map_number: 0,
         };
 
         map.add_exit_tile();
@@ -343,6 +338,7 @@ mod tests {
             height: 1,
             tiles: vec![TileKind::Grass],
             exits: vec![],
+            map_number: 0,
         };
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
@@ -358,6 +354,7 @@ mod tests {
             height: 1,
             tiles: vec![TileKind::GrassWithStone],
             exits: vec![],
+            map_number: 0,
         };
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);

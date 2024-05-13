@@ -99,10 +99,7 @@ pub fn despawn_mobs_on_current_map(
     next_game_state.set(GameState::CleanupMap);
 }
 
-pub fn generate_spawn_counts(
-    _map: &Map,
-    _map_number: &MapNumber,
-) -> HashMap<ActorKind, usize> {
+pub fn generate_spawn_counts(_map: &Map) -> HashMap<ActorKind, usize> {
     let mut result = HashMap::new();
     result.insert(ActorKind::Blob, 3);
     result.insert(ActorKind::Rabbit, 3);
@@ -112,15 +109,15 @@ pub fn generate_spawn_counts(
 /// Spawn mob entities (enemies, NPC...) on the current map.
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
-    query_map: Query<(&Map, &MapNumber)>,
+    query_map: Query<&Map>,
     mut query_actors: Query<(&mut MapPosition, &Actor)>,
     tileset: Res<TilesetActor>,
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    let (map, map_number) = query_map
+    let map = query_map
         .iter()
-        .filter(|(_, map_n)| map_n.0 == current_map_number.0)
+        .filter(|m| m.map_number == current_map_number.0)
         .last()
         .expect(
             format!(
@@ -136,7 +133,7 @@ pub fn spawn_mobs_on_current_map(
         .map(|(m_p, _)| *m_p)
         .collect();
 
-    let spawn_counts = generate_spawn_counts(map, map_number);
+    let spawn_counts = generate_spawn_counts(map);
     let actor_quantity = spawn_counts.values().fold(0, |acc, &x| acc + x);
     let pos_actors = map
         .generate_random_positions(actor_quantity, &pos_occupied)

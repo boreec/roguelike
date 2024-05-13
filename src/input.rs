@@ -6,13 +6,13 @@ use bevy::prelude::*;
 pub fn check_player_directional_input(
     mut next_state: ResMut<NextState<GameState>>,
     mut query_actors: Query<(&mut MapPosition, &Actor)>,
-    query_map: Query<(&Map, &MapNumber)>,
+    query_map: Query<&Map>,
     input: Res<ButtonInput<KeyCode>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let (map, _) = query_map
+    let map = query_map
         .iter()
-        .filter(|(_, m_n)| m_n.0 == current_map_number.0)
+        .filter(|m| m.map_number == current_map_number.0)
         .last()
         .expect("no map found");
 
