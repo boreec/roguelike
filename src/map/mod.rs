@@ -112,12 +112,11 @@ fn initialize_map(
     };
 
     for (i, tile) in m.tiles.iter().enumerate() {
-        let tile_position = MapPosition {
+        let pos_tile = MapPosition {
             x: i % m.width,
             y: i / m.width,
         };
-        commands
-            .spawn((OnScreen, TileBundle::new(tile_position, &tileset, *tile)));
+        commands.spawn((OnScreen, TileBundle::new(pos_tile, &tileset, *tile)));
     }
 
     m.number = current_map_number.0;
