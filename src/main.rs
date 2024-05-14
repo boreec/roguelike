@@ -42,6 +42,7 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
             ActorsPlugin,
             CameraPlugin,
+            InputPlugin,
             MapPlugin,
             ResourcesPlugin,
             DebugPlugin,
@@ -53,11 +54,6 @@ fn main() {
         .add_systems(
             Update,
             check_assets.run_if(in_state(AppState::LoadingAssets)),
-        )
-        .add_systems(
-            Update,
-            (check_player_directional_input, check_app_exit_events)
-                .run_if(in_state(GameState::PlayerTurn)),
         )
         .add_systems(OnEnter(GameState::EnemyTurn), increase_game_turn)
         .run();

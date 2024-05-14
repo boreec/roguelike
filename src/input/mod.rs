@@ -1,6 +1,18 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
+pub struct InputPlugin;
+
+impl Plugin for InputPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(
+            Update,
+            (check_player_directional_input, check_app_exit_events)
+                .run_if(in_state(GameState::PlayerTurn)),
+        );
+    }
+}
+
 /// Checks if the player receives a directional input (i.e. an arrow key or a
 /// WSQD key pressed), and moves the `Player` position accordingly.
 pub fn check_player_directional_input(
