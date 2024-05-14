@@ -6,8 +6,11 @@ impl Plugin for InputPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (check_player_move_via_keys, check_app_exit_events)
-                .run_if(in_state(GameState::PlayerTurn)),
+            check_player_move_via_keys.run_if(in_state(GameState::PlayerTurn)),
+        )
+        .add_systems(
+            Update,
+            check_app_exit_events.run_if(in_state(AppState::InGame)),
         );
     }
 }
