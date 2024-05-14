@@ -1,6 +1,7 @@
 mod constants;
 
 use crate::prelude::*;
+use bevy::input::mouse::MouseWheel;
 use constants::*;
 
 pub struct InputPlugin;
@@ -9,7 +10,11 @@ impl Plugin for InputPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (check_player_move_via_keys, check_player_skip_turn_via_keys)
+            (
+                check_camera_zoom,
+                check_player_move_via_keys,
+                check_player_skip_turn_via_keys,
+            )
                 .run_if(in_state(GameState::PlayerTurn)),
         )
         .add_systems(
@@ -17,6 +22,27 @@ impl Plugin for InputPlugin {
             check_app_exit_via_keys.run_if(in_state(AppState::InGame)),
         );
     }
+}
+
+/// Updates the camera zoom depending on the mouse wheel input.
+pub fn check_camera_zoom(
+    mut scroll_evr: EventReader<MouseWheel>,
+    mut query_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
+) {
+    use bevy::input::mouse::MouseScrollUnit;
+    let mut projection = query_main_camera.single_mut();
+    let mut log_scale = projection.scale.ln();
+    for ev in scroll_evr.read() {
+        if ev.unit != MouseScrollUnit::Line {
+            continue;
+        }
+        if ev.y > 0f32 && projection.scale > CAMERA_ZOOM_IN_MAX {
+            log_scale -= CAMERA_ZOOM_INCREMENT;
+        } else if ev.y < 0f32 && projection.scale < CAMERA_ZOOM_OUT_MAX {
+            log_scale += CAMERA_ZOOM_INCREMENT;
+        }
+    }
+    projection.scale = log_scale.exp();
 }
 
 pub fn check_player_skip_turn_via_keys(

@@ -1,10 +1,7 @@
 mod constants;
 
 use crate::prelude::*;
-use constants::*;
-
-use bevy::input::mouse::MouseWheel;
-use bevy::prelude::*;
+pub use constants::*;
 
 pub struct CameraPlugin;
 
@@ -13,8 +10,7 @@ impl Plugin for CameraPlugin {
         app.add_systems(OnEnter(AppState::InGame), setup_main_camera)
             .add_systems(
                 Update,
-                (check_camera_zoom, update_camera_position)
-                    .run_if(in_state(GameState::PlayerTurn)),
+                update_camera_position.run_if(in_state(GameState::PlayerTurn)),
             );
     }
 }
@@ -26,27 +22,6 @@ pub struct MainCamera;
 /// Creates an entity for the `MainCamera`.
 fn setup_main_camera(mut commands: Commands) {
     commands.spawn((Camera2dBundle::default(), MainCamera));
-}
-
-/// Updates the camera zoom depending on the mouse wheel input.
-pub fn check_camera_zoom(
-    mut scroll_evr: EventReader<MouseWheel>,
-    mut query_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
-) {
-    use bevy::input::mouse::MouseScrollUnit;
-    let mut projection = query_main_camera.single_mut();
-    let mut log_scale = projection.scale.ln();
-    for ev in scroll_evr.read() {
-        if ev.unit != MouseScrollUnit::Line {
-            continue;
-        }
-        if ev.y > 0f32 && projection.scale > CAMERA_ZOOM_IN_MAX {
-            log_scale -= CAMERA_ZOOM_INCREMENT;
-        } else if ev.y < 0f32 && projection.scale < CAMERA_ZOOM_OUT_MAX {
-            log_scale += CAMERA_ZOOM_INCREMENT;
-        }
-    }
-    projection.scale = log_scale.exp();
 }
 
 /// Sets the camera position centered on the player.
