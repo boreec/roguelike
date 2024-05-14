@@ -45,6 +45,7 @@ pub fn check_camera_zoom_via_mouse(
     projection.scale = log_scale.exp();
 }
 
+/// Checks if the player skip turn when `KEY_PLAYER_SKIP_TURN` is pressed.
 pub fn check_player_skip_turn_via_keys(
     mut next_state: ResMut<NextState<GameState>>,
     input: Res<ButtonInput<KeyCode>>,
