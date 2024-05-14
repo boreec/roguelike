@@ -10,7 +10,7 @@ impl Plugin for InputPlugin {
         )
         .add_systems(
             Update,
-            check_app_exit_events.run_if(in_state(AppState::InGame)),
+            check_app_exit_via_keys.run_if(in_state(AppState::InGame)),
         );
     }
 }
@@ -73,7 +73,7 @@ pub fn check_player_move_via_keys(
 
 /// Checks if an application exit event (i.e. Escape key pressed), and moves
 /// the app state to `AppState::Finished`.
-pub fn check_app_exit_events(
+pub fn check_app_exit_via_keys(
     input: Res<ButtonInput<KeyCode>>,
     mut app_next_state: ResMut<NextState<AppState>>,
     mut exit_events: ResMut<Events<bevy::app::AppExit>>,
