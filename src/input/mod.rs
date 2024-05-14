@@ -55,28 +55,28 @@ pub fn check_player_move_via_keys(
         .last()
         .expect("no player pos found");
 
-    if input.any_just_pressed([KeyCode::ArrowRight, KeyCode::KeyD])
+    if input.any_just_pressed(KEYS_PLAYER_MOVE_RIGHT)
         && can_move_right(&player_pos, map, &occupied_pos)
     {
         move_right(&mut player_pos);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::ArrowLeft, KeyCode::KeyA])
+    if input.any_just_pressed(KEYS_PLAYER_MOVE_LEFT)
         && can_move_left(&player_pos, map, &occupied_pos)
     {
         move_left(&mut player_pos);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::ArrowUp, KeyCode::KeyW])
+    if input.any_just_pressed(KEYS_PLAYER_MOVE_UP)
         && can_move_up(&player_pos, map, &occupied_pos)
     {
         move_up(&mut player_pos);
         next_state.set(GameState::EnemyTurn);
     }
 
-    if input.any_just_pressed([KeyCode::ArrowDown, KeyCode::KeyS])
+    if input.any_just_pressed(KEYS_PLAYER_MOVE_DOWN)
         && can_move_down(&player_pos, map, &occupied_pos)
     {
         move_down(&mut player_pos);
