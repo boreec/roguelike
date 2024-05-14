@@ -5,7 +5,6 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct Tile {
     pub kind: TileKind,
-    pub map_number: usize,
 }
 
 /// Represent all kind of tiles.
@@ -53,13 +52,12 @@ impl TileBundle {
     /// Creates a new entity using the `TileBundle` struct components.
     pub fn new(
         map_position: MapPosition,
-        map_number: usize,
         tileset: &TilesetTerrain,
         kind: TileKind,
     ) -> Self {
         let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
         Self {
-            tile: Tile { kind, map_number },
+            tile: Tile { kind },
             map_position,
             sprite: SpriteSheetBundle {
                 transform: Transform::from_xyz(

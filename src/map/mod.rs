@@ -31,7 +31,7 @@ impl Plugin for MapPlugin {
 pub fn cleanup_map(
     mut commands: Commands,
     query_map: Query<(Entity, &Map)>,
-    query_tiles: Query<(Entity, &Tile)>,
+    query_tiles: Query<Entity, (With<Tile>, With<OnScreen>)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     mut current_map_number: ResMut<CurrentMapNumber>,
 ) {
@@ -40,10 +40,8 @@ pub fn cleanup_map(
             commands.entity(entity).despawn();
         }
     }
-    for (entity, tile) in &query_tiles {
-        if tile.map_number == current_map_number.0 {
-            commands.entity(entity).despawn();
-        }
+    for entity in &query_tiles {
+        commands.entity(entity).despawn();
     }
     next_game_state.set(GameState::InitializingMap);
     current_map_number.0 += 1;
@@ -118,12 +116,8 @@ fn initialize_map(
             x: i % m.width,
             y: i / m.width,
         };
-        commands.spawn(TileBundle::new(
-            tile_position,
-            current_map_number.0,
-            &tileset,
-            *tile,
-        ));
+        commands
+            .spawn((OnScreen, TileBundle::new(tile_position, &tileset, *tile)));
     }
 
     m.number = current_map_number.0;

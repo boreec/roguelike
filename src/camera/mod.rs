@@ -19,6 +19,9 @@ impl Plugin for CameraPlugin {
 #[derive(Component)]
 pub struct MainCamera;
 
+#[derive(Component)]
+pub struct OnScreen;
+
 /// Creates an entity for the `MainCamera`.
 fn setup_main_camera(mut commands: Commands) {
     commands.spawn((Camera2dBundle::default(), MainCamera));
