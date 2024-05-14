@@ -51,7 +51,7 @@ pub fn cleanup_map(
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
     query_map: Query<&Map>,
-    query_actors: Query<(&MapPosition, &Actor)>,
+    query_actors: Query<(&MapPosition, &Actor), With<OnScreen>>,
     mut next_game_state: ResMut<NextState<GameState>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
@@ -63,9 +63,7 @@ pub fn check_if_player_exit_map(
 
     let (player_position, _) = query_actors
         .iter()
-        .filter(|(_, actor)| {
-            actor.map_number == current_map_number.0 && actor.is_player()
-        })
+        .filter(|(_, actor)| actor.is_player())
         .last()
         .expect("player position not found");
 

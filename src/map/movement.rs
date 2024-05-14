@@ -2,15 +2,12 @@ use crate::prelude::*;
 
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
-    mut query_actors: Query<(&mut MapPosition, &Actor)>,
+    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnScreen>>,
     query_map: Query<&Map>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let pos_occupied: Vec<MapPosition> = query_actors
-        .iter_mut()
-        .filter(|(_, a)| a.map_number == current_map_number.0)
-        .map(|(p, _)| *p)
-        .collect();
+    let pos_occupied: Vec<MapPosition> =
+        query_actors.iter_mut().map(|(p, _)| *p).collect();
 
     let map = query_map
         .iter()
@@ -19,7 +16,7 @@ pub fn move_randomly(
         .expect("no map found");
 
     for (mut pos_mob, actor) in query_actors.iter_mut() {
-        if actor.map_number == current_map_number.0 && !actor.is_player() {
+        if !actor.is_player() {
             let pos_reachable = enumerate_reachable_positions(
                 &pos_mob.clone(),
                 map,

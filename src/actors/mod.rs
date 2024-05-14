@@ -26,7 +26,6 @@ impl Plugin for ActorsPlugin {
 #[derive(Clone, Component, Copy)]
 pub struct Actor {
     pub kind: ActorKind,
-    pub map_number: usize,
 }
 
 impl Actor {
@@ -87,14 +86,14 @@ impl ActorBundle {
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
-    query_actors: Query<(Entity, &Actor)>,
+    query_actors: Query<(Entity, &Actor), With<OnScreen>>,
     mut next_game_state: ResMut<NextState<GameState>>,
-    current_map_number: Res<CurrentMapNumber>,
 ) {
     for (entity, actor) in &query_actors {
-        if actor.map_number == current_map_number.0 {
-            commands.entity(entity).despawn();
+        if actor.is_player() {
+            continue;
         }
+        commands.entity(entity).despawn();
     }
     next_game_state.set(GameState::CleanupMap);
 }
@@ -110,7 +109,7 @@ pub fn generate_spawn_counts(_map: &Map) -> HashMap<ActorKind, usize> {
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
     query_map: Query<&Map>,
-    mut query_actors: Query<(&mut MapPosition, &Actor)>,
+    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnScreen>>,
     tileset: Res<TilesetActor>,
     current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
@@ -127,11 +126,8 @@ pub fn spawn_mobs_on_current_map(
             .as_str(),
         );
 
-    let pos_occupied: Vec<MapPosition> = query_actors
-        .iter()
-        .filter(|(_, a)| a.map_number == current_map_number.0)
-        .map(|(m_p, _)| *m_p)
-        .collect();
+    let pos_occupied: Vec<MapPosition> =
+        query_actors.iter().map(|(m_p, _)| *m_p).collect();
 
     let spawn_counts = generate_spawn_counts(map);
     let actor_quantity = spawn_counts.values().fold(0, |acc, &x| acc + x);
@@ -145,7 +141,6 @@ pub fn spawn_mobs_on_current_map(
             *actor_kind,
             &pos_actors[spawned_quantity..spawned_quantity + quantity],
             &mut commands,
-            current_map_number.0,
             &tileset,
         );
         spawned_quantity += quantity;
@@ -154,7 +149,7 @@ pub fn spawn_mobs_on_current_map(
     // initialize the player only if there's no player created
     let pos_player = query_actors
         .iter_mut()
-        .filter(|(_, a)| a.map_number == current_map_number.0 && a.is_player())
+        .filter(|(_, a)| a.is_player())
         .last();
 
     // if the player already exists, set a new spawn on the map
@@ -179,7 +174,6 @@ pub fn spawn_mobs_on_current_map(
             ActorKind::Player,
             &[pos_player_spawn],
             &mut commands,
-            current_map_number.0,
             &tileset,
         );
     }
@@ -191,17 +185,12 @@ pub fn spawn_creature(
     actor_kind: ActorKind,
     positions: &[MapPosition],
     commands: &mut Commands,
-    current_map_number: usize,
     tileset: &TilesetActor,
 ) {
     for position in positions {
-        commands.spawn(ActorBundle::new(
-            Actor {
-                kind: actor_kind,
-                map_number: current_map_number,
-            },
-            *position,
-            tileset,
+        commands.spawn((
+            OnScreen,
+            ActorBundle::new(Actor { kind: actor_kind }, *position, tileset),
         ));
     }
 }
@@ -209,13 +198,13 @@ pub fn spawn_creature(
 /// Update the sprite position of all actors of the current map according to
 /// their map position.
 pub fn update_actor_sprites(
-    mut query_actors: Query<(&mut Transform, &MapPosition, &Actor)>,
-    current_map_number: Res<CurrentMapNumber>,
+    mut query_actors: Query<
+        (&mut Transform, &MapPosition),
+        (With<OnScreen>, With<Actor>),
+    >,
 ) {
-    for (mut transform, pos, actor) in &mut query_actors {
-        if actor.map_number == current_map_number.0 {
-            let (x, y) = pos.as_sprite_coordinates();
-            transform.translation = Vec3::new(x, y, Z_INDEX_ACTOR);
-        }
+    for (mut transform, pos) in &mut query_actors {
+        let (x, y) = pos.as_sprite_coordinates();
+        transform.translation = Vec3::new(x, y, Z_INDEX_ACTOR);
     }
 }
