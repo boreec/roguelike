@@ -30,16 +30,14 @@ impl Plugin for MapPlugin {
 /// Removes all entities (`Map`, `Tile`, etc) related to the current map.
 pub fn cleanup_map(
     mut commands: Commands,
-    query_map: Query<(Entity, &Map)>,
+    query_map: Query<Entity, (With<Map>, With<OnScreen>)>,
     query_tiles: Query<Entity, (With<Tile>, With<OnScreen>)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     mut current_map_number: ResMut<CurrentMapNumber>,
 ) {
-    for (entity, map) in &query_map {
-        if map.number == current_map_number.0 {
-            commands.entity(entity).despawn();
-        }
-    }
+    let entity = query_map.single();
+    commands.entity(entity).despawn();
+
     for entity in &query_tiles {
         commands.entity(entity).despawn();
     }
@@ -50,16 +48,11 @@ pub fn cleanup_map(
 /// Checks if a player is on an exit tile. In that case, the game state is
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
-    query_map: Query<&Map>,
+    query_map: Query<&Map, With<OnScreen>>,
     query_actors: Query<(&MapPosition, &Actor), With<OnScreen>>,
     mut next_game_state: ResMut<NextState<GameState>>,
-    current_map_number: Res<CurrentMapNumber>,
 ) {
-    let map = query_map
-        .iter()
-        .filter(|m| m.number == current_map_number.0)
-        .last()
-        .expect("no map found");
+    let map = query_map.single();
 
     let (player_position, _) = query_actors
         .iter()
@@ -85,8 +78,6 @@ pub struct Map {
     pub tiles: Vec<TileKind>,
     /// The exits positions for the map.
     pub exits: Vec<MapPosition>,
-    /// The number corresponding to the map.
-    pub number: usize,
 }
 
 /// Initialize a map by spawning tile entities depending on the map dimensions,
@@ -96,9 +87,8 @@ fn initialize_map(
     mut commands: Commands,
     mut game_next_state: ResMut<NextState<GameState>>,
     tileset: Res<TilesetTerrain>,
-    current_map_number: Res<CurrentMapNumber>,
 ) {
-    let mut m = if rand::thread_rng().gen_bool(0.5) {
+    let m = if rand::thread_rng().gen_bool(0.5) {
         Map::from((PerlinNoise::new(), MAP_WIDTH, MAP_HEIGHT))
     } else {
         let mut ca = CellularAutomaton::new(MAP_WIDTH, MAP_HEIGHT, 0.5);
@@ -117,8 +107,7 @@ fn initialize_map(
         commands.spawn((OnScreen, TileBundle::new(pos_tile, &tileset, *tile)));
     }
 
-    m.number = current_map_number.0;
-    commands.spawn(m);
+    commands.spawn((OnScreen, m));
 
     game_next_state.set(GameState::InitializingActors);
 }
@@ -213,8 +202,8 @@ impl From<CellularAutomaton> for Map {
                 })
                 .collect(),
             exits: vec![],
-            number: 0,
         };
+
         map.add_exit_tile();
         map
     }
@@ -253,7 +242,6 @@ impl From<(PerlinNoise, usize, usize)> for Map {
             height: tuple.2,
             tiles: cells,
             exits: vec![],
-            number: 0,
         };
 
         map.add_exit_tile();
@@ -293,7 +281,6 @@ mod tests {
             height: 1,
             tiles: vec![TileKind::Grass],
             exits: vec![],
-            number: 0,
         };
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
@@ -309,7 +296,6 @@ mod tests {
             height: 1,
             tiles: vec![TileKind::GrassWithStone],
             exits: vec![],
-            number: 0,
         };
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);

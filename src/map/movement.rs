@@ -3,17 +3,12 @@ use crate::prelude::*;
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
     mut query_actors: Query<(&mut MapPosition, &Actor), With<OnScreen>>,
-    query_map: Query<&Map>,
-    current_map_number: Res<CurrentMapNumber>,
+    query_map: Query<&Map, With<OnScreen>>,
 ) {
     let pos_occupied: Vec<MapPosition> =
         query_actors.iter_mut().map(|(p, _)| *p).collect();
 
-    let map = query_map
-        .iter()
-        .filter(|m| m.number == current_map_number.0)
-        .last()
-        .expect("no map found");
+    let map = query_map.iter().last().expect("no map found");
 
     for (mut pos_mob, actor) in query_actors.iter_mut() {
         if !actor.is_player() {
@@ -167,7 +162,6 @@ mod tests {
             height: 3,
             tiles: vec![TileKind::Grass; 3 * 3],
             exits: vec![],
-            number: 0,
         }
     }
 
@@ -187,7 +181,6 @@ mod tests {
                 TileKind::Grass,
             ],
             exits: vec![],
-            number: 0,
         }
     }
 

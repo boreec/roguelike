@@ -60,15 +60,10 @@ pub fn check_player_skip_turn_via_keys(
 pub fn check_player_move_via_keys(
     mut next_state: ResMut<NextState<GameState>>,
     mut query_actors: Query<(&mut MapPosition, &Actor), With<OnScreen>>,
-    query_map: Query<&Map>,
+    query_map: Query<&Map, With<OnScreen>>,
     input: Res<ButtonInput<KeyCode>>,
-    current_map_number: Res<CurrentMapNumber>,
 ) {
-    let map = query_map
-        .iter()
-        .filter(|m| m.number == current_map_number.0)
-        .last()
-        .expect("no map found");
+    let map = query_map.single();
 
     let occupied_pos: Vec<MapPosition> = query_actors
         .iter()

@@ -108,23 +108,12 @@ pub fn generate_spawn_counts(_map: &Map) -> HashMap<ActorKind, usize> {
 /// Spawn mob entities (enemies, NPC...) on the current map.
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
-    query_map: Query<&Map>,
+    query_map: Query<&Map, With<OnScreen>>,
     mut query_actors: Query<(&mut MapPosition, &Actor), With<OnScreen>>,
     tileset: Res<TilesetActor>,
-    current_map_number: Res<CurrentMapNumber>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    let map = query_map
-        .iter()
-        .filter(|m| m.number == current_map_number.0)
-        .last()
-        .expect(
-            format!(
-                "a map should be associated with the current map number: {}",
-                current_map_number.0
-            )
-            .as_str(),
-        );
+    let map = query_map.single();
 
     let pos_occupied: Vec<MapPosition> =
         query_actors.iter().map(|(m_p, _)| *m_p).collect();
