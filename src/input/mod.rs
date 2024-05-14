@@ -11,7 +11,7 @@ impl Plugin for InputPlugin {
         app.add_systems(
             Update,
             (
-                check_camera_zoom,
+                check_camera_zoom_via_mouse,
                 check_player_move_via_keys,
                 check_player_skip_turn_via_keys,
             )
@@ -25,7 +25,7 @@ impl Plugin for InputPlugin {
 }
 
 /// Updates the camera zoom depending on the mouse wheel input.
-pub fn check_camera_zoom(
+pub fn check_camera_zoom_via_mouse(
     mut scroll_evr: EventReader<MouseWheel>,
     mut query_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
 ) {
