@@ -1,4 +1,7 @@
+mod constants;
+
 use crate::prelude::*;
+use constants::*;
 
 pub struct InputPlugin;
 
@@ -20,7 +23,7 @@ pub fn check_player_skip_turn_via_keys(
     mut next_state: ResMut<NextState<GameState>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
-    if input.just_pressed(KeyCode::Space) {
+    if input.just_pressed(KEY_PLAYER_SKIP_TURN) {
         next_state.set(GameState::EnemyTurn);
     }
 }
