@@ -6,12 +6,22 @@ impl Plugin for InputPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            check_player_move_via_keys.run_if(in_state(GameState::PlayerTurn)),
+            (check_player_move_via_keys, check_player_skip_turn_via_keys)
+                .run_if(in_state(GameState::PlayerTurn)),
         )
         .add_systems(
             Update,
             check_app_exit_via_keys.run_if(in_state(AppState::InGame)),
         );
+    }
+}
+
+pub fn check_player_skip_turn_via_keys(
+    mut next_state: ResMut<NextState<GameState>>,
+    input: Res<ButtonInput<KeyCode>>,
+) {
+    if input.just_pressed(KeyCode::Space) {
+        next_state.set(GameState::EnemyTurn);
     }
 }
 
