@@ -8,3 +8,5 @@ pub const KEYS_PLAYER_MOVE_RIGHT: [KeyCode; 2] =
 pub const KEYS_PLAYER_MOVE_UP: [KeyCode; 2] = [KeyCode::KeyW, KeyCode::ArrowUp];
 pub const KEYS_PLAYER_MOVE_DOWN: [KeyCode; 2] =
     [KeyCode::KeyS, KeyCode::ArrowDown];
+
+pub const KEY_APP_EXIT: KeyCode = KeyCode::Escape;

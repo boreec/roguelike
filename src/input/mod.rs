@@ -91,7 +91,7 @@ pub fn check_app_exit_via_keys(
     mut app_next_state: ResMut<NextState<AppState>>,
     mut exit_events: ResMut<Events<bevy::app::AppExit>>,
 ) {
-    if input.just_pressed(KeyCode::Escape) {
+    if input.just_pressed(KEY_APP_EXIT) {
         app_next_state.set(AppState::Finished);
         exit_events.send(bevy::app::AppExit);
     }
