@@ -75,7 +75,7 @@ pub struct Map {
     pub height: usize,
     /// All tiles for the map, the vector index corresponds to the tile
     /// coordinates.
-    pub tiles: Vec<TileKind>,
+    pub tiles: Vec<Tile>,
     /// The exits positions for the map.
     pub exits: Vec<MapPosition>,
 }
@@ -168,7 +168,7 @@ impl Map {
         let mut rng = rand::thread_rng();
         let index = *spawnable_positions.choose(&mut rng).unwrap();
 
-        self.tiles[index] = TileKind::LevelExit;
+        self.tiles[index].kind = TileKind::LevelExit;
 
         let exit_position = MapPosition {
             x: index % self.width,
@@ -196,9 +196,12 @@ impl From<CellularAutomaton> for Map {
             tiles: ca
                 .cells
                 .iter()
-                .map(|cellular_state| match cellular_state {
-                    CellularState::Alive => TileKind::GrassWithStone,
-                    CellularState::Dead => TileKind::Grass,
+                .map(|cellular_state| {
+                    let tile_kind = match cellular_state {
+                        CellularState::Alive => TileKind::GrassWithStone,
+                        CellularState::Dead => TileKind::Grass,
+                    };
+                    Tile { kind: tile_kind }
                 })
                 .collect(),
             exits: vec![],
@@ -221,19 +224,21 @@ impl From<(PerlinNoise, usize, usize)> for Map {
     ///
     /// A `Map` where the tiles are determined by Perlin noise.
     fn from(tuple: (PerlinNoise, usize, usize)) -> Self {
-        let mut cells: Vec<TileKind> = Vec::new();
+        let mut cells: Vec<Tile> = Vec::new();
         for i in 0..tuple.1 {
             for j in 0..tuple.2 {
                 let x_scaled = i as f64 * PERLIN_NOISE_SCALE;
                 let y_scaled = j as f64 * PERLIN_NOISE_SCALE;
                 let noise_value = tuple.0.perlin_noise(x_scaled, y_scaled);
-                if noise_value > 2.2 {
-                    cells.push(TileKind::GrassWithFlower);
+
+                let kind = if noise_value > 2.2 {
+                    TileKind::GrassWithFlower
                 } else if noise_value > -0.25 {
-                    cells.push(TileKind::Grass);
+                    TileKind::Grass
                 } else {
-                    cells.push(TileKind::GrassWithStone);
-                }
+                    TileKind::GrassWithStone
+                };
+                cells.push(Tile { kind });
             }
         }
 
@@ -279,7 +284,9 @@ mod tests {
         let map1x1 = Map {
             width: 1,
             height: 1,
-            tiles: vec![TileKind::Grass],
+            tiles: vec![Tile {
+                kind: TileKind::Grass,
+            }],
             exits: vec![],
         };
 
@@ -294,14 +301,18 @@ mod tests {
         let mut map1x1 = Map {
             width: 1,
             height: 1,
-            tiles: vec![TileKind::GrassWithStone],
+            tiles: vec![Tile {
+                kind: TileKind::GrassWithStone,
+            }],
             exits: vec![],
         };
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
         assert!(spawn.is_err());
 
-        map1x1.tiles = vec![TileKind::Grass];
+        map1x1.tiles = vec![Tile {
+            kind: TileKind::Grass,
+        }];
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
         assert!(spawn.is_ok());

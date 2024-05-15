@@ -2,7 +2,7 @@ use crate::prelude::*;
 use bevy::prelude::*;
 
 /// Represents a tile.
-#[derive(Component)]
+#[derive(Clone, Component, Copy)]
 pub struct Tile {
     pub kind: TileKind,
 }
@@ -16,6 +16,17 @@ pub enum TileKind {
     LevelExit,
 }
 
+impl Tile {
+    /// Returns whether or not a tile can be walked on by an actor.
+    pub const fn is_walkable(self) -> bool {
+        match self.kind {
+            TileKind::Grass
+            | TileKind::GrassWithFlower
+            | TileKind::LevelExit => true,
+            TileKind::GrassWithStone => false,
+        }
+    }
+}
 impl TileKind {
     /// Returns the sprite index for a given `TileType`. The index corresponds
     /// to the location in the tilesheet where the corresponding tile is.
@@ -25,14 +36,6 @@ impl TileKind {
             Self::GrassWithFlower => TILESET_TERRAIN_IDX_GRASS_WITH_FLOWER,
             Self::GrassWithStone => TILESET_TERRAIN_IDX_GRASS_WITH_STONE,
             Self::LevelExit => TILESET_TERRAIN_IDX_SIGNPOST,
-        }
-    }
-
-    /// Returns whether or not a tile can be walked on by an actor.
-    pub const fn is_walkable(self) -> bool {
-        match self {
-            Self::Grass | Self::GrassWithFlower | Self::LevelExit => true,
-            Self::GrassWithStone => false,
         }
     }
 }
@@ -53,11 +56,11 @@ impl TileBundle {
     pub fn new(
         map_position: MapPosition,
         tileset: &TilesetTerrain,
-        kind: TileKind,
+        tile: Tile,
     ) -> Self {
         let (sprite_x, sprite_y) = map_position.as_sprite_coordinates();
         Self {
-            tile: Tile { kind },
+            tile,
             map_position,
             sprite: SpriteSheetBundle {
                 transform: Transform::from_xyz(
@@ -69,7 +72,7 @@ impl TileBundle {
                 texture: tileset.1.clone(),
                 atlas: TextureAtlas {
                     layout: tileset.0.clone(),
-                    index: TileKind::to_sprite_idx(kind),
+                    index: TileKind::to_sprite_idx(tile.kind),
                 },
                 ..Default::default()
             },
