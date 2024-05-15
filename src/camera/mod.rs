@@ -19,6 +19,7 @@ impl Plugin for CameraPlugin {
 #[derive(Component)]
 pub struct MainCamera;
 
+/// Represents an entity that is on the screen and displayable by the camera.
 #[derive(Component)]
 pub struct OnDisplay;
 
