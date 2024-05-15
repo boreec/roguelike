@@ -284,7 +284,7 @@ mod tests {
         let map1x1 = Map {
             width: 1,
             height: 1,
-            tiles: vec![Tile::from_kind(TileKind::Grass)],
+            tiles: vec![Tile::default()],
             exits: vec![],
         };
 
@@ -306,7 +306,7 @@ mod tests {
         let spawn = map1x1.generate_random_positions(1, &vec![]);
         assert!(spawn.is_err());
 
-        map1x1.tiles = vec![Tile::from_kind(TileKind::Grass)];
+        map1x1.tiles = vec![Tile::default()];
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
         assert!(spawn.is_ok());

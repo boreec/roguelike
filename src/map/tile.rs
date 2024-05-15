@@ -9,12 +9,22 @@ pub struct Tile {
 }
 
 /// Represent all kind of tiles.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 pub enum TileKind {
+    #[default]
     Grass,
     GrassWithFlower,
     GrassWithStone,
     LevelExit,
+}
+
+impl Default for Tile {
+    fn default() -> Self {
+        Self {
+            kind: TileKind::default(),
+            actor: None,
+        }
+    }
 }
 
 impl Tile {
