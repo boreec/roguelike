@@ -201,7 +201,7 @@ impl From<CellularAutomaton> for Map {
                         CellularState::Alive => TileKind::GrassWithStone,
                         CellularState::Dead => TileKind::Grass,
                     };
-                    Tile { kind: tile_kind }
+                    Tile::from_kind(tile_kind)
                 })
                 .collect(),
             exits: vec![],
@@ -238,7 +238,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
                 } else {
                     TileKind::GrassWithStone
                 };
-                cells.push(Tile { kind });
+                cells.push(Tile::from_kind(kind));
             }
         }
 
@@ -284,9 +284,7 @@ mod tests {
         let map1x1 = Map {
             width: 1,
             height: 1,
-            tiles: vec![Tile {
-                kind: TileKind::Grass,
-            }],
+            tiles: vec![Tile::from_kind(TileKind::Grass)],
             exits: vec![],
         };
 
@@ -301,18 +299,14 @@ mod tests {
         let mut map1x1 = Map {
             width: 1,
             height: 1,
-            tiles: vec![Tile {
-                kind: TileKind::GrassWithStone,
-            }],
+            tiles: vec![Tile::from_kind(TileKind::GrassWithStone)],
             exits: vec![],
         };
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
         assert!(spawn.is_err());
 
-        map1x1.tiles = vec![Tile {
-            kind: TileKind::Grass,
-        }];
+        map1x1.tiles = vec![Tile::from_kind(TileKind::Grass)];
 
         let spawn = map1x1.generate_random_positions(1, &vec![]);
         assert!(spawn.is_ok());

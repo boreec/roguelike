@@ -5,6 +5,7 @@ use bevy::prelude::*;
 #[derive(Clone, Component, Copy)]
 pub struct Tile {
     pub kind: TileKind,
+    pub actor: Option<Actor>,
 }
 
 /// Represent all kind of tiles.
@@ -17,6 +18,10 @@ pub enum TileKind {
 }
 
 impl Tile {
+    pub fn from_kind(kind: TileKind) -> Self {
+        Self { kind, actor: None }
+    }
+
     /// Returns whether or not a tile can be walked on by an actor.
     pub const fn is_walkable(self) -> bool {
         match self.kind {
