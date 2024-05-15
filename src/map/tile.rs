@@ -18,6 +18,8 @@ pub enum TileKind {
 }
 
 impl Tile {
+    /// Creates a new `Tile` with a given `TileKind`. Other fields are set
+    /// with default values.
     pub fn from_kind(kind: TileKind) -> Self {
         Self { kind, actor: None }
     }
