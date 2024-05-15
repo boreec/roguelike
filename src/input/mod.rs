@@ -59,8 +59,8 @@ pub fn check_player_skip_turn_via_keys(
 /// WSQD key pressed), and moves the `Player` position accordingly.
 pub fn check_player_move_via_keys(
     mut next_state: ResMut<NextState<GameState>>,
-    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnScreen>>,
-    query_map: Query<&Map, With<OnScreen>>,
+    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
+    query_map: Query<&Map, With<OnDisplay>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
     let map = query_map.single();

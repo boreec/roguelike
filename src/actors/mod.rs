@@ -86,7 +86,7 @@ impl ActorBundle {
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
-    query_actors: Query<(Entity, &Actor), With<OnScreen>>,
+    query_actors: Query<(Entity, &Actor), With<OnDisplay>>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     for (entity, actor) in &query_actors {
@@ -108,8 +108,8 @@ pub fn generate_spawn_counts(_map: &Map) -> HashMap<ActorKind, usize> {
 /// Spawn mob entities (enemies, NPC...) on the current map.
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
-    query_map: Query<&Map, With<OnScreen>>,
-    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnScreen>>,
+    query_map: Query<&Map, With<OnDisplay>>,
+    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
     tileset: Res<TilesetActor>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
@@ -178,7 +178,7 @@ pub fn spawn_creature(
 ) {
     for position in positions {
         commands.spawn((
-            OnScreen,
+            OnDisplay,
             ActorBundle::new(Actor { kind: actor_kind }, *position, tileset),
         ));
     }
@@ -189,7 +189,7 @@ pub fn spawn_creature(
 pub fn update_actor_sprites(
     mut query_actors: Query<
         (&mut Transform, &MapPosition),
-        (With<OnScreen>, With<Actor>),
+        (With<OnDisplay>, With<Actor>),
     >,
 ) {
     for (mut transform, pos) in &mut query_actors {

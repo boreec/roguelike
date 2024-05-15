@@ -2,8 +2,8 @@ use crate::prelude::*;
 
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
-    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnScreen>>,
-    query_map: Query<&Map, With<OnScreen>>,
+    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
+    query_map: Query<&Map, With<OnDisplay>>,
 ) {
     let pos_occupied: Vec<MapPosition> =
         query_actors.iter_mut().map(|(p, _)| *p).collect();

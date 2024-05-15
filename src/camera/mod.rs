@@ -20,7 +20,7 @@ impl Plugin for CameraPlugin {
 pub struct MainCamera;
 
 #[derive(Component)]
-pub struct OnScreen;
+pub struct OnDisplay;
 
 /// Creates an entity for the `MainCamera`.
 fn setup_main_camera(mut commands: Commands) {
@@ -29,7 +29,7 @@ fn setup_main_camera(mut commands: Commands) {
 
 /// Sets the camera position centered on the player.
 pub fn update_camera_position(
-    query_actors: Query<(&MapPosition, &Actor), With<OnScreen>>,
+    query_actors: Query<(&MapPosition, &Actor), With<OnDisplay>>,
     mut query_main_camera: Query<&mut Transform, With<MainCamera>>,
 ) {
     let (pos_player, _) = query_actors

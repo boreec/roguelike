@@ -30,8 +30,8 @@ impl Plugin for MapPlugin {
 /// Removes all entities (`Map`, `Tile`, etc) related to the current map.
 pub fn cleanup_map(
     mut commands: Commands,
-    query_map: Query<Entity, (With<Map>, With<OnScreen>)>,
-    query_tiles: Query<Entity, (With<Tile>, With<OnScreen>)>,
+    query_map: Query<Entity, (With<Map>, With<OnDisplay>)>,
+    query_tiles: Query<Entity, (With<Tile>, With<OnDisplay>)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     mut current_map_number: ResMut<CurrentMapNumber>,
 ) {
@@ -48,8 +48,8 @@ pub fn cleanup_map(
 /// Checks if a player is on an exit tile. In that case, the game state is
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
-    query_map: Query<&Map, With<OnScreen>>,
-    query_actors: Query<(&MapPosition, &Actor), With<OnScreen>>,
+    query_map: Query<&Map, With<OnDisplay>>,
+    query_actors: Query<(&MapPosition, &Actor), With<OnDisplay>>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
     let map = query_map.single();
@@ -104,10 +104,10 @@ fn initialize_map(
             x: i % m.width,
             y: i / m.width,
         };
-        commands.spawn((OnScreen, TileBundle::new(pos_tile, &tileset, *tile)));
+        commands.spawn((OnDisplay, TileBundle::new(pos_tile, &tileset, *tile)));
     }
 
-    commands.spawn((OnScreen, m));
+    commands.spawn((OnDisplay, m));
 
     game_next_state.set(GameState::InitializingActors);
 }
