@@ -60,15 +60,15 @@ fn despawn_grid_lines(commands: &mut Commands, grid_entities: Vec<Entity>) {
     }
 }
 
-pub fn show_grid(mut commands: Commands, query_map: Query<&Map>) {
-    let map = query_map.single();
+pub fn show_grid(mut commands: Commands, q_map: Query<&Map>) {
+    let map = q_map.single();
     spawn_grid_vertical_lines(&mut commands, map);
     spawn_grid_horizontal_lines(&mut commands, map);
 }
 
 pub fn hide_grid(
     mut commands: Commands,
-    query_grid_entities: Query<Entity, With<DebugGrid>>,
+    q_grid_entities: Query<Entity, With<DebugGrid>>,
 ) {
-    despawn_grid_lines(&mut commands, query_grid_entities.iter().collect());
+    despawn_grid_lines(&mut commands, q_grid_entities.iter().collect());
 }

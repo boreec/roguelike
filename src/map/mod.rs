@@ -30,15 +30,15 @@ impl Plugin for MapPlugin {
 /// Removes all entities (`Map`, `Tile`, etc) related to the current map.
 pub fn cleanup_map(
     mut commands: Commands,
-    query_map: Query<Entity, (With<Map>, With<OnDisplay>)>,
-    query_tiles: Query<Entity, (With<Tile>, With<OnDisplay>)>,
+    q_map: Query<Entity, (With<Map>, With<OnDisplay>)>,
+    q_tiles: Query<Entity, (With<Tile>, With<OnDisplay>)>,
     mut next_game_state: ResMut<NextState<GameState>>,
     mut current_map_number: ResMut<CurrentMapNumber>,
 ) {
-    let entity = query_map.single();
+    let entity = q_map.single();
     commands.entity(entity).despawn();
 
-    for entity in &query_tiles {
+    for entity in &q_tiles {
         commands.entity(entity).despawn();
     }
     next_game_state.set(GameState::InitializingMap);
@@ -48,13 +48,13 @@ pub fn cleanup_map(
 /// Checks if a player is on an exit tile. In that case, the game state is
 /// switched to `GameState::CleanupMap`.
 pub fn check_if_player_exit_map(
-    query_map: Query<&Map, With<OnDisplay>>,
-    query_actors: Query<(&MapPosition, &Actor), With<OnDisplay>>,
+    q_map: Query<&Map, With<OnDisplay>>,
+    q_actors: Query<(&MapPosition, &Actor), With<OnDisplay>>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    let map = query_map.single();
+    let map = q_map.single();
 
-    let (player_position, _) = query_actors
+    let (player_position, _) = q_actors
         .iter()
         .filter(|(_, actor)| actor.is_player())
         .last()

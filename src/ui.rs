@@ -67,18 +67,18 @@ pub fn setup_ui(
 
 /// Updates the ui element which represents the current turn.
 pub fn update_ui_current_turn_text(
-    mut query: Query<&mut Text, With<UiCurrentTurnText>>,
+    mut q_text: Query<&mut Text, With<UiCurrentTurnText>>,
     current_turn_number: Res<CurrentTurnNumber>,
 ) {
-    let mut text = query.single_mut();
+    let mut text = q_text.single_mut();
     text.sections[0].value = format!("Turn {}", current_turn_number.0);
 }
 
 /// Updates the ui element which represents the current map.
 pub fn update_ui_current_map_text(
-    mut query: Query<&mut Text, With<UiCurrentMapText>>,
+    mut q_text: Query<&mut Text, With<UiCurrentMapText>>,
     current_map_number: Res<CurrentMapNumber>,
 ) {
-    let mut text = query.single_mut();
+    let mut text = q_text.single_mut();
     text.sections[0].value = format!("Map {}", current_map_number.0);
 }

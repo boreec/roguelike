@@ -27,10 +27,10 @@ impl Plugin for InputPlugin {
 /// Updates the camera zoom depending on the mouse wheel input.
 pub fn check_camera_zoom_via_mouse(
     mut scroll_evr: EventReader<MouseWheel>,
-    mut query_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
+    mut q_main_camera: Query<&mut OrthographicProjection, With<MainCamera>>,
 ) {
     use bevy::input::mouse::MouseScrollUnit;
-    let mut projection = query_main_camera.single_mut();
+    let mut projection = q_main_camera.single_mut();
     let mut log_scale = projection.scale.ln();
     for ev in scroll_evr.read() {
         if ev.unit != MouseScrollUnit::Line {
@@ -59,13 +59,13 @@ pub fn check_player_skip_turn_via_keys(
 /// WSQD key pressed), and moves the `Player` position accordingly.
 pub fn check_player_move_via_keys(
     mut next_state: ResMut<NextState<GameState>>,
-    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
-    mut query_map: Query<&mut Map, With<OnDisplay>>,
+    mut q_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
+    mut q_map: Query<&mut Map, With<OnDisplay>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
-    let mut map = query_map.single_mut();
+    let mut map = q_map.single_mut();
 
-    let (mut pos_player, _) = query_actors
+    let (mut pos_player, _) = q_actors
         .iter_mut()
         .filter(|(_, a)| a.is_player())
         .last()

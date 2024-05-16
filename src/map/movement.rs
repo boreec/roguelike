@@ -2,12 +2,12 @@ use crate::prelude::*;
 
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
-    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
-    mut query_map: Query<&mut Map, With<OnDisplay>>,
+    mut q_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
+    mut q_map: Query<&mut Map, With<OnDisplay>>,
 ) {
-    let mut map = query_map.single_mut();
+    let mut map = q_map.single_mut();
 
-    for (mut pos_mob, actor) in query_actors.iter_mut() {
+    for (mut pos_mob, actor) in q_actors.iter_mut() {
         if !actor.is_player() {
             let pos_reachable =
                 enumerate_reachable_positions(&pos_mob.clone(), &map);

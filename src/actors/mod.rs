@@ -87,10 +87,10 @@ impl ActorBundle {
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
-    query_actors: Query<(Entity, &Actor), With<OnDisplay>>,
+    q_actors: Query<(Entity, &Actor), With<OnDisplay>>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    for (entity, actor) in &query_actors {
+    for (entity, actor) in &q_actors {
         if actor.is_player() {
             continue;
         }
@@ -109,15 +109,15 @@ pub fn generate_spawn_counts(_map: &Map) -> HashMap<ActorKind, usize> {
 /// Spawn mob entities (enemies, NPC...) on the current map.
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
-    mut query_map: Query<&mut Map, With<OnDisplay>>,
-    mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
+    mut q_map: Query<&mut Map, With<OnDisplay>>,
+    mut q_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
     tileset: Res<TilesetActor>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    let mut map = query_map.single_mut();
+    let mut map = q_map.single_mut();
 
     let pos_occupied: Vec<MapPosition> =
-        query_actors.iter().map(|(m_p, _)| *m_p).collect();
+        q_actors.iter().map(|(m_p, _)| *m_p).collect();
 
     let spawn_counts = generate_spawn_counts(&map);
     let actor_quantity = spawn_counts.values().fold(0, |acc, &x| acc + x);
@@ -138,10 +138,7 @@ pub fn spawn_mobs_on_current_map(
     }
 
     // initialize the player only if there's no player created
-    let pos_player = query_actors
-        .iter_mut()
-        .filter(|(_, a)| a.is_player())
-        .last();
+    let pos_player = q_actors.iter_mut().filter(|(_, a)| a.is_player()).last();
 
     // if the player already exists, set a new spawn on the map
     if let Some(mut pos_player) = pos_player {
@@ -196,12 +193,12 @@ pub fn spawn_creature(
 /// Update the sprite position of all actors of the current map according to
 /// their map position.
 pub fn update_actor_sprites(
-    mut query_actors: Query<
+    mut q_actors: Query<
         (&mut Transform, &MapPosition),
         (With<OnDisplay>, With<Actor>),
     >,
 ) {
-    for (mut transform, pos) in &mut query_actors {
+    for (mut transform, pos) in &mut q_actors {
         let (x, y) = pos.as_sprite_coordinates();
         transform.translation = Vec3::new(x, y, Z_INDEX_ACTOR);
     }

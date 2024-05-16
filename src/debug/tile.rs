@@ -49,18 +49,18 @@ pub fn despawn_tile_coordinate_labels(
 pub fn show_tile_coordinate_labels(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    query_map: Query<&Map>,
+    q_map: Query<&Map>,
 ) {
-    let map = query_map.single();
+    let map = q_map.single();
     spawn_tile_coordinate_labels(&mut commands, asset_server, map);
 }
 
 pub fn hide_tile_coordinate_labels(
     mut commands: Commands,
-    query_label_entities: Query<Entity, With<TileCoordinateLabel>>,
+    q_label_entities: Query<Entity, With<TileCoordinateLabel>>,
 ) {
     despawn_tile_coordinate_labels(
         &mut commands,
-        query_label_entities.iter().collect(),
+        q_label_entities.iter().collect(),
     );
 }
