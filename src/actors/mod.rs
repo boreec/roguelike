@@ -83,6 +83,7 @@ impl ActorBundle {
         }
     }
 }
+
 /// Despawn mob entities on the current map.
 pub fn despawn_mobs_on_current_map(
     mut commands: Commands,
@@ -108,17 +109,17 @@ pub fn generate_spawn_counts(_map: &Map) -> HashMap<ActorKind, usize> {
 /// Spawn mob entities (enemies, NPC...) on the current map.
 pub fn spawn_mobs_on_current_map(
     mut commands: Commands,
-    query_map: Query<&Map, With<OnDisplay>>,
+    mut query_map: Query<&mut Map, With<OnDisplay>>,
     mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
     tileset: Res<TilesetActor>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    let map = query_map.single();
+    let mut map = query_map.single_mut();
 
     let pos_occupied: Vec<MapPosition> =
         query_actors.iter().map(|(m_p, _)| *m_p).collect();
 
-    let spawn_counts = generate_spawn_counts(map);
+    let spawn_counts = generate_spawn_counts(&map);
     let actor_quantity = spawn_counts.values().fold(0, |acc, &x| acc + x);
     let pos_actors = map
         .generate_random_positions(actor_quantity, &pos_occupied)
@@ -128,6 +129,7 @@ pub fn spawn_mobs_on_current_map(
     for (actor_kind, quantity) in spawn_counts.iter() {
         spawn_creature(
             *actor_kind,
+            &mut map,
             &pos_actors[spawned_quantity..spawned_quantity + quantity],
             &mut commands,
             &tileset,
@@ -161,6 +163,7 @@ pub fn spawn_mobs_on_current_map(
 
         spawn_creature(
             ActorKind::Player,
+            &mut map,
             &[pos_player_spawn],
             &mut commands,
             &tileset,
@@ -172,16 +175,22 @@ pub fn spawn_mobs_on_current_map(
 /// Spawn creatures at specific map positions.
 pub fn spawn_creature(
     actor_kind: ActorKind,
+    map: &mut Map,
     positions: &[MapPosition],
     commands: &mut Commands,
     tileset: &TilesetActor,
-) {
+) -> Result<(), String> {
     for position in positions {
-        commands.spawn((
-            OnDisplay,
-            ActorBundle::new(Actor { kind: actor_kind }, *position, tileset),
-        ));
+        let tile_pos = map.as_tile_index(position).unwrap();
+        if map.tiles[tile_pos].actor.is_some() {
+            return Err("tile already occupied".into());
+        }
+        let actor = Actor { kind: actor_kind };
+        map.tiles[tile_pos].actor = Some(actor);
+        commands
+            .spawn((OnDisplay, ActorBundle::new(actor, *position, tileset)));
     }
+    Ok(())
 }
 
 /// Update the sprite position of all actors of the current map according to

@@ -60,48 +60,47 @@ pub fn check_player_skip_turn_via_keys(
 pub fn check_player_move_via_keys(
     mut next_state: ResMut<NextState<GameState>>,
     mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
-    query_map: Query<&Map, With<OnDisplay>>,
+    mut query_map: Query<&mut Map, With<OnDisplay>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
-    let map = query_map.single();
+    let mut map = query_map.single_mut();
 
-    let occupied_pos: Vec<MapPosition> = query_actors
-        .iter()
-        .filter(|(_, a)| !a.is_player())
-        .map(|(p, _)| *p)
-        .collect();
-
-    let (mut player_pos, _) = query_actors
+    let (mut pos_player, _) = query_actors
         .iter_mut()
         .filter(|(_, a)| a.is_player())
         .last()
         .expect("no player pos found");
 
+    let pos_player_old = pos_player.clone();
+
     if input.any_just_pressed(KEYS_PLAYER_MOVE_RIGHT)
-        && can_move_right(&player_pos, map, &occupied_pos)
+        && can_move_right(&pos_player.clone(), &map)
     {
-        move_right(&mut player_pos);
-        next_state.set(GameState::EnemyTurn);
+        move_right(&mut pos_player);
     }
 
     if input.any_just_pressed(KEYS_PLAYER_MOVE_LEFT)
-        && can_move_left(&player_pos, map, &occupied_pos)
+        && can_move_left(&pos_player.clone(), &map)
     {
-        move_left(&mut player_pos);
-        next_state.set(GameState::EnemyTurn);
+        move_left(&mut pos_player);
     }
 
     if input.any_just_pressed(KEYS_PLAYER_MOVE_UP)
-        && can_move_up(&player_pos, map, &occupied_pos)
+        && can_move_up(&pos_player.clone(), &map)
     {
-        move_up(&mut player_pos);
-        next_state.set(GameState::EnemyTurn);
+        move_up(&mut pos_player);
     }
 
     if input.any_just_pressed(KEYS_PLAYER_MOVE_DOWN)
-        && can_move_down(&player_pos, map, &occupied_pos)
+        && can_move_down(&pos_player.clone(), &map)
     {
-        move_down(&mut player_pos);
+        move_down(&mut pos_player);
+    }
+
+    if pos_player_old != pos_player.clone() {
+        let tile_pos_old = map.as_tile_index(&pos_player_old).unwrap();
+        let tile_pos_new = map.as_tile_index(&pos_player.clone()).unwrap();
+        map.tiles[tile_pos_new].actor = map.tiles[tile_pos_old].actor.take();
         next_state.set(GameState::EnemyTurn);
     }
 }

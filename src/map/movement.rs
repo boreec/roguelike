@@ -3,24 +3,22 @@ use crate::prelude::*;
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
     mut query_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
-    query_map: Query<&Map, With<OnDisplay>>,
+    mut query_map: Query<&mut Map, With<OnDisplay>>,
 ) {
-    let pos_occupied: Vec<MapPosition> =
-        query_actors.iter_mut().map(|(p, _)| *p).collect();
-
-    let map = query_map.iter().last().expect("no map found");
+    let mut map = query_map.single_mut();
 
     for (mut pos_mob, actor) in query_actors.iter_mut() {
         if !actor.is_player() {
-            let pos_reachable = enumerate_reachable_positions(
-                &pos_mob.clone(),
-                map,
-                &pos_occupied,
-            );
+            let pos_reachable =
+                enumerate_reachable_positions(&pos_mob.clone(), &map);
 
             if !pos_reachable.is_empty() {
                 let pos_random = pos_reachable
                     [rand::thread_rng().gen_range(0..pos_reachable.len())];
+                let tile_pos_old = map.as_tile_index(&pos_mob).unwrap();
+                let tile_pos_new = map.as_tile_index(&pos_random).unwrap();
+                map.tiles[tile_pos_new].actor =
+                    map.tiles[tile_pos_old].actor.take();
                 pos_mob.x = pos_random.x;
                 pos_mob.y = pos_random.y;
             }
@@ -48,29 +46,28 @@ pub fn move_down(position: &mut MapPosition) {
 pub fn enumerate_reachable_positions(
     position: &MapPosition,
     map: &Map,
-    occupied_positions: &Vec<MapPosition>,
 ) -> Vec<MapPosition> {
     let mut reachable_positions: Vec<MapPosition> = vec![];
 
-    if can_move_left(position, map, occupied_positions) {
+    if can_move_left(position, map) {
         reachable_positions.push(MapPosition {
             x: position.x - 1,
             y: position.y,
         });
     }
-    if can_move_right(position, map, occupied_positions) {
+    if can_move_right(position, map) {
         reachable_positions.push(MapPosition {
             x: position.x + 1,
             y: position.y,
         });
     }
-    if can_move_up(position, map, occupied_positions) {
+    if can_move_up(position, map) {
         reachable_positions.push(MapPosition {
             x: position.x,
             y: position.y - 1,
         });
     }
-    if can_move_down(position, map, occupied_positions) {
+    if can_move_down(position, map) {
         reachable_positions.push(MapPosition {
             x: position.x,
             y: position.y + 1,
@@ -79,73 +76,33 @@ pub fn enumerate_reachable_positions(
     return reachable_positions;
 }
 
-pub fn can_move_left(
-    position: &MapPosition,
-    map: &Map,
-    occupied_positions: &Vec<MapPosition>,
-) -> bool {
-    if position.x > 0 {
-        map.tiles[position.x + position.y * map.width - 1]
-            .clone()
-            .is_walkable()
-            && !occupied_positions.contains(&MapPosition {
-                x: position.x - 1,
-                y: position.y,
-            })
+pub fn can_move_left(pos: &MapPosition, map: &Map) -> bool {
+    if pos.x > 0 {
+        map.tiles[pos.x + pos.y * map.width - 1].is_walkable()
     } else {
         false
     }
 }
 
-pub fn can_move_right(
-    position: &MapPosition,
-    map: &Map,
-    occupied_positions: &Vec<MapPosition>,
-) -> bool {
-    if position.x < map.width - 1 {
-        map.tiles[position.x + position.y * map.width + 1]
-            .clone()
-            .is_walkable()
-            && !occupied_positions.contains(&MapPosition {
-                x: position.x + 1,
-                y: position.y,
-            })
+pub fn can_move_right(pos: &MapPosition, map: &Map) -> bool {
+    if pos.x < map.width - 1 {
+        map.tiles[pos.x + pos.y * map.width + 1].is_walkable()
     } else {
         false
     }
 }
 
-pub fn can_move_up(
-    position: &MapPosition,
-    map: &Map,
-    occupied_positions: &Vec<MapPosition>,
-) -> bool {
-    if position.y > 0 {
-        map.tiles[position.x + (position.y - 1) * map.width]
-            .clone()
-            .is_walkable()
-            && !occupied_positions.contains(&MapPosition {
-                x: position.x,
-                y: position.y - 1,
-            })
+pub fn can_move_up(pos: &MapPosition, map: &Map) -> bool {
+    if pos.y > 0 {
+        map.tiles[pos.x + (pos.y - 1) * map.width].is_walkable()
     } else {
         false
     }
 }
 
-pub fn can_move_down(
-    position: &MapPosition,
-    map: &Map,
-    occupied_positions: &Vec<MapPosition>,
-) -> bool {
-    if position.y < map.height - 1 {
-        map.tiles[position.x + (position.y + 1) * map.width]
-            .clone()
-            .is_walkable()
-            && !occupied_positions.contains(&MapPosition {
-                x: position.x,
-                y: position.y + 1,
-            })
+pub fn can_move_down(pos: &MapPosition, map: &Map) -> bool {
+    if pos.y < map.height - 1 {
+        map.tiles[pos.x + (pos.y + 1) * map.width].is_walkable()
     } else {
         false
     }
@@ -160,7 +117,7 @@ mod tests {
         Map {
             width: 3,
             height: 3,
-            tiles: vec![TileKind::Grass; 3 * 3],
+            tiles: vec![Tile::default(); 3 * 3],
             exits: vec![],
         }
     }
@@ -170,15 +127,15 @@ mod tests {
             width: 3,
             height: 3,
             tiles: vec![
-                TileKind::Grass,
-                TileKind::GrassWithStone,
-                TileKind::Grass,
-                TileKind::GrassWithStone,
-                TileKind::Grass,
-                TileKind::GrassWithStone,
-                TileKind::Grass,
-                TileKind::GrassWithStone,
-                TileKind::Grass,
+                Tile::default(),
+                Tile::from_kind(TileKind::GrassWithStone),
+                Tile::default(),
+                Tile::from_kind(TileKind::GrassWithStone),
+                Tile::default(),
+                Tile::from_kind(TileKind::GrassWithStone),
+                Tile::default(),
+                Tile::from_kind(TileKind::GrassWithStone),
+                Tile::default(),
             ],
             exits: vec![],
         }
@@ -197,169 +154,113 @@ mod tests {
     #[test]
     fn test_can_move_left_without_actors() {
         let map_plain = create_plain_map();
-        assert!(!can_move_left(&POSITION_TOP_LEFT, &map_plain, &vec![]));
-        assert!(!can_move_left(&POSITION_BOTTOM_LEFT, &map_plain, &vec![]));
-        assert!(can_move_left(&POSITION_TOP_RIGHT, &map_plain, &vec![]));
-        assert!(can_move_left(&POSITION_BOTTOM_RIGHT, &map_plain, &vec![]));
-        assert!(can_move_left(&POSITION_MIDDLE, &map_plain, &vec![]));
+        assert!(!can_move_left(&POSITION_TOP_LEFT, &map_plain));
+        assert!(!can_move_left(&POSITION_BOTTOM_LEFT, &map_plain));
+        assert!(can_move_left(&POSITION_TOP_RIGHT, &map_plain));
+        assert!(can_move_left(&POSITION_BOTTOM_RIGHT, &map_plain));
+        assert!(can_move_left(&POSITION_MIDDLE, &map_plain));
 
         let map_stone = create_stone_map();
-        assert!(!can_move_left(&POSITION_TOP_LEFT, &map_stone, &vec![]));
-        assert!(!can_move_left(&POSITION_TOP_RIGHT, &map_stone, &vec![]));
-        assert!(!can_move_left(&POSITION_BOTTOM_LEFT, &map_stone, &vec![]));
-        assert!(!can_move_left(&POSITION_BOTTOM_RIGHT, &map_stone, &vec![]));
-        assert!(!can_move_left(&POSITION_MIDDLE, &map_stone, &vec![]));
+        assert!(!can_move_left(&POSITION_TOP_LEFT, &map_stone));
+        assert!(!can_move_left(&POSITION_TOP_RIGHT, &map_stone));
+        assert!(!can_move_left(&POSITION_BOTTOM_LEFT, &map_stone));
+        assert!(!can_move_left(&POSITION_BOTTOM_RIGHT, &map_stone));
+        assert!(!can_move_left(&POSITION_MIDDLE, &map_stone));
     }
 
     #[test]
     fn test_can_move_left_with_actors() {
         let map_plain = create_plain_map();
-        let actor_positions = vec![POSITION_MIDDLE];
 
-        assert!(!can_move_left(
-            &POSITION_MIDDLE_RIGHT,
-            &map_plain,
-            &actor_positions,
-        ));
-        assert!(can_move_left(
-            &POSITION_TOP_RIGHT,
-            &map_plain,
-            &actor_positions,
-        ));
-        assert!(can_move_left(
-            &POSITION_BOTTOM_RIGHT,
-            &map_plain,
-            &actor_positions,
-        ));
+        assert!(!can_move_left(&POSITION_MIDDLE_RIGHT, &map_plain,));
+        assert!(can_move_left(&POSITION_TOP_RIGHT, &map_plain,));
+        assert!(can_move_left(&POSITION_BOTTOM_RIGHT, &map_plain,));
     }
 
     #[test]
     fn test_can_move_right_without_actors() {
         let map_plain = create_plain_map();
-        assert!(!can_move_right(&POSITION_TOP_RIGHT, &map_plain, &vec![]));
-        assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &map_plain, &vec![]));
-        assert!(can_move_right(&POSITION_TOP_LEFT, &map_plain, &vec![]));
-        assert!(can_move_right(&POSITION_BOTTOM_LEFT, &map_plain, &vec![]));
-        assert!(can_move_right(&POSITION_MIDDLE, &map_plain, &vec![]));
+        assert!(!can_move_right(&POSITION_TOP_RIGHT, &map_plain));
+        assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &map_plain));
+        assert!(can_move_right(&POSITION_TOP_LEFT, &map_plain));
+        assert!(can_move_right(&POSITION_BOTTOM_LEFT, &map_plain));
+        assert!(can_move_right(&POSITION_MIDDLE, &map_plain));
 
         let map_stone = create_stone_map();
-        assert!(!can_move_right(&POSITION_TOP_LEFT, &map_stone, &vec![]));
-        assert!(!can_move_right(&POSITION_TOP_RIGHT, &map_stone, &vec![]));
-        assert!(!can_move_right(&POSITION_BOTTOM_LEFT, &map_stone, &vec![]));
-        assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &map_stone, &vec![]));
-        assert!(!can_move_right(&POSITION_MIDDLE, &map_stone, &vec![]));
+        assert!(!can_move_right(&POSITION_TOP_LEFT, &map_stone));
+        assert!(!can_move_right(&POSITION_TOP_RIGHT, &map_stone));
+        assert!(!can_move_right(&POSITION_BOTTOM_LEFT, &map_stone));
+        assert!(!can_move_right(&POSITION_BOTTOM_RIGHT, &map_stone));
+        assert!(!can_move_right(&POSITION_MIDDLE, &map_stone));
     }
 
     #[test]
     fn test_can_move_right_with_actors() {
         let map_plain = create_plain_map();
-        let actor_positions = vec![POSITION_MIDDLE];
 
-        assert!(!can_move_right(
-            &POSITION_MIDDLE_LEFT,
-            &map_plain,
-            &actor_positions,
-        ));
-        assert!(can_move_right(
-            &POSITION_TOP_LEFT,
-            &map_plain,
-            &actor_positions,
-        ));
-        assert!(can_move_right(
-            &POSITION_BOTTOM_LEFT,
-            &map_plain,
-            &actor_positions,
-        ));
+        assert!(!can_move_right(&POSITION_MIDDLE_LEFT, &map_plain,));
+        assert!(can_move_right(&POSITION_TOP_LEFT, &map_plain,));
+        assert!(can_move_right(&POSITION_BOTTOM_LEFT, &map_plain,));
     }
 
     #[test]
     fn test_can_move_up_without_actors() {
         let map_plain = create_plain_map();
-        assert!(!can_move_up(&POSITION_TOP_LEFT, &map_plain, &vec![]));
-        assert!(!can_move_up(&POSITION_TOP_RIGHT, &map_plain, &vec![]));
-        assert!(can_move_up(&POSITION_BOTTOM_LEFT, &map_plain, &vec![]));
-        assert!(can_move_up(&POSITION_BOTTOM_RIGHT, &map_plain, &vec![]));
-        assert!(can_move_up(&POSITION_MIDDLE, &map_plain, &vec![]));
+        assert!(!can_move_up(&POSITION_TOP_LEFT, &map_plain));
+        assert!(!can_move_up(&POSITION_TOP_RIGHT, &map_plain));
+        assert!(can_move_up(&POSITION_BOTTOM_LEFT, &map_plain));
+        assert!(can_move_up(&POSITION_BOTTOM_RIGHT, &map_plain));
+        assert!(can_move_up(&POSITION_MIDDLE, &map_plain));
 
         let map_stone = create_stone_map();
-        assert!(!can_move_up(&POSITION_TOP_LEFT, &map_stone, &vec![]));
-        assert!(!can_move_up(&POSITION_TOP_RIGHT, &map_stone, &vec![]));
-        assert!(!can_move_up(&POSITION_BOTTOM_LEFT, &map_stone, &vec![]));
-        assert!(!can_move_up(&POSITION_BOTTOM_RIGHT, &map_stone, &vec![]));
-        assert!(!can_move_up(&POSITION_MIDDLE, &map_stone, &vec![]));
+        assert!(!can_move_up(&POSITION_TOP_LEFT, &map_stone));
+        assert!(!can_move_up(&POSITION_TOP_RIGHT, &map_stone));
+        assert!(!can_move_up(&POSITION_BOTTOM_LEFT, &map_stone));
+        assert!(!can_move_up(&POSITION_BOTTOM_RIGHT, &map_stone));
+        assert!(!can_move_up(&POSITION_MIDDLE, &map_stone));
     }
 
     #[test]
     fn test_can_move_up_with_actors() {
         let map_plain = create_plain_map();
-        let actor_positions = vec![POSITION_MIDDLE];
 
-        assert!(can_move_up(
-            &POSITION_BOTTOM_RIGHT,
-            &map_plain,
-            &actor_positions,
-        ));
-        assert!(can_move_up(
-            &POSITION_BOTTOM_LEFT,
-            &map_plain,
-            &actor_positions,
-        ));
-        assert!(!can_move_up(
-            &POSITION_BOTTOM_MIDDLE,
-            &map_plain,
-            &actor_positions,
-        ));
+        assert!(can_move_up(&POSITION_BOTTOM_RIGHT, &map_plain,));
+        assert!(can_move_up(&POSITION_BOTTOM_LEFT, &map_plain,));
+        assert!(!can_move_up(&POSITION_BOTTOM_MIDDLE, &map_plain,));
     }
 
     #[test]
     fn test_can_move_down_without_actors() {
         let map_plain = create_plain_map();
-        assert!(!can_move_down(&POSITION_BOTTOM_LEFT, &map_plain, &vec![]));
-        assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map_plain, &vec![]));
-        assert!(can_move_down(&POSITION_TOP_LEFT, &map_plain, &vec![]));
-        assert!(can_move_down(&POSITION_TOP_RIGHT, &map_plain, &vec![]));
-        assert!(can_move_down(&POSITION_MIDDLE, &map_plain, &vec![]));
+        assert!(!can_move_down(&POSITION_BOTTOM_LEFT, &map_plain));
+        assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map_plain));
+        assert!(can_move_down(&POSITION_TOP_LEFT, &map_plain));
+        assert!(can_move_down(&POSITION_TOP_RIGHT, &map_plain));
+        assert!(can_move_down(&POSITION_MIDDLE, &map_plain));
 
         let map_stone = create_stone_map();
-        assert!(!can_move_down(&POSITION_TOP_LEFT, &map_stone, &vec![]));
-        assert!(!can_move_down(&POSITION_TOP_RIGHT, &map_stone, &vec![]));
-        assert!(!can_move_down(&POSITION_BOTTOM_LEFT, &map_stone, &vec![]));
-        assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map_stone, &vec![]));
-        assert!(!can_move_down(&POSITION_MIDDLE, &map_stone, &vec![]));
+        assert!(!can_move_down(&POSITION_TOP_LEFT, &map_stone));
+        assert!(!can_move_down(&POSITION_TOP_RIGHT, &map_stone));
+        assert!(!can_move_down(&POSITION_BOTTOM_LEFT, &map_stone));
+        assert!(!can_move_down(&POSITION_BOTTOM_RIGHT, &map_stone));
+        assert!(!can_move_down(&POSITION_MIDDLE, &map_stone));
     }
 
     #[test]
     fn test_can_move_down_with_actors() {
         let map_plain = create_plain_map();
-        let actor_positions = vec![POSITION_MIDDLE];
 
-        assert!(can_move_down(
-            &POSITION_TOP_RIGHT,
-            &map_plain,
-            &actor_positions,
-        ));
-        assert!(can_move_down(
-            &POSITION_TOP_LEFT,
-            &map_plain,
-            &actor_positions,
-        ));
-        assert!(!can_move_down(
-            &POSITION_TOP_MIDDLE,
-            &map_plain,
-            &actor_positions,
-        ));
+        assert!(can_move_down(&POSITION_TOP_RIGHT, &map_plain,));
+        assert!(can_move_down(&POSITION_TOP_LEFT, &map_plain));
+        assert!(!can_move_down(&POSITION_TOP_MIDDLE, &map_plain));
     }
 
     #[test]
     fn test_enumerate_reachable_positions() {
         let map_plain = create_plain_map();
-        let actor_positions = vec![];
 
-        let reachable_positions = enumerate_reachable_positions(
-            &POSITION_MIDDLE,
-            &map_plain,
-            &actor_positions,
-        );
+        let reachable_positions =
+            enumerate_reachable_positions(&POSITION_MIDDLE, &map_plain);
 
         assert_eq!(4, reachable_positions.len())
     }

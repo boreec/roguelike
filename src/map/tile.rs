@@ -39,7 +39,7 @@ impl Tile {
         match self.kind {
             TileKind::Grass
             | TileKind::GrassWithFlower
-            | TileKind::LevelExit => true,
+            | TileKind::LevelExit => self.actor.is_none(),
             TileKind::GrassWithStone => false,
         }
     }

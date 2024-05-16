@@ -177,6 +177,15 @@ impl Map {
 
         self.exits.push(exit_position);
     }
+
+    /// Converts a given `MapPosition` to an index in the tiles vector.
+    pub fn as_tile_index(&self, pos: &MapPosition) -> Result<usize, String> {
+        let index = pos.x + pos.y * self.width;
+        if index >= self.tiles.len() {
+            return Err("index out of bounds".into());
+        }
+        Ok(index)
+    }
 }
 
 impl From<CellularAutomaton> for Map {
