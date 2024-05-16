@@ -1,6 +1,5 @@
 use crate::debug::constants::*;
 use crate::prelude::*;
-use bevy::prelude::*;
 
 #[derive(Component)]
 pub struct TileCoordinateLabel;

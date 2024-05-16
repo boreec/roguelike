@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use crate::prelude::*;
 
 /// States used for the whole executable application. It comprises resources
 /// loading, game switching, etc.

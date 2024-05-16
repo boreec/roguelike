@@ -3,7 +3,6 @@ mod tileset;
 pub use tileset::*;
 
 use crate::prelude::*;
-use bevy::prelude::*;
 
 pub struct ResourcesPlugin;
 
