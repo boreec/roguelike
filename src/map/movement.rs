@@ -25,11 +25,7 @@ pub fn move_left(
     map: &mut Map,
     position: &mut MapPosition,
 ) -> Result<(), String> {
-    let pos_left = MapPosition {
-        x: position.x - 1,
-        y: position.y,
-    };
-    map.move_actor(position, &pos_left)?;
+    map.move_actor(position, &position.left()?)?;
     Ok(())
 }
 
@@ -37,11 +33,7 @@ pub fn move_right(
     map: &mut Map,
     position: &mut MapPosition,
 ) -> Result<(), String> {
-    let pos_right = MapPosition {
-        x: position.x + 1,
-        y: position.y,
-    };
-    map.move_actor(position, &pos_right)?;
+    map.move_actor(position, &position.right()?)?;
     Ok(())
 }
 
@@ -49,11 +41,7 @@ pub fn move_up(
     map: &mut Map,
     position: &mut MapPosition,
 ) -> Result<(), String> {
-    let pos_up = MapPosition {
-        x: position.x,
-        y: position.y - 1,
-    };
-    map.move_actor(position, &pos_up)?;
+    map.move_actor(position, &position.up()?)?;
     Ok(())
 }
 
@@ -61,11 +49,7 @@ pub fn move_down(
     map: &mut Map,
     position: &mut MapPosition,
 ) -> Result<(), String> {
-    let pos_down = MapPosition {
-        x: position.x,
-        y: position.y + 1,
-    };
-    map.move_actor(position, &pos_down)?;
+    map.move_actor(position, &position.down()?)?;
     Ok(())
 }
 

@@ -293,6 +293,40 @@ impl MapPosition {
                 .mul_add(SPRITE_TILE_HEIGHT, -(SPRITE_TILE_HEIGHT / 2.0)),
         )
     }
+
+    pub fn left(&self) -> Result<Self, String> {
+        if self.x == 0 {
+            return Err("left can't be out of bounds".into());
+        }
+        Ok(Self {
+            x: self.x - 1,
+            y: self.y,
+        })
+    }
+
+    pub fn right(&self) -> Result<Self, String> {
+        Ok(Self {
+            x: self.x + 1,
+            y: self.y,
+        })
+    }
+
+    pub fn up(&self) -> Result<Self, String> {
+        if self.y == 0 {
+            return Err("up can't be out of bounds".into());
+        }
+        Ok(Self {
+            x: self.x,
+            y: self.y - 1,
+        })
+    }
+
+    pub fn down(&self) -> Result<Self, String> {
+        Ok(Self {
+            x: self.x,
+            y: self.y + 1,
+        })
+    }
 }
 
 #[cfg(test)]
