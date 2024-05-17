@@ -15,10 +15,7 @@ pub fn move_randomly(
             if !pos_reachable.is_empty() {
                 let pos_random = pos_reachable
                     [rand::thread_rng().gen_range(0..pos_reachable.len())];
-                let tile_pos_old = map.as_tile_index(&pos_mob).unwrap();
-                let tile_pos_new = map.as_tile_index(&pos_random).unwrap();
-                map.tiles[tile_pos_new].actor =
-                    map.tiles[tile_pos_old].actor.take();
+                map.move_actor(&pos_mob, &pos_random).unwrap();
                 pos_mob.x = pos_random.x;
                 pos_mob.y = pos_random.y;
             }
