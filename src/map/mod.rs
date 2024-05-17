@@ -188,12 +188,13 @@ impl Map {
 
     pub fn move_actor(
         &mut self,
-        from: &MapPosition,
+        from: &mut MapPosition,
         to: &MapPosition,
     ) -> Result<(), String> {
         let index_from = self.as_tile_index(from)?;
         let index_to = self.as_tile_index(to)?;
         self.tiles[index_to].actor = self.tiles[index_from].actor.take();
+        *from = *to;
         Ok(())
     }
 }

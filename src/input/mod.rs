@@ -76,31 +76,28 @@ pub fn check_player_move_via_keys(
     if input.any_just_pressed(KEYS_PLAYER_MOVE_RIGHT)
         && can_move_right(&pos_player.clone(), &map)
     {
-        move_right(&mut pos_player);
+        move_right(&mut map, &mut pos_player).unwrap();
     }
 
     if input.any_just_pressed(KEYS_PLAYER_MOVE_LEFT)
         && can_move_left(&pos_player.clone(), &map)
     {
-        move_left(&mut pos_player);
+        move_left(&mut map, &mut pos_player).unwrap();
     }
 
     if input.any_just_pressed(KEYS_PLAYER_MOVE_UP)
         && can_move_up(&pos_player.clone(), &map)
     {
-        move_up(&mut pos_player);
+        move_up(&mut map, &mut pos_player).unwrap();
     }
 
     if input.any_just_pressed(KEYS_PLAYER_MOVE_DOWN)
         && can_move_down(&pos_player.clone(), &map)
     {
-        move_down(&mut pos_player);
+        move_down(&mut map, &mut pos_player).unwrap();
     }
 
     if pos_player_old != pos_player.clone() {
-        let tile_pos_old = map.as_tile_index(&pos_player_old).unwrap();
-        let tile_pos_new = map.as_tile_index(&pos_player.clone()).unwrap();
-        map.tiles[tile_pos_new].actor = map.tiles[tile_pos_old].actor.take();
         next_state.set(GameState::EnemyTurn);
     }
 }

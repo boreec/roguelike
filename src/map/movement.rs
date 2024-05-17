@@ -15,28 +15,58 @@ pub fn move_randomly(
             if !pos_reachable.is_empty() {
                 let pos_random = pos_reachable
                     [rand::thread_rng().gen_range(0..pos_reachable.len())];
-                map.move_actor(&pos_mob, &pos_random).unwrap();
-                pos_mob.x = pos_random.x;
-                pos_mob.y = pos_random.y;
+                map.move_actor(&mut pos_mob, &pos_random).unwrap();
             }
         }
     }
 }
 
-pub fn move_left(position: &mut MapPosition) {
-    position.x -= 1;
+pub fn move_left(
+    map: &mut Map,
+    position: &mut MapPosition,
+) -> Result<(), String> {
+    let pos_left = MapPosition {
+        x: position.x - 1,
+        y: position.y,
+    };
+    map.move_actor(position, &pos_left)?;
+    Ok(())
 }
 
-pub fn move_right(position: &mut MapPosition) {
-    position.x += 1;
+pub fn move_right(
+    map: &mut Map,
+    position: &mut MapPosition,
+) -> Result<(), String> {
+    let pos_right = MapPosition {
+        x: position.x + 1,
+        y: position.y,
+    };
+    map.move_actor(position, &pos_right)?;
+    Ok(())
 }
 
-pub fn move_up(position: &mut MapPosition) {
-    position.y -= 1;
+pub fn move_up(
+    map: &mut Map,
+    position: &mut MapPosition,
+) -> Result<(), String> {
+    let pos_up = MapPosition {
+        x: position.x,
+        y: position.y - 1,
+    };
+    map.move_actor(position, &pos_up)?;
+    Ok(())
 }
 
-pub fn move_down(position: &mut MapPosition) {
-    position.y += 1;
+pub fn move_down(
+    map: &mut Map,
+    position: &mut MapPosition,
+) -> Result<(), String> {
+    let pos_down = MapPosition {
+        x: position.x,
+        y: position.y + 1,
+    };
+    map.move_actor(position, &pos_down)?;
+    Ok(())
 }
 
 /// Returns a vector of reachable positions from a specific map position.
