@@ -8,7 +8,7 @@ pub fn move_randomly(
     let mut map = q_map.single_mut();
 
     for (mut pos_mob, actor) in q_actors.iter_mut() {
-        if !actor.is_player() {
+        if !actor.is_player() && actor.is_friendly() {
             let pos_reachable =
                 enumerate_reachable_positions(&pos_mob.clone(), &map);
 

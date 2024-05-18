@@ -26,9 +26,17 @@ impl Plugin for ActorsPlugin {
 #[derive(Clone, Component, Copy)]
 pub struct Actor {
     pub kind: ActorKind,
+    pub hostility: ActorHostility,
 }
 
 impl Actor {
+    pub fn new(kind: ActorKind) -> Self {
+        Self {
+            kind,
+            hostility: kind.get_hostility(),
+        }
+    }
+
     pub fn get_tileset_index(&self) -> usize {
         match self.kind {
             ActorKind::Blob => TILESET_ACTOR_IDX_BLOB,
@@ -40,6 +48,14 @@ impl Actor {
     pub fn is_player(&self) -> bool {
         self.kind == ActorKind::Player
     }
+
+    pub fn is_hostile(&self) -> bool {
+        self.hostility == ActorHostility::Enemy
+    }
+
+    pub fn is_friendly(&self) -> bool {
+        self.hostility == ActorHostility::Friend
+    }
 }
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
@@ -47,6 +63,22 @@ pub enum ActorKind {
     Blob,
     Rabbit,
     Player,
+}
+
+impl ActorKind {
+    pub fn get_hostility(&self) -> ActorHostility {
+        match self {
+            ActorKind::Blob => ActorHostility::Enemy,
+            ActorKind::Rabbit => ActorHostility::Friend,
+            ActorKind::Player => ActorHostility::Friend,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Eq, PartialEq)]
+pub enum ActorHostility {
+    Enemy,
+    Friend,
 }
 
 /// Bundle for spawning actor entities.
@@ -182,7 +214,7 @@ pub fn spawn_creature(
         if map.tiles[tile_pos].actor.is_some() {
             return Err("tile already occupied".into());
         }
-        let actor = Actor { kind: actor_kind };
+        let actor = Actor::new(actor_kind);
         map.tiles[tile_pos].actor = Some(actor);
         commands
             .spawn((OnDisplay, ActorBundle::new(actor, *position, tileset)));
