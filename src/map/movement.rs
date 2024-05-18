@@ -1,5 +1,46 @@
 use crate::prelude::*;
 
+pub fn move_to_player(
+    mut q_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
+    mut q_map: Query<&mut Map, With<OnDisplay>>,
+) {
+    let mut map = q_map.single_mut();
+
+    let player = q_actors
+        .iter()
+        .filter(|(_, a)| a.is_player())
+        .last()
+        .expect("no player found")
+        .0
+        .clone();
+
+    for (mut mob, actor) in q_actors.iter_mut() {
+        if !actor.is_hostile() {
+            continue;
+        }
+        if mob.y == player.y && mob.x < player.x {
+            if can_move_right(&mob, &mut map) {
+                move_right(&mut map, &mut mob).unwrap();
+            }
+        }
+        if mob.y == player.y && mob.x > player.x {
+            if can_move_left(&mob, &mut map) {
+                move_left(&mut map, &mut mob).unwrap();
+            }
+        }
+        if mob.x == player.x && mob.y > player.y {
+            if can_move_up(&mob, &mut map) {
+                move_up(&mut map, &mut mob).unwrap();
+            }
+        }
+        if mob.x == player.x && mob.y < player.y {
+            if can_move_down(&mob, &mut map) {
+                move_down(&mut map, &mut mob).unwrap();
+            }
+        }
+    }
+}
+
 /// Move mob actors to a random reachable position.
 pub fn move_randomly(
     mut q_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,

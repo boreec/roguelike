@@ -22,7 +22,10 @@ impl Plugin for MapPlugin {
                 check_if_player_exit_map.run_if(in_state(AppState::InGame)),
             )
             .add_systems(OnEnter(GameState::CleanupMap), cleanup_map)
-            .add_systems(OnEnter(GameState::EnemyTurn), move_randomly);
+            .add_systems(
+                OnEnter(GameState::EnemyTurn),
+                (move_randomly, move_to_player),
+            );
     }
 }
 
