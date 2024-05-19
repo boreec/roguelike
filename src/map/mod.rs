@@ -152,7 +152,7 @@ impl Map {
     /// Adds an exit tile on the right side of the map. The position is
     /// selected randomly.
     pub fn add_exit_tile(&mut self) {
-        let spawnable_positions: Vec<_> = self
+        let pos_spawnable: Vec<_> = self
             .tiles
             .iter()
             .enumerate()
@@ -163,21 +163,21 @@ impl Map {
             .collect();
 
         assert!(
-            !spawnable_positions.is_empty(),
+            !pos_spawnable.is_empty(),
             "there are no available positions for the exit tile",
         );
 
         let mut rng = rand::thread_rng();
-        let index = *spawnable_positions.choose(&mut rng).unwrap();
+        let index = *pos_spawnable.choose(&mut rng).unwrap();
 
         self.tiles[index].kind = TileKind::LevelExit;
 
-        let exit_position = MapPosition {
+        let pos_exit = MapPosition {
             x: index % self.width,
             y: index / self.width,
         };
 
-        self.exits.push(exit_position);
+        self.exits.push(pos_exit);
     }
 
     /// Converts a given `MapPosition` to an index in the tiles vector.
