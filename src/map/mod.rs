@@ -221,7 +221,14 @@ impl From<CellularAutomaton> for Map {
                 .iter()
                 .map(|cellular_state| {
                     let tile_kind = match cellular_state {
-                        CellularState::Alive => TileKind::GrassWithStone,
+                        CellularState::Alive => {
+                            let mut rng = rand::thread_rng();
+                            if rng.gen_bool(0.1) {
+                                TileKind::GrassWithStoneDamaged
+                            } else {
+                                TileKind::GrassWithStone
+                            }
+                        }
                         CellularState::Dead => TileKind::Grass,
                     };
                     Tile::from_kind(tile_kind)

@@ -15,6 +15,7 @@ pub enum TileKind {
     Grass,
     GrassWithFlower,
     GrassWithStone,
+    GrassWithStoneDamaged,
     LevelExit,
 }
 
@@ -40,7 +41,7 @@ impl Tile {
             TileKind::Grass
             | TileKind::GrassWithFlower
             | TileKind::LevelExit => self.actor.is_none(),
-            TileKind::GrassWithStone => false,
+            TileKind::GrassWithStone | TileKind::GrassWithStoneDamaged => false,
         }
     }
 }
@@ -52,6 +53,9 @@ impl TileKind {
             Self::Grass => TILESET_TERRAIN_IDX_GRASS,
             Self::GrassWithFlower => TILESET_TERRAIN_IDX_GRASS_WITH_FLOWER,
             Self::GrassWithStone => TILESET_TERRAIN_IDX_GRASS_WITH_STONE,
+            Self::GrassWithStoneDamaged => {
+                TILESET_TERRAIN_IDX_GRASS_WITH_STONE_DAMAGED
+            }
             Self::LevelExit => TILESET_TERRAIN_IDX_SIGNPOST,
         }
     }
