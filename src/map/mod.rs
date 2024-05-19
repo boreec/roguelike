@@ -164,7 +164,7 @@ impl Map {
 
         assert!(
             !pos_spawnable.is_empty(),
-            "there are no available positions for the exit tile",
+            "mo positions available for exit tile",
         );
 
         let mut rng = rand::thread_rng();
