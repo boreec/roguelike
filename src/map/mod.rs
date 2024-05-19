@@ -310,6 +310,7 @@ impl MapPosition {
         )
     }
 
+    /// Returns a `MapPostion` on the left of the current one.
     pub fn left(&self) -> Result<Self, String> {
         if self.x == 0 {
             return Err("left can't be out of bounds".into());
@@ -317,10 +318,12 @@ impl MapPosition {
         Ok(Self::new(self.x - 1, self.y))
     }
 
+    /// Returns a `MapPostion` on the right of the current one.
     pub fn right(&self) -> Result<Self, String> {
         Ok(Self::new(self.x + 1, self.y))
     }
 
+    /// Returns a `MapPostion` above the current one.
     pub fn up(&self) -> Result<Self, String> {
         if self.y == 0 {
             return Err("up can't be out of bounds".into());
@@ -328,6 +331,7 @@ impl MapPosition {
         Ok(Self::new(self.x, self.y - 1))
     }
 
+    /// Returns a `MapPostion` under the current one.
     pub fn down(&self) -> Result<Self, String> {
         Ok(Self::new(self.x, self.y + 1))
     }
