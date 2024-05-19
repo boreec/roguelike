@@ -314,34 +314,22 @@ impl MapPosition {
         if self.x == 0 {
             return Err("left can't be out of bounds".into());
         }
-        Ok(Self {
-            x: self.x - 1,
-            y: self.y,
-        })
+        Ok(Self::new(self.x - 1, self.y))
     }
 
     pub fn right(&self) -> Result<Self, String> {
-        Ok(Self {
-            x: self.x + 1,
-            y: self.y,
-        })
+        Ok(Self::new(self.x + 1, self.y))
     }
 
     pub fn up(&self) -> Result<Self, String> {
         if self.y == 0 {
             return Err("up can't be out of bounds".into());
         }
-        Ok(Self {
-            x: self.x,
-            y: self.y - 1,
-        })
+        Ok(Self::new(self.x, self.y - 1))
     }
 
     pub fn down(&self) -> Result<Self, String> {
-        Ok(Self {
-            x: self.x,
-            y: self.y + 1,
-        })
+        Ok(Self::new(self.x, self.y + 1))
     }
 }
 
