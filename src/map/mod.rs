@@ -266,7 +266,12 @@ impl From<(PerlinNoise, usize, usize)> for Map {
                 } else if noise_value > -0.25 {
                     TileKind::Grass
                 } else {
-                    TileKind::GrassWithStone
+                    let mut rng = rand::thread_rng();
+                    if rng.gen_bool(0.1) {
+                        TileKind::GrassWithStoneDamaged
+                    } else {
+                        TileKind::GrassWithStone
+                    }
                 };
                 cells.push(Tile::from_kind(kind));
             }
