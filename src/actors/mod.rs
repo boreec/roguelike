@@ -165,7 +165,8 @@ pub fn spawn_mobs_on_current_map(
             &pos_actors[spawned_quantity..spawned_quantity + quantity],
             &mut commands,
             &tileset,
-        );
+        )
+        .unwrap();
         spawned_quantity += quantity;
     }
 
@@ -196,7 +197,8 @@ pub fn spawn_mobs_on_current_map(
             &[pos_player_spawn],
             &mut commands,
             &tileset,
-        );
+        )
+        .unwrap();
     }
     next_game_state.set(GameState::PlayerTurn);
 }
