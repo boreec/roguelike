@@ -189,6 +189,7 @@ impl Map {
         Ok(index)
     }
 
+    /// Moves an actor from a tile to another and updates its map position.
     pub fn move_actor(
         &mut self,
         pos_actor_old: &mut MapPosition,
