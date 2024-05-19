@@ -223,7 +223,7 @@ impl From<CellularAutomaton> for Map {
                     let tile_kind = match cellular_state {
                         CellularState::Alive => {
                             let mut rng = rand::thread_rng();
-                            if rng.gen_bool(0.1) {
+                            if rng.gen_bool(PROBABILITY_STONE_DAMAGED) {
                                 TileKind::GrassWithStoneDamaged
                             } else {
                                 TileKind::GrassWithStone
@@ -267,7 +267,7 @@ impl From<(PerlinNoise, usize, usize)> for Map {
                     TileKind::Grass
                 } else {
                     let mut rng = rand::thread_rng();
-                    if rng.gen_bool(0.1) {
+                    if rng.gen_bool(PROBABILITY_STONE_DAMAGED) {
                         TileKind::GrassWithStoneDamaged
                     } else {
                         TileKind::GrassWithStone
