@@ -120,15 +120,15 @@ impl Map {
     pub fn generate_random_positions(
         &self,
         quantity: usize,
-        occupied_positions: &[MapPosition],
+        pos_occupied: &[MapPosition],
     ) -> Result<Vec<MapPosition>, Box<dyn std::error::Error>> {
-        let mut spawnable_positions: Vec<_> = self
+        let mut pos_spawnable: Vec<_> = self
             .tiles
             .iter()
             .enumerate()
             .filter(|(index, tile)| {
                 tile.is_walkable()
-                    && !occupied_positions.contains(&MapPosition {
+                    && !pos_occupied.contains(&MapPosition {
                         x: index % self.width,
                         y: index / self.width,
                     })
@@ -139,14 +139,14 @@ impl Map {
             })
             .collect();
 
-        if spawnable_positions.is_empty() {
+        if pos_spawnable.is_empty() {
             return Err("no spawnable positions".into());
         }
 
         let mut rng = rand::thread_rng();
-        spawnable_positions.shuffle(&mut rng);
+        pos_spawnable.shuffle(&mut rng);
 
-        Ok(spawnable_positions[0..quantity].to_vec())
+        Ok(pos_spawnable[0..quantity].to_vec())
     }
 
     /// Adds an exit tile on the right side of the map. The position is
