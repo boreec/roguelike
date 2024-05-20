@@ -67,6 +67,7 @@ pub fn move_randomly(mut pos_mob: &mut MapPosition, map: &mut Map) {
     }
 }
 
+/// Moves an actor one coordinate to the left.
 pub fn move_left(
     map: &mut Map,
     position: &mut MapPosition,
