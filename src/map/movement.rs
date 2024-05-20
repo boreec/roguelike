@@ -1,5 +1,6 @@
 use crate::prelude::*;
 
+// Moves mobs in the map depending on their `ActorHostility` type.
 pub fn move_mob(
     mut q_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
     mut q_map: Query<&mut Map, With<OnDisplay>>,
