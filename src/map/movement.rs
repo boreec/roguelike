@@ -1,12 +1,12 @@
 use crate::prelude::*;
 
-pub fn move_to_player(
+pub fn move_mob(
     mut q_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
     mut q_map: Query<&mut Map, With<OnDisplay>>,
 ) {
     let mut map = q_map.single_mut();
 
-    let player = q_actors
+    let pos_player = q_actors
         .iter()
         .filter(|(_, a)| a.is_player())
         .last()
@@ -15,50 +15,52 @@ pub fn move_to_player(
         .clone();
 
     for (mut mob, actor) in q_actors.iter_mut() {
-        if !actor.is_hostile() {
+        if actor.is_player() {
             continue;
         }
-        if mob.y == player.y && mob.x < player.x {
-            if can_move_right(&mob, &mut map) {
-                move_right(&mut map, &mut mob).unwrap();
-            }
+
+        if actor.is_neutral() {
+            move_randomly(&mut mob, &mut map);
+        } else if actor.is_hostile() {
+            move_to_player(&pos_player, &mut mob, &mut map);
         }
-        if mob.y == player.y && mob.x > player.x {
-            if can_move_left(&mob, &mut map) {
-                move_left(&mut map, &mut mob).unwrap();
-            }
+    }
+}
+pub fn move_to_player(
+    player: &MapPosition,
+    mut mob: &mut MapPosition,
+    mut map: &mut Map,
+) {
+    if mob.y == player.y && mob.x < player.x {
+        if can_move_right(&mob, &mut map) {
+            move_right(&mut map, &mut mob).unwrap();
         }
-        if mob.x == player.x && mob.y > player.y {
-            if can_move_up(&mob, &mut map) {
-                move_up(&mut map, &mut mob).unwrap();
-            }
+    }
+    if mob.y == player.y && mob.x > player.x {
+        if can_move_left(&mob, &mut map) {
+            move_left(&mut map, &mut mob).unwrap();
         }
-        if mob.x == player.x && mob.y < player.y {
-            if can_move_down(&mob, &mut map) {
-                move_down(&mut map, &mut mob).unwrap();
-            }
+    }
+    if mob.x == player.x && mob.y > player.y {
+        if can_move_up(&mob, &mut map) {
+            move_up(&mut map, &mut mob).unwrap();
+        }
+    }
+    if mob.x == player.x && mob.y < player.y {
+        if can_move_down(&mob, &mut map) {
+            move_down(&mut map, &mut mob).unwrap();
         }
     }
 }
 
 /// Move mob actors to a random reachable position.
-pub fn move_randomly(
-    mut q_actors: Query<(&mut MapPosition, &Actor), With<OnDisplay>>,
-    mut q_map: Query<&mut Map, With<OnDisplay>>,
-) {
-    let mut map = q_map.single_mut();
+pub fn move_randomly(mut pos_mob: &mut MapPosition, map: &mut Map) {
+    let pos_reachable = enumerate_reachable_positions(&pos_mob.clone(), &map);
 
-    for (mut pos_mob, actor) in q_actors.iter_mut() {
-        if !actor.is_player() && actor.is_friendly() {
-            let pos_reachable =
-                enumerate_reachable_positions(&pos_mob.clone(), &map);
-
-            if !pos_reachable.is_empty() {
-                let pos_random = pos_reachable
-                    [rand::thread_rng().gen_range(0..pos_reachable.len())];
-                map.move_actor(&mut pos_mob, &pos_random).unwrap();
-            }
-        }
+    if !pos_reachable.is_empty() {
+        let pos_random =
+            pos_reachable[rand::thread_rng().gen_range(0..pos_reachable.len())];
+        map.move_actor(&mut pos_mob, &pos_random).unwrap();
     }
 }
 

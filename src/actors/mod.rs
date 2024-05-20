@@ -53,8 +53,8 @@ impl Actor {
         self.hostility == ActorHostility::Enemy
     }
 
-    pub fn is_friendly(&self) -> bool {
-        self.hostility == ActorHostility::Friend
+    pub fn is_neutral(&self) -> bool {
+        self.hostility == ActorHostility::Neutral
     }
 }
 
@@ -69,8 +69,8 @@ impl ActorKind {
     pub fn get_hostility(&self) -> ActorHostility {
         match self {
             ActorKind::Blob => ActorHostility::Enemy,
-            ActorKind::Rabbit => ActorHostility::Friend,
-            ActorKind::Player => ActorHostility::Friend,
+            ActorKind::Rabbit => ActorHostility::Neutral,
+            ActorKind::Player => ActorHostility::Neutral,
         }
     }
 }
@@ -78,7 +78,7 @@ impl ActorKind {
 #[derive(Clone, Copy, Eq, PartialEq)]
 pub enum ActorHostility {
     Enemy,
-    Friend,
+    Neutral,
 }
 
 /// Bundle for spawning actor entities.
