@@ -26,6 +26,8 @@ pub fn move_mob(
         }
     }
 }
+
+/// Moves a mob towards the player in a straight line.
 pub fn move_to_player(
     player: &MapPosition,
     mut mob: &mut MapPosition,
