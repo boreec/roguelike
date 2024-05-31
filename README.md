@@ -16,7 +16,7 @@ entries:
 2. 31/01/2024: [devlog #1 - Procedural Map Generation](https://boreec.github.io/posts/devlog-0001/)
 3. 28/02/2024: [devlog #2 - Palette and Tileset update](https://boreec.github.io/posts/devlog-0002/)
 4. 29/04/2024: [devlog #3 - Switching between maps](https://boreec.github.io/posts/devlog-0003/)
-5. ??/??/????: devlog #4 - ???????????????????
+5. 31/05/2024: [devlog #4 - NPC movements](https://boreec.github.io/posts/devlog-0004/)
 
 # Running the game
 
