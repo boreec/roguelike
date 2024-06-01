@@ -55,7 +55,6 @@ fn main() {
             Update,
             check_assets.run_if(in_state(AppState::LoadingAssets)),
         )
-        .add_systems(OnEnter(GameState::EnemyTurn), increase_game_turn)
         .run();
 }
 

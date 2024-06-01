@@ -19,7 +19,8 @@ impl Plugin for ActorsPlugin {
             despawn_mobs_on_current_map.run_if(in_state(AppState::InGame)),
         )
         .add_systems(OnEnter(GameState::PlayerTurn), update_actor_sprites)
-        .add_systems(OnEnter(GameState::EnemyTurn), update_actor_sprites);
+        .add_systems(OnEnter(GameState::EnemyTurn), update_actor_sprites)
+        .add_systems(OnEnter(GameState::EnemyTurn), increase_game_turn);
     }
 }
 
